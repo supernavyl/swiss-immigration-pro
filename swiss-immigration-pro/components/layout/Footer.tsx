@@ -1,268 +1,291 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import { motion } from 'framer-motion'
-import { useState } from 'react'
-import { 
-  Mail, Phone, MapPin, Facebook, Twitter, Linkedin, 
-  ArrowRight, Shield
-} from 'lucide-react'
-import { CONFIG } from '@/lib/config'
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { Mail, MapPin, ArrowRight, CheckCircle, MessageCircle } from "lucide-react";
+import { CONFIG } from "@/lib/config";
+import { useT } from "@/lib/i18n/useTranslation";
+import { api } from "@/lib/api";
 
 export default function Footer() {
-  const [logoError, setLogoError] = useState(false)
-  const [bottomLogoError, setBottomLogoError] = useState(false)
+  const { t } = useT();
+  const [email, setEmail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [year, setYear] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  // Set year and mounted flag after hydration to avoid mismatch
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+    setMounted(true);
+  }, []);
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim() || loading) return;
+    setLoading(true);
+    try {
+      await api.post("/api/newsletter/subscribe", { email, source: "footer" });
+    } catch {
+      // Don't penalise the user if backend is down
+    }
+    setSubmitted(true);
+    setLoading(false);
+  };
+
+  const quickLinks = [
+    { href: "/", label: t("nav.home") },
+    { href: "/lawyer", label: "Virtual Lawyer" },
+    { href: "/employment", label: "Employment" },
+    { href: "/citizenship", label: t("visa.citizenship") },
+    { href: "/pricing", label: t("nav.pricing") },
+    { href: "/tools", label: t("nav.tools") },
+  ];
+
+  const resourceLinks = [
+    { href: "/faq", label: t("nav.faq") },
+    { href: "/about", label: t("nav.about") },
+    { href: "/resources", label: t("nav.resources") },
+    { href: "/cv-templates", label: "CV Templates" },
+    { href: "/contact", label: t("nav.contact") },
+    { href: "/consultation", label: t("contact.bookConsultation") },
+  ];
+
+  const legalLinks = [
+    { href: "/privacy", label: t("footer.privacyPolicy") },
+    { href: "/terms", label: t("footer.termsOfService") },
+    { href: "/cookie-policy", label: t("footer.cookiePolicy") },
+    { href: "/refund-policy", label: t("footer.refundPolicy") },
+    { href: "/disclaimer", label: t("footer.disclaimer") },
+    { href: "/accessibility", label: t("footer.accessibility") },
+  ];
+
+  const trustMetrics = [
+    { value: "12,000+", label: "Applications guided" },
+    { value: "4.9\u2605", label: "Average rating" },
+    { value: "98%", label: "Permit success rate" },
+  ];
+
+  const socialLinks = [
+    { href: "https://linkedin.com/company/swissimmigrationpro", label: "LinkedIn" },
+    { href: "https://x.com/swissimmipro", label: "X (Twitter)" },
+  ];
 
   return (
-    <footer className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.1, 0.15, 0.1],
-            x: [0, 100, 0],
-            y: [0, -50, 0],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute top-0 right-0 w-96 h-96 bg-blue-500 rounded-full blur-3xl opacity-20"
-        />
-        <motion.div
-          animate={{
-            scale: [1, 1.3, 1],
-            opacity: [0.08, 0.12, 0.08],
-            x: [0, -80, 0],
-            y: [0, 60, 0],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute bottom-0 left-0 w-80 h-80 bg-indigo-500 rounded-full blur-3xl opacity-20"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 via-transparent to-transparent" />
+    <footer className="bg-slate-900 text-slate-300">
+      {/* Social proof bar */}
+      <div className="bg-slate-950 border-b border-slate-800">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-6">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-0 sm:divide-x sm:divide-slate-700">
+            {trustMetrics.map((metric) => (
+              <div
+                key={metric.label}
+                className="flex flex-col items-center px-8 sm:px-12"
+              >
+                <span className="text-white text-2xl font-bold tracking-tight">
+                  {metric.value}
+                </span>
+                <span className="text-slate-400 text-xs mt-1">
+                  {metric.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
-        {/* Main Footer Content */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 lg:gap-8 mb-12 sm:mb-16">
-          {/* Company Info */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="lg:col-span-1"
-          >
-            <div className="flex items-center gap-3 mb-6">
-              {logoError ? (
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <span className="text-2xl">🇨🇭</span>
-                </div>
-              ) : (
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg overflow-hidden bg-white/10 backdrop-blur-sm">
-                  <img
-                    src="/images/logo-removebg.png"
-                    alt="Swiss Immigration Pro Logo"
-                    width={48}
-                    height={48}
-                    className="w-full h-full object-contain"
-                    onError={() => setLogoError(true)}
-                  />
-                </div>
-              )}
-              <div>
-                <h3 className="font-bold text-xl bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
-                  {CONFIG.app.name}
-                </h3>
-                <p className="text-xs text-slate-400">Expert Guidance</p>
-              </div>
-            </div>
-            <p className="text-slate-300 text-sm mb-6 leading-relaxed">
-              Premium AI-Powered Swiss Immigration & Citizenship Mastery Platform
-            </p>
-
-            {/* Social Media */}
-            <div className="flex items-center gap-3">
-              {[
-                { icon: Facebook, href: '#', label: 'Facebook' },
-                { icon: Twitter, href: '#', label: 'Twitter' },
-                { icon: Linkedin, href: '#', label: 'LinkedIn' },
-              ].map((social, idx) => (
-                <motion.a
-                  key={idx}
-                  href={social.href}
-                  whileHover={{ scale: 1.1, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-10 h-10 bg-slate-800/50 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-all backdrop-blur-sm border border-slate-700/50 hover:border-blue-500"
-                  aria-label={social.label}
-                >
-                  <social.icon className="w-5 h-5 text-slate-300 hover:text-white transition-colors" />
-                </motion.a>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Quick Links */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            <h4 className="font-bold text-lg mb-6 text-white flex items-center gap-2">
-              <ArrowRight className="w-4 h-4 text-blue-400" />
-              Quick Links
-            </h4>
-            <ul className="space-y-2 sm:space-y-3 text-sm">
-              {[
-                { href: '/', label: 'Home' },
-                { href: '/lawyer', label: '⚖️ Virtual Lawyer' },
-                { href: '/employment', label: 'Employment' },
-                { href: '/citizenship', label: 'Citizenship' },
-                { href: '/pricing', label: 'Pricing' },
-                { href: '/tools', label: '🧮 Tools' },
-              ].map((link, idx) => (
-                <li key={idx}>
-                  <Link 
-                    href={link.href} 
-                    className="group flex items-center gap-2 text-slate-300 hover:text-blue-400 transition-all duration-200 py-1 min-h-[44px] touch-manipulation"
-                  >
-                    <span className="w-1.5 h-1.5 bg-blue-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <span className="group-hover:translate-x-1 transition-transform">{link.label}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
-          {/* Resources */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <h4 className="font-bold text-lg mb-6 text-white flex items-center gap-2">
-              <Shield className="w-4 h-4 text-blue-400" />
-              Resources
-            </h4>
-            <ul className="space-y-2 sm:space-y-3 text-sm">
-              {[
-                { href: '/faq', label: 'FAQs' },
-                { href: '/about', label: 'About Us' },
-                { href: '/resources', label: 'Guides & PDFs' },
-                { href: '/cv-templates', label: 'CV Templates' },
-                { href: '/contact', label: 'Contact Us' },
-                { href: '/consultation', label: 'Book Consultation' },
-              ].map((link, idx) => (
-                <li key={idx}>
-                  <Link 
-                    href={link.href} 
-                    className="group flex items-center gap-2 text-slate-300 hover:text-blue-400 transition-all duration-200 py-1 min-h-[44px] touch-manipulation"
-                  >
-                    <span className="w-1.5 h-1.5 bg-blue-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <span className="group-hover:translate-x-1 transition-transform">{link.label}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
-          {/* Contact */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <h4 className="font-bold text-lg mb-6 text-white flex items-center gap-2">
-              <Mail className="w-4 h-4 text-blue-400" />
-              Contact
-            </h4>
-            <ul className="space-y-3 sm:space-y-4 text-sm text-slate-300">
-              <li className="flex items-start gap-3 group">
-                <Mail className="w-5 h-5 text-blue-400 mt-0.5 shrink-0 group-hover:scale-110 transition-transform" />
-                <a 
-                  href="mailto:info@swissimmigrationpro.com" 
-                  className="hover:text-blue-400 transition-colors break-all touch-manipulation min-h-[44px] flex items-center"
-                >
-                  info@swissimmigrationpro.com
-                </a>
-              </li>
-              <li className="flex items-start gap-3">
-                <Phone className="w-5 h-5 text-blue-400 mt-0.5 shrink-0" />
-                <span className="flex items-center min-h-[44px]">+41 XX XXX XX XX</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-blue-400 mt-0.5 shrink-0" />
-                <span className="flex flex-col justify-center min-h-[44px]">
-                  <strong className="text-white">{CONFIG.app.firm}</strong>
-                  <span className="text-slate-400">Zurich, Switzerland</span>
-                </span>
-              </li>
-            </ul>
-          </motion.div>
-        </div>
-
-        {/* Bottom Bar */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="border-t border-slate-700/50 pt-8"
-        >
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="flex items-center gap-4">
-              {bottomLogoError ? (
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg">
-                  <span className="text-xl">🇨🇭</span>
-                </div>
-              ) : (
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center shadow-lg overflow-hidden bg-white/10 backdrop-blur-sm">
-                  <img
-                    src="/images/logo-removebg.png"
-                    alt="SIP Logo"
-                    width={40}
-                    height={40}
-                    className="w-full h-full object-contain"
-                    onError={() => setBottomLogoError(true)}
-                  />
-                </div>
-              )}
+      {/* Email capture strip */}
+      <div className="border-b border-slate-800 bg-slate-800/50">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+              <h3 className="text-white font-semibold text-base mb-1">
+                Get weekly Swiss immigration tips
+              </h3>
               <p className="text-slate-400 text-sm">
-                © {new Date().getFullYear()} <span className="text-white font-semibold">SIP</span>. All rights reserved.
+                Latest permit updates, cantonal strategies, and success stories.
+                No spam.
               </p>
             </div>
-            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6 text-xs sm:text-sm">
-              {[
-                { href: '/privacy', label: 'Privacy Policy' },
-                { href: '/terms', label: 'Terms of Service' },
-                { href: '/cookie-policy', label: 'Cookie Policy' },
-                { href: '/refund-policy', label: 'Refund Policy' },
-                { href: '/disclaimer', label: 'Disclaimer' },
-                { href: '/accessibility', label: 'Accessibility' },
-              ].map((link, idx) => (
-                <Link
-                  key={idx}
+            {mounted && submitted ? (
+              <div className="flex items-center gap-2 text-green-400 font-medium text-sm whitespace-nowrap">
+                <CheckCircle className="w-4 h-4" />
+                You&apos;re subscribed!
+              </div>
+            ) : (
+              <form
+                onSubmit={handleSubscribe}
+                className="flex gap-2 w-full md:w-auto"
+              >
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  required
+                  className="flex-1 md:w-64 bg-slate-700 border border-slate-600 text-white placeholder-slate-400 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold px-4 py-2.5 rounded-lg text-sm transition-all whitespace-nowrap disabled:opacity-60"
+                >
+                  Subscribe
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 py-14 lg:py-16">
+        {/* Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
+          {/* Brand */}
+          <div>
+            <Link href="/" className="inline-flex items-center gap-2.5 mb-4">
+              <img
+                src="/images/logo-removebg.png"
+                alt={CONFIG.app.name}
+                width={36}
+                height={36}
+                className="w-9 h-9 rounded-lg object-contain bg-white/10"
+              />
+              <span className="text-white font-semibold text-lg tracking-tight">
+                {CONFIG.app.name}
+              </span>
+            </Link>
+            <p className="text-white text-sm font-medium mb-2">
+              Your AI-powered Swiss immigration guide
+            </p>
+            <p className="text-sm leading-relaxed mb-5 text-slate-400">
+              {t("footer.description")}
+            </p>
+
+            {/* Social links */}
+            <div className="flex items-center gap-2">
+              {socialLinks.map((link) => (
+                <a
+                  key={link.label}
                   href={link.href}
-                  className="text-slate-400 hover:text-blue-400 transition-colors relative group py-2 px-1 touch-manipulation min-h-[44px] flex items-center"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white text-xs font-medium transition-colors"
                 >
                   {link.label}
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300" />
-                </Link>
+                </a>
               ))}
             </div>
           </div>
-        </motion.div>
+
+          {/* Quick Links */}
+          <div>
+            <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-4">
+              {t("footer.quickLinks")}
+            </h4>
+            <ul className="space-y-2.5">
+              {quickLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm hover:text-white transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Resources */}
+          <div>
+            <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-4">
+              {t("footer.resources")}
+            </h4>
+            <ul className="space-y-2.5">
+              {resourceLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm hover:text-white transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-4">
+              {t("footer.contact")}
+            </h4>
+            <ul className="space-y-3 text-sm">
+              <li>
+                <a
+                  href="mailto:info@swissimmigrationpro.com"
+                  className="flex items-center gap-2.5 hover:text-white transition-colors"
+                >
+                  <Mail className="w-4 h-4 text-slate-500 shrink-0" />
+                  info@swissimmigrationpro.com
+                </a>
+              </li>
+              <li className="flex items-center gap-2.5 text-slate-400">
+                <MessageCircle className="w-4 h-4 text-slate-500 shrink-0" />
+                Replies within 24 hours
+              </li>
+              <li className="flex items-start gap-2.5">
+                <MapPin className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
+                <span>
+                  {CONFIG.app.firm}
+                  <br />
+                  <span className="text-slate-500">Zurich, Switzerland</span>
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* CTA row */}
+        <div className="bg-gradient-to-r from-blue-600/10 to-indigo-600/10 border border-blue-500/20 rounded-2xl px-6 py-5 mt-12 mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-slate-300 font-medium">
+            Ready to start your Swiss journey?
+          </p>
+          <Link
+            href="/pricing"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-all"
+          >
+            Begin Free Assessment <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+
+        {/* Divider + Bottom */}
+        <div className="border-t border-slate-800 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <p className="text-xs text-slate-500">
+              &copy; {year || "2026"} {CONFIG.app.name}.{" "}
+              {t("footer.allRightsReserved")}
+            </p>
+            <span className="text-xs text-slate-600">|</span>
+            <p className="text-xs text-slate-500">
+              Built for Switzerland
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-slate-500">
+            {legalLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="hover:text-slate-300 transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+        </div>
       </div>
     </footer>
-  )
+  );
 }
-

@@ -1,5 +1,55 @@
 @import "tailwindcss";
 
+/* Use class-based dark mode (Tailwind v4 requires this explicit variant) */
+@custom-variant dark (&:where(.dark *));
+
+/* ========================================
+   Module Content Color Palette (CSS Custom Properties)
+   Used by the rehype-inline-styles plugin to make
+   hardcoded inline-style colors dark-mode aware.
+   ======================================== */
+:root {
+  --mod-bg: #ffffff;
+  --mod-bg-subtle: #f9fafb;
+  --mod-bg-blue: #eff6ff;
+  --mod-bg-blue-light: #e0f2fe;
+  --mod-bg-dark: #1f2937;
+  --mod-bg-darker: #111827;
+  --mod-text: #374151;
+  --mod-text-blue-dark: #1e40af;
+  --mod-text-blue: #3b82f6;
+  --mod-text-muted: #d1d5db;
+  --mod-text-muted-2: #9ca3af;
+  --mod-border: #e5e7eb;
+  --mod-border-light-blue: #bfdbfe;
+  --mod-border-green: #bbf7d0;
+  --mod-accent-blue: #2563eb;
+  --mod-accent-orange: #fb923c;
+  --mod-accent-green: #10b981;
+  --mod-accent-green-dark: #059669;
+}
+
+.dark {
+  --mod-bg: #1f2937;
+  --mod-bg-subtle: #1f2937;
+  --mod-bg-blue: #1e3a5f;
+  --mod-bg-blue-light: #1e3a5f;
+  --mod-bg-dark: #111827;
+  --mod-bg-darker: #0d1117;
+  --mod-text: #e5e7eb;
+  --mod-text-blue-dark: #93c5fd;
+  --mod-text-blue: #60a5fa;
+  --mod-text-muted: #9ca3af;
+  --mod-text-muted-2: #6b7280;
+  --mod-border: #374151;
+  --mod-border-light-blue: #2563eb;
+  --mod-border-green: #065f46;
+  --mod-accent-blue: #3b82f6;
+  --mod-accent-orange: #f97316;
+  --mod-accent-green: #34d399;
+  --mod-accent-green-dark: #10b981;
+}
+
 /* Prevent Google Translate from translating technical terms and proper nouns */
 .notranslate,
 [translate="no"] {
@@ -62,9 +112,8 @@
     scroll-behavior: smooth;
     /* Enable hardware acceleration for smooth scrolling */
     -webkit-overflow-scrolling: touch;
-    /* Light mode only */
-    color-scheme: light;
-    @apply bg-white;
+    color-scheme: light dark;
+    @apply bg-white dark:bg-gray-950;
     /* Optimize font rendering */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -77,20 +126,19 @@
     -moz-osx-font-smoothing: grayscale;
     /* Optimize text rendering */
     text-rendering: optimizeLegibility;
-    @apply bg-white text-gray-900;
+    @apply bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100;
     /* Prevent pull-to-refresh on mobile (can be enabled per page) */
     overscroll-behavior-y: contain;
     /* Optimize touch scrolling */
     touch-action: pan-y;
   }
 
-  /* Ensure all main containers are light */
   main {
-    @apply bg-white text-gray-900;
+    @apply bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100;
   }
 
   section {
-    @apply bg-white text-gray-900;
+    @apply bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100;
   }
 }
 
@@ -99,6 +147,11 @@
   position: relative;
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
   overflow: hidden;
+}
+
+.dark .fluid-gradient-bg,
+.fluid-gradient-bg:is(.dark *) {
+  background: linear-gradient(135deg, #030712 0%, #0f172a 50%, #1e293b 100%);
 }
 
 .fluid-gradient-bg::before {
@@ -134,6 +187,11 @@
   overflow: hidden;
 }
 
+.dark .fluid-blue-gradient,
+.fluid-blue-gradient:is(.dark *) {
+  background: linear-gradient(135deg, #0c1929 0%, #172554 50%, #1e3a5f 100%);
+}
+
 .fluid-blue-gradient::before {
   content: '';
   position: absolute;
@@ -158,6 +216,11 @@
 .fluid-slate-gradient {
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
   position: relative;
+}
+
+.dark .fluid-slate-gradient,
+.fluid-slate-gradient:is(.dark *) {
+  background: linear-gradient(135deg, #030712 0%, #0f172a 50%, #1e293b 100%);
 }
 
 .fluid-slate-gradient::after {
@@ -188,6 +251,11 @@
   position: relative;
   min-height: 100vh;
   background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%);
+}
+
+.dark .page-with-fluid-bg,
+.page-with-fluid-bg:is(.dark *) {
+  background: linear-gradient(135deg, #030712 0%, #0f172a 50%, #111827 100%);
 }
 
 .page-with-fluid-bg::before {
@@ -559,6 +627,201 @@
   }
 }
 
+/* ========================================
+   Mobile-Specific Animations & Transitions
+   ======================================== */
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Fade out animation */
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Slide in from right */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Slide out to right */
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Slide in from left */
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Slide up from bottom */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Slide down to bottom */
+@keyframes slideDown {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+/* Scale in animation */
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Scale out animation */
+@keyframes scaleOut {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+}
+
+/* Section completion animation (scale + fade in) */
+@keyframes sip-fade-scale {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Bounce animation */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Pulse animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+/* Mobile-specific animation classes */
+@media (max-width: 768px) {
+  .mobile-drawer-backdrop {
+    animation: fadeIn 0.3s ease-out;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  
+  .mobile-drawer {
+    animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+  }
+  
+  .mobile-drawer-exit {
+    animation: slideOutRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .chatbot-sheet {
+    animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, opacity;
+  }
+
+  .chatbot-sheet-exit {
+    animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .mobile-modal {
+    animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .mobile-modal-exit {
+    animation: scaleOut 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Smooth spring-like animations for touch interactions */
+  .mobile-spring {
+    transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  /* Active state for buttons */
+  button:active,
+  a:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+  }
+
+  /* Prevent animation on page load */
+  .no-animate-on-load * {
+    animation-duration: 0s !important;
+    transition-duration: 0s !important;
+  }
+}
+
 /* Performance optimizations */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -676,4 +939,89 @@ input:focus, select:focus, button:focus {
 
 .animate-float {
   animation: float 3s ease-in-out infinite;
+}
+
+/* ========================================
+   Dark Mode for Enhanced Module Content
+   Inline-style colors are transformed into CSS custom properties
+   by the rehype-inline-styles plugin. The --mod-* variables defined
+   in :root / .dark above handle the palette swap automatically.
+   The rules below cover semantic HTML elements that don't carry
+   inline styles.
+   ======================================== */
+.dark .enhanced-module-content {
+  color: #d1d5db;
+}
+
+.dark .enhanced-module-content h1,
+.dark .enhanced-module-content h2,
+.dark .enhanced-module-content h3,
+.dark .enhanced-module-content h4 {
+  color: #f9fafb;
+}
+
+.dark .enhanced-module-content table {
+  border-color: #374151;
+}
+
+.dark .enhanced-module-content th {
+  background: #1f2937;
+  color: #f9fafb;
+  border-color: #374151;
+}
+
+.dark .enhanced-module-content td {
+  border-color: #374151;
+  color: #d1d5db;
+}
+
+.dark .enhanced-module-content a {
+  color: #60a5fa;
+}
+
+.dark .enhanced-module-content blockquote {
+  border-left-color: #3b82f6;
+  color: #9ca3af;
+}
+
+.dark .enhanced-module-content code {
+  background: #1f2937;
+  color: #f9fafb;
+}
+
+.dark .enhanced-module-content hr {
+  border-color: #374151;
+}
+
+/* ------------------------------------------------------------------ */
+/* Chatbot typing cursor                                              */
+/* ------------------------------------------------------------------ */
+@keyframes typing-cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.typing-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  border-radius: 9999px;
+  background: linear-gradient(180deg, #3b82f6, #6366f1);
+  animation: typing-cursor-blink 1s ease-in-out infinite;
+}
+
+/* Glow variant while actively receiving tokens */
+.typing-cursor--streaming {
+  box-shadow: 0 0 6px rgba(59, 130, 246, 0.5);
+}
+
+.dark .typing-cursor {
+  background: linear-gradient(180deg, #60a5fa, #818cf8);
+  box-shadow: none;
+}
+
+.dark .typing-cursor--streaming {
+  box-shadow: 0 0 6px rgba(96, 165, 250, 0.4);
 }
