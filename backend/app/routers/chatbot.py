@@ -13,8 +13,8 @@ from datetime import date, datetime
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Request
-from pydantic import Field
 from fastapi.responses import StreamingResponse
+from pydantic import Field
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -22,9 +22,9 @@ from app.config import get_settings
 from app.database import get_db
 from app.middleware.auth import CurrentUser, get_optional_user
 from app.models.content import ChatMessage
-from app.models.user import UserLimit
-from app.schemas import CamelModel
+from app.models.user import User, UserLimit
 from app.redis_pool import get_redis
+from app.schemas import CamelModel
 from app.services.ai_service import get_chatbot_response, stream_chatbot_response
 
 router = APIRouter(prefix="/api/chatbot", tags=["chatbot"])
@@ -162,6 +162,16 @@ async def chat(
         if anon_error:
             raise HTTPException(status_code=429, detail=anon_error)
     else:
+        # Require email verification for authenticated users
+        user_uuid = uuid.UUID(user.user_id)
+        db_user_result = await db.execute(select(User).where(User.id == user_uuid))
+        db_user = db_user_result.scalar_one_or_none()
+        if db_user is not None and not db_user.email_verified:
+            raise HTTPException(
+                status_code=403,
+                detail="Please verify your email to use the AI assistant",
+            )
+
         limit_error = await _check_and_increment_limit(user, db)
         if limit_error:
             raise HTTPException(status_code=429, detail=limit_error)

@@ -71,8 +71,10 @@ class Employee(Base):
     permit_type: Mapped[str | None] = mapped_column(Text)  # B, C, L, G, S, etc.
     permit_number: Mapped[str | None] = mapped_column(Text)
     permit_expiry: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    permit_issued: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     employment_start: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     department: Mapped[str | None] = mapped_column(Text)
+    canton: Mapped[str | None] = mapped_column(String(2))
     position: Mapped[str | None] = mapped_column(Text)
     status: Mapped[str] = mapped_column(Text, default="active")  # active, inactive, terminated
     documents: Mapped[dict] = mapped_column(JSONB, default=dict)

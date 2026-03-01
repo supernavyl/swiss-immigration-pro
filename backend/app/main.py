@@ -36,15 +36,31 @@ from app.routers import (
 from app.routers.b2b import b2b_router
 from app.routers.marketplace import marketplace_router
 
+
 # --- Sentry ---
-sentry_dsn = os.environ.get("SENTRY_DSN", "")
-if sentry_dsn:
+# Initialized here (before app creation) so it captures startup errors too.
+# Only activates when SENTRY_DSN is set — safe to leave unset in local dev.
+def _init_sentry() -> None:
+    from app.config import get_settings as _get_settings
+    _settings = _get_settings()
+    if not _settings.sentry_dsn:
+        return
     try:
         import sentry_sdk
+        from sentry_sdk.integrations.fastapi import FastApiIntegration
 
-        sentry_sdk.init(dsn=sentry_dsn, traces_sample_rate=0.2, profiles_sample_rate=0.1)
+        sentry_sdk.init(
+            dsn=_settings.sentry_dsn,
+            integrations=[FastApiIntegration()],
+            traces_sample_rate=0.1,
+            profiles_sample_rate=0.1,
+            environment="development" if _settings.debug else "production",
+        )
     except Exception:
         logging.getLogger(__name__).warning("Sentry SDK init failed", exc_info=True)
+
+
+_init_sentry()
 
 logging.basicConfig(
     level=logging.INFO,

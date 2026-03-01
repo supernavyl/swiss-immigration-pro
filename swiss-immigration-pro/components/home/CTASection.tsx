@@ -50,6 +50,7 @@ export default function CTASection() {
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
             <button
               onClick={openQuiz}
+              aria-label="Start your free Swiss immigration assessment"
               className="group bg-white text-blue-700 px-8 py-3.5 rounded-xl font-semibold transition-all hover:shadow-lg hover:shadow-blue-900/20 flex items-center gap-2"
             >
               <Rocket className="w-4 h-4" />
@@ -58,6 +59,7 @@ export default function CTASection() {
             </button>
             <Link
               href="/pricing"
+              aria-label="View Swiss Immigration Pro pricing plans"
               className="group text-white px-8 py-3.5 rounded-xl font-semibold transition-all border border-white/25 hover:bg-white/10 inline-flex items-center gap-2"
             >
               {t('hero.ctaSecondary')}

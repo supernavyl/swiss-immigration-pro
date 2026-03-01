@@ -21,6 +21,13 @@ const VISA_SLUGS = [
   'c-permit-guide',
 ]
 
+const MODULE_IDS = [
+  'free-01', 'free-02', 'free-03',
+  'imm-01', 'imm-02', 'imm-03', 'imm-04', 'imm-05', 'imm-06', 'imm-07', 'imm-08',
+  'adv-01', 'adv-02', 'adv-03', 'adv-04', 'adv-05', 'adv-06', 'adv-07', 'adv-08', 'adv-09', 'adv-10',
+  'cit-01', 'cit-02', 'cit-03', 'cit-04', 'cit-05', 'cit-06', 'cit-07', 'cit-08', 'cit-09', 'cit-10',
+]
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date()
 
@@ -67,5 +74,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }))
 
-  return [...staticPages, ...blogPages, ...visaPages]
+  const modulePages: MetadataRoute.Sitemap = MODULE_IDS.map((id) => ({
+    url: `${BASE_URL}/modules/${id}`,
+    lastModified: now,
+    changeFrequency: 'monthly' as const,
+    priority: 0.6,
+  }))
+
+  return [...staticPages, ...blogPages, ...visaPages, ...modulePages]
 }

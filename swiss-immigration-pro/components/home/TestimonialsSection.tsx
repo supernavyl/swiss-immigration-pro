@@ -97,6 +97,8 @@ export default function TestimonialsSection() {
           {TESTIMONIALS.map((story, idx) => (
             <div
               key={idx}
+              role="article"
+              aria-label={`Testimonial from ${story.name}`}
               className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 hover:shadow-xl hover:shadow-slate-100/80 dark:hover:shadow-none hover:-translate-y-0.5 transition-all duration-300"
             >
               {/* Author */}

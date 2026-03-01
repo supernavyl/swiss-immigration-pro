@@ -72,6 +72,8 @@ async def stripe_webhook(request: Request, db: AsyncSession = Depends(get_db)):
             await handle_subscription_deleted(data, db)
         elif event_type == "invoice.payment_failed":
             await handle_payment_failed(data, db)
+        elif event_type == "charge.refunded":
+            await handle_charge_refunded(data, db)
         else:
             logger.info("Unhandled Stripe event: %s", event_type)
 
@@ -134,11 +136,26 @@ async def handle_checkout_completed(session: dict, db: AsyncSession):
     customer_id = session.get("customer", "")
     session_type = metadata.get("type", "")
 
-    # Find user by email
+    # Find user by email, fallback to stripe_customer_id via Subscription
     profile = None
     if customer_email:
         result = await db.execute(select(Profile).where(Profile.email == customer_email))
         profile = result.scalar_one_or_none()
+
+    if not profile and customer_id:
+        result = await db.execute(
+            select(Subscription).where(Subscription.stripe_customer_id == customer_id)
+        )
+        sub = result.scalar_one_or_none()
+        if sub:
+            result = await db.execute(select(Profile).where(Profile.id == sub.user_id))
+            profile = result.scalar_one_or_none()
+
+    if not profile:
+        logger.warning(
+            "Checkout completed but no profile found: email=%s customer=%s type=%s",
+            customer_email, customer_id, session_type,
+        )
 
     if session_type == "subscription":
         pack_id = metadata.get("pack_id", "immigration")
@@ -197,6 +214,15 @@ async def handle_checkout_completed(session: dict, db: AsyncSession):
                 status="succeeded",
             )
             db.add(payment)
+
+            # Grant product access in profile metadata
+            current_meta = dict(profile.metadata_ or {})
+            purchased = list(current_meta.get("purchased_products", []))
+            if product_id and product_id not in purchased:
+                purchased.append(product_id)
+                current_meta["purchased_products"] = purchased
+                profile.metadata_ = current_meta
+            logger.info("One-time product access granted: user=%s product=%s", profile.id, product_id)
 
     elif session_type == "consultation":
         consultation_id = metadata.get("consultation_id")
@@ -301,3 +327,32 @@ async def handle_payment_failed(invoice: dict, db: AsyncSession):
         pass  # Celery unavailable — daily beat will catch it
 
     logger.info("Payment failed handled: subscription=%s", sub_id)
+
+
+async def handle_charge_refunded(charge: dict, db: AsyncSession):
+    """Handle refund — downgrade user if full refund on subscription payment."""
+    payment_intent_id = charge.get("payment_intent", "")
+    refunded = charge.get("refunded", False)
+
+    if not payment_intent_id:
+        return
+
+    # Find payment record
+    result = await db.execute(
+        select(Payment).where(Payment.stripe_payment_intent_id == payment_intent_id)
+    )
+    payment = result.scalar_one_or_none()
+
+    if payment and refunded:
+        payment.status = "refunded"
+
+        # If this was a subscription payment, downgrade user to free
+        result = await db.execute(select(Profile).where(Profile.id == payment.user_id))
+        profile = result.scalar_one_or_none()
+        if profile and profile.pack_id != "free":
+            logger.info("Refund processed: downgrading user %s from %s to free", profile.id, profile.pack_id)
+            profile.pack_id = "free"
+
+        await db.flush()
+
+    logger.info("Charge refunded: payment_intent=%s full_refund=%s", payment_intent_id, refunded)

@@ -39,7 +39,7 @@ export default function EmployeeDetailPage() {
 
   async function fetchEmployee() {
     try {
-      const res = await fetch(`/api/b2b/employees/${companyId}/${employeeId}`, {
+      const res = await fetch(`/api/b2b/companies/${companyId}/employees/${employeeId}`, {
         headers: getAuthHeaderSync(),
       })
       if (res.ok) setEmployee(await res.json())
@@ -61,7 +61,7 @@ export default function EmployeeDetailPage() {
     }
 
     try {
-      const res = await fetch(`/api/b2b/employees/${companyId}/${employeeId}`, {
+      const res = await fetch(`/api/b2b/companies/${companyId}/employees/${employeeId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', ...getAuthHeaderSync() },
         body: JSON.stringify(body),
@@ -79,7 +79,7 @@ export default function EmployeeDetailPage() {
 
   async function handleDelete() {
     if (!confirm('Are you sure you want to delete this employee record?')) return
-    const res = await fetch(`/api/b2b/employees/${companyId}/${employeeId}`, {
+    const res = await fetch(`/api/b2b/companies/${companyId}/employees/${employeeId}`, {
       method: 'DELETE',
       headers: getAuthHeaderSync(),
     })

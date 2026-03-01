@@ -43,7 +43,7 @@ export default function EmployeesPage() {
       if (search) params.set('search', search)
       if (permitFilter) params.set('permitType', permitFilter)
 
-      const res = await fetch(`/api/b2b/employees/${companyId}?${params}`, {
+      const res = await fetch(`/api/b2b/companies/${companyId}/employees?${params}`, {
         headers: getAuthHeaderSync(),
       })
       if (res.ok) {
@@ -74,7 +74,7 @@ export default function EmployeesPage() {
       position: form.get('position') || null,
     }
 
-    const res = await fetch(`/api/b2b/employees/${companyId}`, {
+    const res = await fetch(`/api/b2b/companies/${companyId}/employees`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...getAuthHeaderSync() },
       body: JSON.stringify(body),

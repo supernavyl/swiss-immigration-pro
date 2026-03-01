@@ -5,6 +5,7 @@
 
 import { ALL_TRANSLATIONS, type SupportedLocale, type TranslationDict } from './translations'
 import { LAYER_CONTENT_FR } from './fr/layerContent'
+import { LAYER_CONTENT_DE } from './de/layerContent'
 import type { LayerContent } from '../layerContent'
 
 export type { SupportedLocale, TranslationDict }
@@ -112,10 +113,17 @@ export function isFrench(): boolean {
   return getCurrentLanguage() === 'fr'
 }
 
+export function isGerman(): boolean {
+  return getCurrentLanguage() === 'de'
+}
+
 export function getLayerContent(layer: string): LayerContent {
   const lang = getCurrentLanguage()
   if (lang === 'fr') {
     return LAYER_CONTENT_FR[layer] || LAYER_CONTENT_FR.europeans
+  }
+  if (lang === 'de') {
+    return LAYER_CONTENT_DE[layer] || LAYER_CONTENT_DE.europeans
   }
   return {} as LayerContent
 }

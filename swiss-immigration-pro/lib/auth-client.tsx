@@ -55,7 +55,7 @@ function setTokens(accessToken: string, refreshToken?: string) {
   if (refreshToken) {
     localStorage.setItem(REFRESH_KEY, refreshToken)
   }
-  document.cookie = `sip_token=${accessToken}; path=/; max-age=86400; SameSite=Lax`
+  document.cookie = `sip_token=${accessToken}; path=/; max-age=2592000; SameSite=Lax`
 }
 
 function removeTokens() {
