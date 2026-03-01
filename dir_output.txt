@@ -1,7 +1,0 @@
-
-    Directory: C:\Program Files\Git\usr\bin
-
-Mode                 LastWriteTime         Length Name
-----                 -------------         ------ ----
--a---          17/11/2025    18:24         976781 ssh.exe
-

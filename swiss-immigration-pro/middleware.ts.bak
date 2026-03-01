@@ -1,9 +1,0 @@
-// Temporarily disable middleware to test if it's causing 500 errors
-export default function middleware() {
-  // Temporary pass-through middleware - allow everything
-  return
-}
-
-export const config = {
-  matcher: []
-}

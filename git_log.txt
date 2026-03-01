@@ -1,5 +1,0 @@
-commit 80155d8ee0d56a2d95a3fbb810e0ae58d65e8e0b
-Author: vileno0on-jpg <vileno0on@gmail.com>
-Date:   Thu Jan 1 11:12:03 2026 +0100
-
-    Update for Infomaniak deployment
