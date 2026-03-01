@@ -7,7 +7,7 @@ import MainHeader from '@/components/layout/MainHeader'
 
 export default function CitizenshipPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       <MainHeader />
       <div className="py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -16,30 +16,30 @@ export default function CitizenshipPage() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold mb-6">
+          <div className="inline-flex items-center gap-2 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-4 py-2 rounded-full text-sm font-semibold mb-6">
             <Globe className="w-4 h-4" />
             <span>Swiss Citizenship Journey</span>
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
             Your Path to
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
               Swiss Citizenship
             </span>
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
             Master the 10-year journey to Swiss citizenship with our comprehensive roadmap,
             personalized timelines, and proven strategies for success.
           </p>
           <div className="flex justify-center gap-4 mt-8">
-            <div className="flex items-center gap-2 text-sm text-gray-600 bg-white px-4 py-2 rounded-full border border-gray-200">
+            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 px-4 py-2 rounded-full border border-gray-200 dark:border-gray-700">
               <Calendar className="w-4 h-4" />
               <span>10-Year Process</span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600 bg-white px-4 py-2 rounded-full border border-gray-200">
+            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 px-4 py-2 rounded-full border border-gray-200 dark:border-gray-700">
               <CheckCircle className="w-4 h-4" />
               <span>Canton-Specific</span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600 bg-white px-4 py-2 rounded-full border border-gray-200">
+            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 px-4 py-2 rounded-full border border-gray-200 dark:border-gray-700">
               <BookOpen className="w-4 h-4" />
               <span>Integration Required</span>
             </div>
@@ -76,11 +76,11 @@ export default function CitizenshipPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 + idx * 0.1 }}
-                className="bg-gradient-to-br from-white to-gray-50 p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300"
+                className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 p-8 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-lg dark:shadow-none transition-all duration-300"
               >
                 <div className="text-4xl mb-4">{item.icon}</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{item.desc}</p>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{item.title}</h3>
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{item.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -94,10 +94,10 @@ export default function CitizenshipPage() {
           className="mb-16"
         >
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               Citizenship Pathways
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
               Three main routes to Swiss citizenship, each with specific requirements and timelines
             </p>
           </div>
@@ -172,10 +172,10 @@ export default function CitizenshipPage() {
                   </div>
 
                   <div>
-                    <div className="text-sm font-semibold text-gray-700 mb-2">Key Requirements</div>
+                    <div className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Key Requirements</div>
                     <ul className="space-y-1">
                       {path.requirements.map((req, reqIdx) => (
-                        <li key={reqIdx} className="text-sm text-gray-600 flex items-start">
+                        <li key={reqIdx} className="text-sm text-gray-600 dark:text-gray-400 flex items-start">
                           <CheckCircle className="w-3 h-3 text-green-600 mr-2 flex-shrink-0 mt-1" />
                           {req}
                         </li>
@@ -196,10 +196,10 @@ export default function CitizenshipPage() {
           className="mb-16"
         >
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               Essential Requirements
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
               Four fundamental pillars that form the foundation of Swiss citizenship applications
             </p>
           </div>
@@ -244,20 +244,20 @@ export default function CitizenshipPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7 + idx * 0.1 }}
-                className={`bg-gradient-to-br ${section.bgColor} p-8 rounded-2xl border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 group relative overflow-hidden`}
+                className={`bg-gradient-to-br ${section.bgColor} dark:from-gray-800 dark:to-gray-900 p-8 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-xl dark:shadow-none transition-all duration-300 group relative overflow-hidden`}
               >
                 <div className={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-br ${section.color} rounded-bl-3xl opacity-10 group-hover:opacity-20 transition-opacity`}></div>
 
                 <section.icon className={`w-12 h-12 bg-gradient-to-br ${section.color} rounded-xl p-3 text-white mb-6 shadow-lg`} />
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
                   {section.title}
                 </h3>
-                <p className="text-gray-600 text-sm mb-4 leading-relaxed">
+                <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 leading-relaxed">
                   {section.description}
                 </p>
                 <ul className="space-y-2">
                   {section.items.map((item, iidx) => (
-                    <li key={iidx} className="flex items-start text-sm text-gray-700">
+                    <li key={iidx} className="flex items-start text-sm text-gray-700 dark:text-gray-200">
                       <CheckCircle className="w-4 h-4 text-green-600 mr-2 flex-shrink-0 mt-0.5" />
                       {item}
                     </li>
@@ -311,7 +311,7 @@ export default function CitizenshipPage() {
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <a
                 href="/pricing"
-                className="inline-flex items-center justify-center gap-2 bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-50 transition-all duration-300 shadow-lg hover:shadow-xl"
+                className="inline-flex items-center justify-center gap-2 bg-white dark:bg-gray-800 text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-50 dark:hover:bg-gray-700 transition-all duration-300 shadow-lg hover:shadow-xl dark:shadow-none"
               >
                 Get Your Success Package
                 <CheckCircle className="w-5 h-5" />

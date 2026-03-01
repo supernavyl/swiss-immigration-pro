@@ -4,10 +4,13 @@ import { useState } from 'react'
 import { Calendar, Clock, CheckCircle, AlertCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { useToast } from '@/components/providers/ToastProvider'
+import MainHeader from '@/components/layout/MainHeader'
 
 export const dynamic = 'force-dynamic'
 
 export default function TimelinePlanner() {
+  const { showToast } = useToast()
   const [targetDate, setTargetDate] = useState('')
   const [nationality, setNationality] = useState<'eu' | 'non-eu'>('non-eu')
   const [hasJobOffer, setHasJobOffer] = useState(false)
@@ -15,7 +18,7 @@ export default function TimelinePlanner() {
 
   const calculateTimeline = () => {
     if (!targetDate) {
-      alert('Please select your target start date')
+      showToast('Please select your target start date', 'warning')
       return
     }
 
@@ -61,7 +64,9 @@ export default function TimelinePlanner() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <MainHeader />
+      <div className="py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -228,6 +233,7 @@ export default function TimelinePlanner() {
             </div>
           </motion.div>
         )}
+      </div>
       </div>
     </div>
   )

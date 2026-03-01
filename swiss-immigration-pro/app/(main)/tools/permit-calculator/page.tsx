@@ -4,8 +4,11 @@ import { useState } from 'react'
 import { Calculator, ArrowRight, CheckCircle, AlertCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { useToast } from '@/components/providers/ToastProvider'
+import MainHeader from '@/components/layout/MainHeader'
 
 export default function PermitCalculator() {
+  const { showToast } = useToast()
   const [nationality, setNationality] = useState<'eu' | 'us' | 'other'>('other')
   const [salary, setSalary] = useState('')
   const [canton, setCanton] = useState('')
@@ -15,7 +18,7 @@ export default function PermitCalculator() {
   const calculate = () => {
     const salaryNum = parseInt(salary)
     if (!salaryNum || !canton || !industry) {
-      alert('Please fill in all fields')
+      showToast('Please fill in all fields', 'warning')
       return
     }
 
@@ -72,7 +75,9 @@ export default function PermitCalculator() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <MainHeader />
+      <div className="py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -286,6 +291,7 @@ export default function PermitCalculator() {
             Official source: <a href="https://www.sem.admin.ch" target="_blank" rel="noopener noreferrer" className="underline">SEM.admin.ch</a>
           </p>
         </div>
+      </div>
       </div>
     </div>
   )

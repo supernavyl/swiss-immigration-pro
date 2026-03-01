@@ -40,6 +40,7 @@ import {
   MapIcon
 } from 'lucide-react'
 import Image from 'next/image'
+import { useToast } from '@/components/providers/ToastProvider'
 
 interface Property {
   id: string
@@ -239,9 +240,9 @@ export default function ApartmentFinderPage() {
                     </div>
                     <input
                       type="number"
-                      placeholder="Max CHF"
-                      className="block w-full px-3 py-3.5 bg-slate-50 border-none rounded-xl text-slate-900 placeholder-slate-400 text-sm focus:ring-2 focus:ring-blue-500 transition-all"
-                      value={maxRent}
+placeholder="Max CHF"
+                        className="block w-full px-3 py-3.5 bg-slate-50 dark:bg-gray-800 border-none rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-gray-400 text-sm focus:ring-2 focus:ring-blue-500 transition-all"
+                        value={maxRent}
                       onChange={(e) => setMaxRent(e.target.value)}
                     />
                   </div>
@@ -355,12 +356,12 @@ export default function ApartmentFinderPage() {
 
                           {/* Furnished */}
                           <div>
-                            <label className="block text-xs font-semibold text-slate-700 mb-2 flex items-center gap-1.5">
+                            <label className="block text-xs font-semibold text-slate-700 dark:text-gray-200 mb-2 flex items-center gap-1.5">
                               <Sofa className="w-3.5 h-3.5" />
                               Furnishing
                             </label>
                             <select
-                              className="block w-full px-3 py-2 bg-slate-50 border-none rounded-lg text-sm text-slate-900 focus:ring-2 focus:ring-blue-500"
+                              className="block w-full px-3 py-2 bg-slate-50 dark:bg-gray-800 border-none rounded-lg text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500"
                               value={furnished === null ? 'any' : furnished ? 'furnished' : 'unfurnished'}
                               onChange={(e) => setFurnished(e.target.value === 'any' ? null : e.target.value === 'furnished')}
                             >
@@ -415,7 +416,7 @@ export default function ApartmentFinderPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="mt-6 flex flex-wrap items-center justify-center gap-4 text-sm text-slate-600"
+              className="mt-6 flex flex-wrap items-center justify-center gap-4 text-sm text-slate-600 dark:text-gray-400"
             >
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-green-600" />
@@ -473,11 +474,11 @@ export default function ApartmentFinderPage() {
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             >
               {[1, 2, 3, 4, 5, 6].map((n) => (
-                <div key={n} className="bg-white rounded-2xl border border-slate-200 overflow-hidden animate-pulse">
-                  <div className="h-64 bg-slate-200" />
+                <div key={n} className="bg-white dark:bg-gray-800 rounded-2xl border border-slate-200 dark:border-gray-700 overflow-hidden animate-pulse">
+                  <div className="h-64 bg-slate-200 dark:bg-gray-700" />
                   <div className="p-6 space-y-4">
-                    <div className="h-6 bg-slate-200 rounded w-3/4" />
-                    <div className="h-4 bg-slate-200 rounded w-1/2" />
+                    <div className="h-6 bg-slate-200 dark:bg-gray-700 rounded w-3/4" />
+                    <div className="h-4 bg-slate-200 dark:bg-gray-700 rounded w-1/2" />
                     <div className="pt-4 flex justify-between">
                       <div className="h-8 bg-slate-200 rounded w-1/4" />
                       <div className="h-8 bg-slate-200 rounded w-1/4" />
@@ -496,10 +497,10 @@ export default function ApartmentFinderPage() {
               {/* Results Header with Controls */}
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                 <div>
-                  <h2 className="text-2xl font-bold text-slate-900">
+                  <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
                     {displayResults.length} {displayResults.length === 1 ? 'Property' : 'Properties'} Found
                   </h2>
-                  <p className="text-sm text-slate-600 mt-1">
+                  <p className="text-sm text-slate-600 dark:text-gray-400 mt-1">
                     {showSavedOnly ? 'Showing your saved properties' : 'Showing all matching properties'}
                   </p>
                 </div>
@@ -510,8 +511,8 @@ export default function ApartmentFinderPage() {
                     onClick={() => setShowSavedOnly(!showSavedOnly)}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                       showSavedOnly
-                        ? 'bg-red-100 text-red-700 border-2 border-red-300'
-                        : 'bg-white text-slate-600 border-2 border-slate-200 hover:border-slate-300'
+                        ? 'bg-red-100 dark:bg-red-900/30 text-red-700 border-2 border-red-300 dark:border-gray-600'
+                        : 'bg-white dark:bg-gray-800 text-slate-600 dark:text-gray-400 border-2 border-slate-200 dark:border-gray-700 hover:border-slate-300 dark:hover:border-gray-600'
                     }`}
                   >
                     <Heart className={`w-4 h-4 ${showSavedOnly ? 'fill-red-600' : ''}`} />
@@ -519,11 +520,11 @@ export default function ApartmentFinderPage() {
                   </button>
 
                   {/* View Mode Toggle */}
-                  <div className="flex bg-white border-2 border-slate-200 rounded-lg p-1">
+                  <div className="flex bg-white dark:bg-gray-800 border-2 border-slate-200 dark:border-gray-700 rounded-lg p-1">
                     <button
                       onClick={() => setViewMode('grid')}
                       className={`p-2 rounded transition-all ${
-                        viewMode === 'grid' ? 'bg-blue-100 text-blue-600' : 'text-slate-600 hover:text-slate-900'
+                        viewMode === 'grid' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600' : 'text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'
                       }`}
                       title="Grid view"
                     >
@@ -532,18 +533,18 @@ export default function ApartmentFinderPage() {
                     <button
                       onClick={() => setViewMode('list')}
                       className={`p-2 rounded transition-all ${
-                        viewMode === 'list' ? 'bg-blue-100 text-blue-600' : 'text-slate-600 hover:text-slate-900'
+viewMode === 'list' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600' : 'text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'
                       }`}
-                      title="List view"
+                    title="List view"
                     >
                       <List className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => setViewMode('map')}
                       className={`p-2 rounded transition-all ${
-                        viewMode === 'map' ? 'bg-blue-100 text-blue-600' : 'text-slate-600 hover:text-slate-900'
+viewMode === 'map' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600' : 'text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'
                       }`}
-                      title="Map view"
+                    title="Map view"
                     >
                       <MapIcon className="w-4 h-4" />
                     </button>
@@ -554,7 +555,7 @@ export default function ApartmentFinderPage() {
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value as SortOption)}
-                      className="appearance-none bg-white border-2 border-slate-200 rounded-lg px-4 py-2 pr-10 text-sm font-medium text-slate-700 hover:border-slate-300 focus:ring-2 focus:ring-blue-500 transition-all"
+                      className="appearance-none bg-white dark:bg-gray-800 border-2 border-slate-200 dark:border-gray-700 rounded-lg px-4 py-2 pr-10 text-sm font-medium text-slate-700 dark:text-gray-200 hover:border-slate-300 dark:hover:border-gray-600 focus:ring-2 focus:ring-blue-500 transition-all"
                     >
                       <option value="relevance">Sort: Relevance</option>
                       <option value="price-asc">Price: Low to High</option>
@@ -570,11 +571,11 @@ export default function ApartmentFinderPage() {
 
               {/* Map View */}
               {viewMode === 'map' && (
-                <div className="bg-white rounded-2xl border-2 border-slate-200 p-8 mb-6">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl border-2 border-slate-200 dark:border-gray-700 p-8 mb-6">
                   <div className="text-center py-20">
-                    <MapIcon className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-                    <h3 className="text-xl font-bold text-slate-900 mb-2">Map View Coming Soon</h3>
-                    <p className="text-slate-600">Interactive map with property locations will be available soon</p>
+                    <MapIcon className="w-16 h-16 text-slate-300 dark:text-gray-500 mx-auto mb-4" />
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Map View Coming Soon</h3>
+                    <p className="text-slate-600 dark:text-gray-400">Interactive map with property locations will be available soon</p>
                   </div>
                 </div>
               )}
@@ -607,13 +608,13 @@ export default function ApartmentFinderPage() {
               exit={{ opacity: 0 }}
               className="text-center py-20"
             >
-              <div className="bg-slate-100 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Search className="w-12 h-12 text-slate-400" />
+              <div className="bg-slate-100 dark:bg-gray-800 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <Search className="w-12 h-12 text-slate-400 dark:text-gray-500" />
               </div>
-              <h2 className="text-2xl font-bold text-slate-900 mb-2">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
                 {showSavedOnly ? 'No saved properties yet' : 'No properties found'}
               </h2>
-              <p className="text-slate-600 mb-8">
+              <p className="text-slate-600 dark:text-gray-400 mb-8">
                 {showSavedOnly 
                   ? 'Start saving properties by clicking the heart icon on listings you like'
                   : 'Try adjusting your filters to find more results'
@@ -673,13 +674,14 @@ interface PropertyCardProps {
 }
 
 function PropertyCard({ property, viewMode, isSaved, onToggleSave, delay }: PropertyCardProps) {
+  const { showToast } = useToast()
   const [showShareMenu, setShowShareMenu] = useState(false)
 
   const shareProperty = (method: 'copy' | 'email') => {
     const url = property.link
     if (method === 'copy') {
       navigator.clipboard.writeText(url)
-      alert('Link copied to clipboard!')
+      showToast('Link copied to clipboard!', 'success')
     } else if (method === 'email') {
       window.location.href = `mailto:?subject=Check out this property&body=I found this property: ${url}`
     }
@@ -692,7 +694,7 @@ function PropertyCard({ property, viewMode, isSaved, onToggleSave, delay }: Prop
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay }}
-        className="bg-white rounded-2xl border-2 border-slate-200 overflow-hidden hover:shadow-xl hover:border-blue-200 transition-all group"
+        className="bg-white dark:bg-gray-800 rounded-2xl border-2 border-slate-200 dark:border-gray-700 overflow-hidden hover:shadow-xl hover:border-blue-200 dark:hover:border-blue-600 transition-all group"
       >
         <div className="flex flex-col md:flex-row">
           <div className="relative h-48 md:h-auto md:w-80 overflow-hidden flex-shrink-0">
@@ -703,7 +705,7 @@ function PropertyCard({ property, viewMode, isSaved, onToggleSave, delay }: Prop
               className="object-cover group-hover:scale-105 transition-transform duration-500"
               sizes="320px"
             />
-            <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-bold text-slate-900 flex items-center gap-1.5 shadow-sm">
+            <div className="absolute top-4 left-4 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5 shadow-sm">
               {property.type === 'apartment' ? <Building2 className="w-3.5 h-3.5" /> : <Home className="w-3.5 h-3.5" />}
               {property.type.charAt(0).toUpperCase() + property.type.slice(1)}
             </div>
@@ -712,8 +714,8 @@ function PropertyCard({ property, viewMode, isSaved, onToggleSave, delay }: Prop
           <div className="flex-1 p-6 flex flex-col">
             <div className="flex items-start justify-between mb-3">
               <div className="flex-1">
-                <h3 className="text-xl font-bold text-slate-900 mb-2">{property.title}</h3>
-                <div className="flex items-center gap-2 text-slate-600 text-sm">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{property.title}</h3>
+                <div className="flex items-center gap-2 text-slate-600 dark:text-gray-400 text-sm">
                   <MapPin className="w-4 h-4" />
                   {property.city}, {property.canton}
                 </div>
@@ -722,31 +724,31 @@ function PropertyCard({ property, viewMode, isSaved, onToggleSave, delay }: Prop
                 <div className="text-3xl font-black text-blue-600">
                   CHF {property.rent.toLocaleString()}
                 </div>
-                <div className="text-xs text-slate-500">per month</div>
+                <div className="text-xs text-slate-500 dark:text-gray-400">per month</div>
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-4 py-4 border-y border-slate-100 my-4">
+            <div className="flex flex-wrap gap-4 py-4 border-y border-slate-100 dark:border-gray-700 my-4">
               <div className="flex items-center gap-2">
                 <BedDouble className="w-5 h-5 text-slate-400" />
-                <span className="text-sm font-medium text-slate-900">{property.rooms} Rooms</span>
+                <span className="text-sm font-medium text-slate-900 dark:text-white">{property.rooms} Rooms</span>
               </div>
               <div className="flex items-center gap-2">
                 <Maximize className="w-5 h-5 text-slate-400" />
-                <span className="text-sm font-medium text-slate-900">{property.sqm} m²</span>
+                <span className="text-sm font-medium text-slate-900 dark:text-white">{property.sqm} m²</span>
               </div>
               <div className="flex items-center gap-2">
                 <Calendar className="w-5 h-5 text-slate-400" />
-                <span className="text-sm font-medium text-slate-900">{property.availableFrom}</span>
+                <span className="text-sm font-medium text-slate-900 dark:text-white">{property.availableFrom}</span>
               </div>
               {property.petFriendly && (
-                <div className="flex items-center gap-1.5 px-2.5 py-1 bg-green-50 rounded-full">
+                <div className="flex items-center gap-1.5 px-2.5 py-1 bg-green-50 dark:bg-green-900/30 rounded-full">
                   <PawPrint className="w-3.5 h-3.5 text-green-600" />
                   <span className="text-xs font-medium text-green-700">Pet Friendly</span>
                 </div>
               )}
               {property.parking && (
-                <div className="flex items-center gap-1.5 px-2.5 py-1 bg-blue-50 rounded-full">
+                <div className="flex items-center gap-1.5 px-2.5 py-1 bg-blue-50 dark:bg-blue-900/30 rounded-full">
                   <Car className="w-3.5 h-3.5 text-blue-600" />
                   <span className="text-xs font-medium text-blue-700">Parking</span>
                 </div>
@@ -755,7 +757,7 @@ function PropertyCard({ property, viewMode, isSaved, onToggleSave, delay }: Prop
 
             <div className="flex flex-wrap gap-2 mb-4">
               {property.features.slice(0, 5).map(feature => (
-                <span key={feature} className="px-3 py-1 bg-slate-100 rounded-lg text-xs font-medium text-slate-700">
+                <span key={feature} className="px-3 py-1 bg-slate-100 dark:bg-gray-700 rounded-lg text-xs font-medium text-slate-700 dark:text-gray-200">
                   {feature}
                 </span>
               ))}
@@ -766,8 +768,8 @@ function PropertyCard({ property, viewMode, isSaved, onToggleSave, delay }: Prop
                 onClick={onToggleSave}
                 className={`p-3 rounded-xl transition-all ${
                   isSaved
-                    ? 'bg-red-100 text-red-600 hover:bg-red-200'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    ? 'bg-red-100 dark:bg-red-900/30 text-red-600 hover:bg-red-200'
+                    : 'bg-slate-100 dark:bg-gray-700 text-slate-600 dark:text-gray-300 hover:bg-slate-200 dark:hover:bg-gray-600'
                 }`}
                 title={isSaved ? 'Remove from saved' : 'Save property'}
               >
@@ -777,7 +779,7 @@ function PropertyCard({ property, viewMode, isSaved, onToggleSave, delay }: Prop
               <div className="relative">
                 <button
                   onClick={() => setShowShareMenu(!showShareMenu)}
-                  className="p-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl transition-all"
+                  className="p-3 bg-slate-100 dark:bg-gray-700 hover:bg-slate-200 dark:hover:bg-gray-600 text-slate-600 dark:text-gray-300 rounded-xl transition-all"
                   title="Share property"
                 >
                   <Share2 className="w-5 h-5" />
@@ -883,14 +885,14 @@ function PropertyCard({ property, viewMode, isSaved, onToggleSave, delay }: Prop
       </div>
 
       <div className="p-6">
-        <h3 className="text-lg font-bold text-slate-900 mb-2 line-clamp-2 min-h-[3.5rem]">{property.title}</h3>
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2 line-clamp-2 min-h-[3.5rem]">{property.title}</h3>
         
-        <div className="flex items-center gap-2 text-slate-600 text-sm mb-4">
+        <div className="flex items-center gap-2 text-slate-600 dark:text-gray-400 text-sm mb-4">
           <MapPin className="w-4 h-4" />
           {property.city}, {property.canton}
         </div>
 
-        <div className="grid grid-cols-3 gap-3 py-4 border-y border-slate-100 mb-4">
+        <div className="grid grid-cols-3 gap-3 py-4 border-y border-slate-100 dark:border-gray-700 mb-4">
           <div className="flex flex-col items-center">
             <BedDouble className="w-5 h-5 text-slate-400 mb-1" />
             <span className="text-xs font-semibold text-slate-900">{property.rooms} Rooms</span>

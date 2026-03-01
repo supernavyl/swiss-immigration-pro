@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback, use } from 'react'
-import { useRouter, useParams } from 'next/navigation'
-import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import { useSession } from '@/lib/auth-client'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import {
@@ -11,16 +11,18 @@ import {
   Bookmark, Share2, Maximize2, Minimize2, Book, Video, CheckSquare,
   Sparkles, Layers
 } from 'lucide-react'
-import { getAllModules, getAllModulesForAdmin, getModulePack } from '@/lib/content/pack-content'
-import { PRICING_PACKS } from '@/lib/stripe'
+import { getAllModules, getAllModulesForAdmin, getModulePack, type Module } from '@/lib/content/pack-content'
+import { PRICING_PACKS } from '@/lib/pricing'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import EnhancedModuleDisplay from '@/components/modules/EnhancedModuleDisplay'
 import AITutorBot from '@/components/modules/AITutorBot'
+import { useToast } from '@/components/providers/ToastProvider'
 
-export default function ModuleView() {
+export default function ModuleView({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter()
-  const params = use(params)
+  const resolvedParams = use(params)
+  const { showToast } = useToast()
   const { data: session, status } = useSession()
   const [loading, setLoading] = useState(true)
   const [module, setModule] = useState<any>(null)
@@ -39,6 +41,8 @@ export default function ModuleView() {
   const [categories, setCategories] = useState<Array<{ title: string; sections: Array<{ id: string; title: string; level: number }> }>>([])
   const [isLocked, setIsLocked] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [quizSubmitted, setQuizSubmitted] = useState(false)
+  const [expandedExercises, setExpandedExercises] = useState<Record<number, boolean>>({})
 
   // Helper functions - defined before useEffect to avoid hoisting issues
   const extractSections = (content: string) => {
@@ -113,14 +117,14 @@ export default function ModuleView() {
     setIsAdmin(adminStatus)
     const userPackId = session?.user?.packId || 'free'
 
-    const moduleId = params.id as string
-    let foundModule: any = null
+    const moduleId = resolvedParams.id
+    let foundModule: Module | null = null
     let foundPack: any = null
     let locked = false
 
     if (adminStatus) {
       const allModules = getAllModulesForAdmin()
-      const matched = allModules.find((mod: any) => mod.id === moduleId)
+      const matched = allModules.find((mod) => mod.id === moduleId)
       if (matched) {
         foundModule = matched
         const packId = getModulePack(matched.id)
@@ -128,13 +132,13 @@ export default function ModuleView() {
       }
     } else {
       const modules = getAllModules(userPackId)
-      const matched = modules.find((mod: any) => mod.id === moduleId)
+      const matched = modules.find((mod) => mod.id === moduleId)
       if (matched) {
         foundModule = matched
         foundPack = PRICING_PACKS[userPackId as keyof typeof PRICING_PACKS] || null
       } else {
         const allModules = getAllModulesForAdmin()
-        const fallback = allModules.find((mod: any) => mod.id === moduleId)
+        const fallback = allModules.find((mod) => mod.id === moduleId)
         if (fallback) {
           foundModule = fallback
           const packId = getModulePack(fallback.id)
@@ -168,7 +172,7 @@ export default function ModuleView() {
     }
 
     setLoading(false)
-  }, [session, status, router, params])
+  }, [session, status, router, resolvedParams])
 
   const loadProgress = async (moduleId: string) => {
     if (isLocked) return
@@ -308,6 +312,7 @@ export default function ModuleView() {
     
     const score = Math.round((correct / totalQuestions) * 100)
     setQuizScore(score)
+    setQuizSubmitted(true)
     
     // Update progress
     if (score >= 80) {
@@ -355,7 +360,7 @@ export default function ModuleView() {
   // Check if this is an enhanced module with interactive components
   if (module.enhancedModule && !isLocked) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
         <div className="max-w-7xl mx-auto px-4">
           {/* Back Button */}
           <div className="mb-6">
@@ -369,7 +374,11 @@ export default function ModuleView() {
           </div>
           
           {/* Enhanced Module Display */}
-          <EnhancedModuleDisplay module={module.enhancedModule} />
+          <EnhancedModuleDisplay
+            module={module.enhancedModule}
+            moduleId={resolvedParams.id}
+            quiz={module.quiz}
+          />
         </div>
       </div>
     )
@@ -496,7 +505,7 @@ export default function ModuleView() {
             {/* Mobile TOC Toggle */}
             <button
               onClick={() => setShowTableOfContents(!showTableOfContents)}
-              className="lg:hidden mb-6 w-full flex items-center justify-between px-4 py-3 bg-gray-50 rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-100 transition-colors"
+              className="lg:hidden mb-6 w-full flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             >
               <div className="flex items-center gap-2">
                 <BookOpen className="w-5 h-5 text-blue-600" />
@@ -514,7 +523,7 @@ export default function ModuleView() {
                   exit={{ height: 0, opacity: 0 }}
                   className="lg:hidden mb-6 overflow-hidden"
                 >
-                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                  <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
                     <nav className="space-y-2">
                       {sections.map((section) => (
                         <button
@@ -522,8 +531,8 @@ export default function ModuleView() {
                           onClick={() => scrollToSection(section.id)}
                           className={`w-full text-left px-3 py-2 rounded-md text-sm transition-all ${
                             activeSection === section.id
-                              ? 'bg-blue-50 text-blue-700 font-medium border border-blue-200'
-                              : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                              ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 font-medium border border-blue-200 dark:border-gray-600'
+                              : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'
                           }`}
                           style={{ paddingLeft: `${(section.level - 1) * 12 + 12}px` }}
                         >
@@ -537,25 +546,25 @@ export default function ModuleView() {
             </AnimatePresence>
 
             {/* Content Area */}
-            <div className="prose prose-lg max-w-none prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-ul:text-gray-700 prose-li:text-gray-700 prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900" ref={contentRef}>
+            <div className="prose prose-lg max-w-none prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-white prose-p:text-gray-700 dark:prose-p:text-gray-200 prose-p:leading-relaxed prose-ul:text-gray-700 dark:prose-ul:text-gray-200 prose-li:text-gray-700 dark:prose-li:text-gray-200 prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 dark:prose-strong:text-white" ref={contentRef}>
               {/* Module Header with Categories */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mb-8 pb-6 border-b border-gray-200"
+                className="mb-8 pb-6 border-b border-gray-200 dark:border-gray-700"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
                     <div className="flex items-center space-x-2 mb-3">
                       <Layers className="w-5 h-5 text-blue-600" />
-                      <span className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
+                      <span className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
                         {categories.length} Categories
                       </span>
                     </div>
-                    <h1 className="text-4xl font-bold text-gray-900 mb-3">
+                    <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-3">
                       {module.title}
                     </h1>
-                    <p className="text-lg text-gray-600 mb-4">
+                    <p className="text-lg text-gray-600 dark:text-gray-400 mb-4">
                       {module.description}
                     </p>
                   </div>
@@ -564,7 +573,7 @@ export default function ModuleView() {
                       <div className="text-2xl font-bold text-blue-600">
                         {progress}%
                       </div>
-                      <div className="text-xs text-gray-500">Complete</div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">Complete</div>
                     </div>
                     {progress === 100 && (
                       <motion.div
@@ -592,10 +601,10 @@ export default function ModuleView() {
                           key={idx}
                           className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                             categoryProgress === 100
-                              ? 'bg-green-100 text-green-700'
+                              ? 'bg-green-100 dark:bg-green-900/30 text-green-700'
                               : categoryProgress > 0
-                              ? 'bg-blue-100 text-blue-700'
-                              : 'bg-gray-100 text-gray-700'
+                              ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700'
+                              : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
                           }`}
                         >
                           <div className="flex items-center space-x-2">
@@ -619,15 +628,15 @@ export default function ModuleView() {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-white rounded-xl p-8 mb-8 border border-gray-200 shadow-sm"
+                  className="bg-white dark:bg-gray-800 rounded-xl p-8 mb-8 border border-gray-200 dark:border-gray-700 shadow-sm"
                 >
-                  <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center relative overflow-hidden">
+                  <div className="aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center relative overflow-hidden">
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                       <Play className="w-20 h-20 text-blue-600 mb-4" />
-                      <p className="text-lg font-semibold text-gray-700">
+                      <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
                         Video Content Coming Soon
                       </p>
-                      <p className="text-sm text-gray-500 mt-2">
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                         This module includes video explanations
                       </p>
                     </div>
@@ -648,24 +657,24 @@ export default function ModuleView() {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-white rounded-xl p-8 mb-8 border border-gray-200 shadow-sm"
+                  className="bg-white dark:bg-gray-800 rounded-xl p-8 mb-8 border border-gray-200 dark:border-gray-700 shadow-sm"
                 >
                   <div className="flex items-center space-x-3 mb-6">
                     <CheckSquare className="w-6 h-6 text-blue-600" />
-                    <h2 className="text-2xl font-bold text-gray-900">
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                       Interactive Checklist
                     </h2>
                   </div>
-                  <p className="text-gray-600 mb-4">
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">
                     Track your progress as you work through this module
                   </p>
                   <div className="space-y-3">
                     {module.content.split('\n').filter((line: string) => line.trim().startsWith('- [ ]')).slice(0, 10).map((line: string, idx: number) => {
                       const item = line.replace('- [ ]', '').trim()
                       return (
-                        <label key={idx} className="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                        <label key={idx} className="flex items-center space-x-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
                           <input type="checkbox" className="w-5 h-5 text-blue-600 rounded" />
-                          <span className="text-gray-700">{item}</span>
+                          <span className="text-gray-700 dark:text-gray-200">{item}</span>
                         </label>
                       )
                     })}
@@ -685,7 +694,7 @@ export default function ModuleView() {
                           <div className="relative group mb-6">
                             <h1 
                               id={id} 
-                              className="scroll-mt-20 text-4xl font-bold text-gray-900 mb-4 pb-3 border-b-2 border-gray-200 flex items-center justify-between"
+                              className="scroll-mt-20 text-4xl font-bold text-gray-900 dark:text-white mb-4 pb-3 border-b-2 border-gray-200 dark:border-gray-700 flex items-center justify-between"
                             >
                               <span {...props} />
                               {isCompleted && (
@@ -759,37 +768,37 @@ export default function ModuleView() {
                         <p className="mb-4 text-gray-700 leading-relaxed" {...props} />
                       ),
                       ul: ({ node, ...props }) => (
-                        <ul className="mb-4 ml-6 space-y-2 list-disc text-gray-700" {...props} />
+                        <ul className="mb-4 ml-6 space-y-2 list-disc text-gray-700 dark:text-gray-200" {...props} />
                       ),
                       ol: ({ node, ...props }) => (
-                        <ol className="mb-4 ml-6 space-y-2 list-decimal text-gray-700" {...props} />
+                        <ol className="mb-4 ml-6 space-y-2 list-decimal text-gray-700 dark:text-gray-200" {...props} />
                       ),
                       li: ({ node, ...props }) => (
                         <li className="leading-relaxed" {...props} />
                       ),
                       blockquote: ({ node, ...props }) => (
-                        <blockquote className="border-l-4 border-blue-500 pl-4 italic my-4 text-gray-600" {...props} />
+                        <blockquote className="border-l-4 border-blue-500 pl-4 italic my-4 text-gray-600 dark:text-gray-400" {...props} />
                       ),
                       code: ({ node, inline, ...props }: any) => {
                         if (inline) {
                           return (
-                            <code className="px-1.5 py-0.5 bg-gray-100 rounded text-sm font-mono text-red-600" {...props} />
+                            <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-sm font-mono text-red-600" {...props} />
                           )
                         }
                         return (
-                          <code className="block p-4 bg-gray-100 rounded-lg text-sm font-mono overflow-x-auto mb-4" {...props} />
+                          <code className="block p-4 bg-gray-100 dark:bg-gray-800 rounded-lg text-sm font-mono overflow-x-auto mb-4" {...props} />
                         )
                       },
                       table: ({ node, ...props }) => (
                         <div className="overflow-x-auto my-6">
-                          <table className="min-w-full border-collapse border border-gray-300" {...props} />
+                          <table className="min-w-full border-collapse border border-gray-300 dark:border-gray-600" {...props} />
                         </div>
                       ),
                       th: ({ node, ...props }) => (
-                        <th className="border border-gray-300 px-4 py-2 bg-gray-100 font-semibold text-left" {...props} />
+                        <th className="border border-gray-300 dark:border-gray-600 px-4 py-2 bg-gray-100 dark:bg-gray-800 font-semibold text-left" {...props} />
                       ),
                       td: ({ node, ...props }) => (
-                        <td className="border border-gray-300 px-4 py-2" {...props} />
+                        <td className="border border-gray-300 dark:border-gray-600 px-4 py-2" {...props} />
                       ),
                     }}
                   >
@@ -802,67 +811,147 @@ export default function ModuleView() {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-white rounded-xl p-8 mb-8 border border-gray-200 shadow-sm"
+                  className="bg-white dark:bg-gray-800 rounded-xl p-8 mb-8 border border-gray-200 dark:border-gray-700 shadow-sm"
                 >
-                  <div className="flex items-center space-x-3 mb-6">
-                    <HelpCircle className="w-6 h-6 text-purple-600" />
-                    <h2 className="text-2xl font-bold text-gray-900">
-                      Interactive Quiz
-                    </h2>
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center space-x-3">
+                      <HelpCircle className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+                      <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                        Knowledge Check
+                      </h2>
+                    </div>
+                    {quizSubmitted && (
+                      <span className={`text-sm font-semibold px-3 py-1 rounded-full ${
+                        (quizScore || 0) >= 80 ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' :
+                        (quizScore || 0) >= 60 ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300' :
+                        'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'
+                      }`}>
+                        {quizScore}% correct
+                      </span>
+                    )}
                   </div>
                   <div className="space-y-6">
-                    {module.quiz.questions.map((q: any, idx: number) => (
-                      <div key={idx} className="border border-gray-200 rounded-lg p-6">
-                        <h3 className="font-semibold text-gray-900 mb-4 flex items-center">
-                          <span className="w-8 h-8 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center text-sm font-bold mr-3">
-                            {idx + 1}
-                          </span>
-                          {q.question}
-                        </h3>
-                        <div className="space-y-2 ml-11">
-                          {q.options.map((opt: string, optIdx: number) => (
-                            <label
-                              key={optIdx}
-                              className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-all ${
-                                quizAnswers[idx] === opt
-                                  ? 'border-blue-500 bg-blue-50'
-                                  : 'border-gray-200 hover:bg-gray-50'
-                              }`}
-                            >
-                              <input
-                                type="radio"
-                                name={`question-${idx}`}
-                                value={opt}
-                                checked={quizAnswers[idx] === opt}
-                                onChange={(e) => setQuizAnswers({ ...quizAnswers, [idx]: e.target.value })}
-                                className="w-4 h-4 text-blue-600"
-                              />
-                              <span className="text-gray-700">{opt}</span>
-                            </label>
-                          ))}
+                    {module.quiz.questions.map((q: any, idx: number) => {
+                      const userAnswer = quizAnswers[idx]
+                      const correctAnswer = q.options[q.correct]
+                      const isCorrect = userAnswer === correctAnswer
+                      const showFeedback = quizSubmitted && userAnswer !== undefined
+
+                      return (
+                        <div key={idx} className={`border rounded-lg p-6 transition-all ${
+                          showFeedback
+                            ? isCorrect
+                              ? 'border-green-300 bg-green-50 dark:border-green-700 dark:bg-green-900/20'
+                              : 'border-red-300 bg-red-50 dark:border-red-700 dark:bg-red-900/20'
+                            : 'border-gray-200 dark:border-gray-700'
+                        }`}>
+                          <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                            <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-3 ${
+                              showFeedback
+                                ? isCorrect
+                                  ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
+                                  : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'
+                                : 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
+                            }`}>
+                              {showFeedback ? (isCorrect ? '✓' : '✗') : idx + 1}
+                            </span>
+                            {q.question}
+                          </h3>
+                          <div className="space-y-2 ml-11">
+                            {q.options.map((opt: string, optIdx: number) => {
+                              const isThisCorrect = optIdx === q.correct
+                              const isThisSelected = userAnswer === opt
+
+                              let optionStyle = 'border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
+                              if (quizSubmitted) {
+                                if (isThisCorrect) {
+                                  optionStyle = 'border-green-400 bg-green-50 dark:border-green-600 dark:bg-green-900/30'
+                                } else if (isThisSelected && !isThisCorrect) {
+                                  optionStyle = 'border-red-400 bg-red-50 dark:border-red-600 dark:bg-red-900/30'
+                                } else {
+                                  optionStyle = 'border-gray-200 dark:border-gray-600 opacity-60'
+                                }
+                              } else if (isThisSelected) {
+                                optionStyle = 'border-blue-500 bg-blue-50 dark:border-blue-500 dark:bg-blue-900/30'
+                              }
+
+                              return (
+                                <label
+                                  key={optIdx}
+                                  className={`flex items-center space-x-3 p-3 border rounded-lg transition-all ${
+                                    quizSubmitted ? 'cursor-default' : 'cursor-pointer'
+                                  } ${optionStyle}`}
+                                >
+                                  <input
+                                    type="radio"
+                                    name={`question-${idx}`}
+                                    value={opt}
+                                    checked={isThisSelected}
+                                    onChange={(e) => !quizSubmitted && setQuizAnswers({ ...quizAnswers, [idx]: e.target.value })}
+                                    disabled={quizSubmitted}
+                                    className="w-4 h-4 text-blue-600"
+                                  />
+                                  <span className={`flex-1 ${
+                                    quizSubmitted && isThisCorrect
+                                      ? 'text-green-700 dark:text-green-300 font-medium'
+                                      : quizSubmitted && isThisSelected && !isThisCorrect
+                                      ? 'text-red-700 dark:text-red-300 line-through'
+                                      : 'text-gray-700 dark:text-gray-300'
+                                  }`}>{opt}</span>
+                                  {quizSubmitted && isThisCorrect && (
+                                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                                  )}
+                                </label>
+                              )
+                            })}
+                          </div>
+                          {showFeedback && !isCorrect && (
+                            <div className="mt-3 ml-11 text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
+                              <span className="font-medium text-green-700 dark:text-green-400">Correct answer:</span> {correctAnswer}
+                            </div>
+                          )}
                         </div>
-                      </div>
-                    ))}
-                    <button
-                      onClick={handleQuizSubmit}
-                      disabled={Object.keys(quizAnswers).length !== module.quiz.questions.length}
-                      className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg font-semibold transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      Submit Quiz
-                    </button>
-                    {quizScore !== null && (
-                      <div className="text-center p-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border border-green-200">
-                        <Award className="w-12 h-12 text-yellow-500 mx-auto mb-2" />
-                        <p className="text-3xl font-bold text-gray-900 mb-2">
-                          {quizScore}%
-                        </p>
-                        <p className="text-gray-600">
-                          {quizScore >= 80
-                            ? 'Excellent work! 🎉 You mastered this module!'
-                            : quizScore >= 60
-                            ? 'Good job! 👍 Keep practicing!'
-                            : 'Keep learning! 💪 Review the content and try again!'}
-                        </p>
+                      )
+                    })}
+
+                    {!quizSubmitted ? (
+                      <button
+                        onClick={handleQuizSubmit}
+                        disabled={Object.keys(quizAnswers).length !== module.quiz.questions.length}
+                        className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg font-semibold transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        Check Answers ({Object.keys(quizAnswers).length}/{module.quiz.questions.length} answered)
+                      </button>
+                    ) : (
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        <div className={`flex-1 text-center p-4 rounded-lg border ${
+                          (quizScore || 0) >= 80
+                            ? 'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-700'
+                            : (quizScore || 0) >= 60
+                            ? 'bg-yellow-50 border-yellow-200 dark:bg-yellow-900/20 dark:border-yellow-700'
+                            : 'bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-700'
+                        }`}>
+                          <p className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+                            {quizScore}%
+                          </p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            {(quizScore || 0) >= 80
+                              ? 'Excellent! You\'ve mastered this material.'
+                              : (quizScore || 0) >= 60
+                              ? 'Good effort! Review the highlighted questions.'
+                              : 'Review the content above and try again.'}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => {
+                            setQuizAnswers({})
+                            setQuizScore(null)
+                            setQuizSubmitted(false)
+                          }}
+                          className="px-6 py-3 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-semibold transition-all"
+                        >
+                          Try Again
+                        </button>
                       </div>
                     )}
                   </div>
@@ -874,39 +963,59 @@ export default function ModuleView() {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-white rounded-xl p-8 mb-8 border border-gray-200 shadow-sm"
+                  className="bg-white dark:bg-gray-800 rounded-xl p-8 mb-8 border border-gray-200 dark:border-gray-700 shadow-sm"
                 >
-                  <div className="flex items-center space-x-3 mb-6">
-                    <BarChart3 className="w-6 h-6 text-green-600" />
-                    <h2 className="text-2xl font-bold text-gray-900">
+                  <div className="flex items-center space-x-3 mb-2">
+                    <BarChart3 className="w-6 h-6 text-green-600 dark:text-green-400" />
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                       Practice Exercises
                     </h2>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {module.exercises.map((exercise: any, idx: number) => (
-                      <div
-                        key={idx}
-                        className="border border-gray-200 rounded-lg p-6 hover:border-blue-300 transition-colors"
-                      >
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="flex items-center space-x-2">
-                            <div className="w-8 h-8 bg-green-100 text-green-700 rounded-lg flex items-center justify-center text-sm font-bold">
-                              {idx + 1}
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 ml-9">Apply what you learned. Click each exercise to see the instructions.</p>
+                  <div className="space-y-4">
+                    {module.exercises.map((exercise: any, idx: number) => {
+                      const isExpanded = expandedExercises[idx] || false
+                      return (
+                        <div
+                          key={idx}
+                          className={`border rounded-lg transition-all ${
+                            isExpanded
+                              ? 'border-green-300 dark:border-green-700 bg-green-50/50 dark:bg-green-900/10'
+                              : 'border-gray-200 dark:border-gray-700 hover:border-green-300 dark:hover:border-green-600'
+                          }`}
+                        >
+                          <button
+                            type="button"
+                            onClick={() => setExpandedExercises(prev => ({ ...prev, [idx]: !prev[idx] }))}
+                            className="w-full p-5 flex items-start justify-between text-left"
+                          >
+                            <div className="flex items-center space-x-3">
+                              <div className="w-8 h-8 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0">
+                                {idx + 1}
+                              </div>
+                              <div>
+                                <h3 className="font-semibold text-gray-900 dark:text-white">
+                                  {exercise.title}
+                                </h3>
+                                {!isExpanded && (
+                                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-1">{exercise.description}</p>
+                                )}
+                              </div>
                             </div>
-                            <h3 className="font-semibold text-gray-900">
-                              {exercise.title}
-                            </h3>
-                          </div>
-                          <CheckSquare className="w-5 h-5 text-gray-400" />
+                            <ChevronRight className={`w-5 h-5 text-gray-400 flex-shrink-0 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                          </button>
+                          {isExpanded && (
+                            <div className="px-5 pb-5 pt-0">
+                              <div className="ml-11 p-4 bg-white dark:bg-gray-700/50 rounded-lg border border-green-200 dark:border-green-800">
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                                  {exercise.description}
+                                </p>
+                              </div>
+                            </div>
+                          )}
                         </div>
-                        <p className="text-sm text-gray-600 mb-4">
-                          {exercise.description}
-                        </p>
-                        <button className="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors">
-                          Start Exercise
-                        </button>
-                      </div>
-                    ))}
+                      )
+                    })}
                   </div>
                 </motion.div>
               )}
@@ -951,7 +1060,7 @@ export default function ModuleView() {
                 <button
                   onClick={() => {
                     setProgress(100)
-                    alert('Module completed! 🎉')
+                    showToast('Module completed! 🎉', 'success')
                   }}
                   className="px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-lg font-semibold text-lg shadow-lg hover:shadow-xl transition-all flex items-center space-x-2"
                 >

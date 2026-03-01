@@ -1,16 +1,15 @@
 'use client'
 
-import { useState, useEffect, use } from 'react'
-import { useParams } from 'next/navigation'
+import { useState, use } from 'react'
 import { motion } from 'framer-motion'
 import { CheckCircle, CreditCard, Download, Video, FileText, Users } from 'lucide-react'
 import Link from 'next/link'
 import MainHeader from '@/components/layout/MainHeader'
-import { ONE_TIME_PRODUCTS } from '@/lib/stripe'
+import { ONE_TIME_PRODUCTS } from '@/lib/pricing'
 
-export default function ProductPage() {
-  const params = use(params)
-  const productId = params?.id as string
+export default function ProductPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = use(params)
+  const productId = resolvedParams?.id
   const product = productId ? ONE_TIME_PRODUCTS[productId as keyof typeof ONE_TIME_PRODUCTS] : null
 
   const [loading, setLoading] = useState(false)
@@ -45,11 +44,11 @@ export default function ProductPage() {
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-screen bg-slate-50 dark:bg-gray-900">
         <MainHeader />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-          <h1 className="text-3xl font-bold text-slate-900 mb-4">Product Not Found</h1>
-          <p className="text-slate-600 mb-8">The product you're looking for doesn't exist.</p>
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Product Not Found</h1>
+          <p className="text-slate-600 dark:text-gray-400 mb-8">The product you're looking for doesn't exist.</p>
           <Link href="/pricing" className="text-blue-600 hover:underline">
             View All Products →
           </Link>
@@ -67,7 +66,7 @@ export default function ProductPage() {
   const Icon = iconMap[product.type] || FileText
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50 dark:bg-gray-900">
       <MainHeader />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -77,51 +76,51 @@ export default function ProductPage() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
           >
-            <div className="bg-white rounded-xl shadow-lg p-8 md:p-12">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 md:p-12">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center">
+                <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
                   <Icon className="w-8 h-8 text-blue-600" />
                 </div>
                 <div>
                   <div className="text-sm font-semibold text-blue-600 uppercase tracking-wide mb-1">
                     {product.type === 'course' ? 'Online Course' : product.type === 'pdf' ? 'Digital Download' : 'Service Package'}
                   </div>
-                  <h1 className="text-3xl md:text-4xl font-bold text-slate-900">
+                  <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">
                     {product.name}
                   </h1>
                 </div>
               </div>
 
-              <p className="text-xl text-slate-600 mb-8 leading-relaxed">
+              <p className="text-xl text-slate-600 dark:text-gray-400 mb-8 leading-relaxed">
                 {product.description}
               </p>
 
               <div className="space-y-4 mb-8">
-                <h2 className="text-xl font-bold text-slate-900">What's Included:</h2>
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white">What's Included:</h2>
                 <ul className="space-y-3">
                   {product.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-3">
                       <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="text-slate-700">{feature}</span>
+                      <span className="text-slate-700 dark:text-gray-200">{feature}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
               {/* Trust Indicators */}
-              <div className="bg-blue-50 rounded-lg p-6 mb-8">
+              <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-6 mb-8">
                 <div className="grid grid-cols-3 gap-4 text-center">
                   <div>
                     <div className="text-2xl font-bold text-blue-600">18,500+</div>
-                    <div className="text-xs text-slate-600">Students</div>
+                    <div className="text-xs text-slate-600 dark:text-gray-400">Students</div>
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-blue-600">87%</div>
-                    <div className="text-xs text-slate-600">Success Rate</div>
+                    <div className="text-xs text-slate-600 dark:text-gray-400">Success Rate</div>
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-blue-600">100%</div>
-                    <div className="text-xs text-slate-600">Satisfaction</div>
+                    <div className="text-xs text-slate-600 dark:text-gray-400">Satisfaction</div>
                   </div>
                 </div>
               </div>
@@ -199,9 +198,9 @@ export default function ProductPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="mt-16 bg-white rounded-xl shadow-lg p-8 md:p-12"
+          className="mt-16 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 md:p-12"
         >
-          <h2 className="text-3xl font-bold text-slate-900 mb-8 text-center">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8 text-center">
             Frequently Asked Questions
           </h2>
 
@@ -228,9 +227,9 @@ export default function ProductPage() {
                 a: 'No, this is a one-time purchase. You pay once and get lifetime access (for courses and PDFs) or the full service package.'
               }
             ].map((faq, idx) => (
-              <div key={idx} className="border-b border-slate-200 pb-6 last:border-0 last:pb-0">
-                <h3 className="font-semibold text-slate-900 mb-2">{faq.q}</h3>
-                <p className="text-slate-600">{faq.a}</p>
+              <div key={idx} className="border-b border-slate-200 dark:border-gray-700 pb-6 last:border-0 last:pb-0">
+                <h3 className="font-semibold text-slate-900 dark:text-white mb-2">{faq.q}</h3>
+                <p className="text-slate-600 dark:text-gray-400">{faq.a}</p>
               </div>
             ))}
           </div>

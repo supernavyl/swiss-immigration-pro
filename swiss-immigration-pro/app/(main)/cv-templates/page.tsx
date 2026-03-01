@@ -1,302 +1,138 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { FileText, Download, CheckCircle2, Star, ArrowRight, Briefcase, GraduationCap, Award } from 'lucide-react'
+import { ArrowRight, Star, Sparkles, Zap, FileText, Shield, Globe } from 'lucide-react'
 import Link from 'next/link'
-import MainHeader from '@/components/layout/MainHeader'
 
-const templates = [
-  {
-    id: 1,
-    name: 'Swiss Professional',
-    category: 'General',
-    description: 'Clean, ATS-optimized format perfect for most industries. Includes professional photo section.',
-    features: ['ATS-friendly', 'Photo section', '2-page format', 'Multi-language'],
-    popular: true,
-    downloads: 1250,
-    rating: 4.9
-  },
-  {
-    id: 2,
-    name: 'Tech & IT Specialist',
-    category: 'Technology',
-    description: 'Designed for software engineers, developers, and IT professionals. Highlights technical skills prominently.',
-    features: ['Skills-first layout', 'Project showcase', 'GitHub integration', 'Certifications'],
-    popular: true,
-    downloads: 890,
-    rating: 4.8
-  },
-  {
-    id: 3,
-    name: 'Finance & Banking',
-    category: 'Finance',
-    description: 'Professional format for finance, banking, and consulting roles. Emphasizes achievements and metrics.',
-    features: ['Achievement-focused', 'Quantified results', 'Executive style', 'Swiss banking standards'],
-    popular: false,
-    downloads: 450,
-    rating: 4.7
-  },
-  {
-    id: 4,
-    name: 'Healthcare Professional',
-    category: 'Healthcare',
-    description: 'Specialized format for doctors, nurses, and healthcare workers. Includes licensing and certifications.',
-    features: ['License section', 'Clinical experience', 'Continuing education', 'Multi-language'],
-    popular: false,
-    downloads: 320,
-    rating: 4.6
-  },
-  {
-    id: 5,
-    name: 'Academic & Research',
-    category: 'Education',
-    description: 'Perfect for researchers, professors, and academic positions. Highlights publications and research.',
-    features: ['Publications section', 'Research focus', 'Academic achievements', 'Conference presentations'],
-    popular: false,
-    downloads: 280,
-    rating: 4.8
-  },
-  {
-    id: 6,
-    name: 'Creative & Design',
-    category: 'Creative',
-    description: 'Modern, visually appealing format for designers, marketers, and creative professionals.',
-    features: ['Portfolio links', 'Visual elements', 'Creative layout', 'Project gallery'],
-    popular: false,
-    downloads: 210,
-    rating: 4.5
-  }
+const TEMPLATES = [
+  { id: 'swiss-classic', name: 'Swiss Classic', desc: 'Traditional Swiss CV with serif fonts and structured sections', category: 'Traditional', color: '#1a1a2e', industries: ['General', 'Government', 'Banking'] },
+  { id: 'modern-zurich', name: 'Modern Zürich', desc: 'Clean two-column design with blue accents', category: 'Modern', color: '#1e3a5f', industries: ['Technology', 'Finance'] },
+  { id: 'executive-geneva', name: 'Executive Geneva', desc: 'Premium layout with gold accents for senior leadership', category: 'Executive', color: '#c9a84c', industries: ['Executive', 'Finance'] },
+  { id: 'tech-startup', name: 'Tech Startup', desc: 'Developer-friendly with monospace touches and skill visualizations', category: 'Tech', color: '#6366f1', industries: ['Technology', 'Startup'] },
+  { id: 'creative-portfolio', name: 'Creative Portfolio', desc: 'Bold colors and asymmetric layout for creatives', category: 'Creative', color: '#7c3aed', industries: ['Design', 'Marketing'] },
+  { id: 'minimal-basel', name: 'Minimal Basel', desc: 'Ultra-clean design with maximum whitespace', category: 'Minimal', color: '#18181b', industries: ['General', 'Consulting'] },
+  { id: 'academic-bern', name: 'Academic Bern', desc: 'Formal layout for academia and research', category: 'Academic', color: '#0369a1', industries: ['Academia', 'Research'] },
+  { id: 'finance-lucerne', name: 'Finance Lucerne', desc: 'Conservative layout for financial professionals', category: 'Finance', color: '#0d4f4f', industries: ['Finance', 'Banking'] },
+  { id: 'healthcare-pro', name: 'Healthcare Pro', desc: 'Clinical design with prominent certifications', category: 'Healthcare', color: '#0891b2', industries: ['Healthcare', 'Medical'] },
+  { id: 'legal-precision', name: 'Legal Precision', desc: 'Formal serif typography for legal professionals', category: 'Legal', color: '#1c1917', industries: ['Legal', 'Compliance'] },
+  { id: 'consultant-elite', name: 'Consultant Elite', desc: 'Sidebar layout with key metrics for consultants', category: 'Consulting', color: '#1d4ed8', industries: ['Consulting', 'Strategy'] },
+  { id: 'marketing-bold', name: 'Marketing Bold', desc: 'Modern color blocks for marketers', category: 'Marketing', color: '#be123c', industries: ['Marketing', 'Sales'] },
+  { id: 'engineering-blue', name: 'Engineering Blue', desc: 'Technical project-focused with skills matrix', category: 'Engineering', color: '#2563eb', industries: ['Engineering', 'Manufacturing'] },
+  { id: 'hospitality-warm', name: 'Hospitality Warm', desc: 'Warm tones with prominent language skills', category: 'Hospitality', color: '#b45309', industries: ['Hospitality', 'Tourism'] },
+  { id: 'retail-fresh', name: 'Retail Fresh', desc: 'Approachable achievement-focused design', category: 'Retail', color: '#15803d', industries: ['Retail', 'Sales'] },
 ]
 
-const categories = ['All', 'General', 'Technology', 'Finance', 'Healthcare', 'Education', 'Creative']
+const FEATURES = [
+  { icon: Sparkles, title: 'AI-Powered Content', desc: 'Generate tailored CV content from any job description' },
+  { icon: Zap, title: 'ATS Optimized', desc: 'Real-time ATS scoring ensures your CV passes automated screening' },
+  { icon: FileText, title: 'PDF Export', desc: 'Pixel-perfect A4 PDF generation with embedded fonts' },
+  { icon: Shield, title: 'Swiss Standards', desc: 'Built for Swiss job market conventions and expectations' },
+  { icon: Globe, title: 'Multilingual', desc: 'Full CEFR language proficiency support' },
+  { icon: Star, title: '15+ Templates', desc: 'Industry-specific professional designs' },
+]
 
-export default function CvTemplatesPage() {
+export default function CVTemplatesPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50">
-      <MainHeader />
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        {/* Hero Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-16"
-        >
-          <motion.div
-            initial={{ scale: 0.9 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.1 }}
-            className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl mb-6 shadow-lg"
-          >
-            <FileText className="w-10 h-10 text-blue-600" />
+    <div className="min-h-screen bg-white dark:bg-slate-950">
+      {/* Hero */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-transparent to-violet-600/5" />
+        <div className="relative max-w-6xl mx-auto px-6 pt-20 pb-16 text-center">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-bold dark:bg-blue-900/30 dark:text-blue-300 mb-4">
+              <Sparkles className="w-3.5 h-3.5" /> AI-Powered CV Builder
+            </span>
+            <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight mt-3">
+              Professional Swiss CV Templates
+            </h1>
+            <p className="text-lg text-slate-500 dark:text-slate-400 mt-4 max-w-2xl mx-auto">
+              15 industry-specific templates designed for the Swiss job market. AI-powered content generation, real-time ATS optimization, and pixel-perfect PDF export.
+            </p>
+            <Link
+              href="/tools/cv-editor"
+              className="inline-flex items-center gap-2 mt-8 px-6 py-3 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 shadow-lg shadow-blue-600/25 transition-all"
+            >
+              Start Building <ArrowRight className="w-4 h-4" />
+            </Link>
           </motion.div>
-          
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4">
-            Swiss CV Templates
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-            Professionally designed CV templates that meet Swiss employer standards. ATS-optimized, multi-language ready, and tailored for success.
-          </p>
-          
-          <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-600">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-green-600" />
-              <span>ATS-Optimized</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-green-600" />
-              <span>Swiss Standards</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-green-600" />
-              <span>Multi-Language</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-green-600" />
-              <span>Editable Formats</span>
-            </div>
-          </div>
-        </motion.div>
+        </div>
+      </section>
 
-        {/* Coming Soon Banner */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 mb-12 text-white shadow-xl"
-        >
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex-1">
-              <h2 className="text-2xl md:text-3xl font-bold mb-3">
-                🎉 CV Templates Coming Soon!
-              </h2>
-              <p className="text-blue-100 text-lg leading-relaxed">
-                We're currently preparing a comprehensive collection of professionally designed CV templates that meet Swiss employer standards. 
-                Subscribe to our newsletter to be notified as soon as they're available.
-              </p>
-            </div>
-            <Link
-              href="/contact"
-              className="flex items-center gap-2 bg-white text-blue-600 hover:bg-blue-50 font-semibold px-6 py-3 rounded-lg transition-all whitespace-nowrap"
+      {/* Template Grid */}
+      <section className="max-w-6xl mx-auto px-6 pb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {TEMPLATES.map((t, i) => (
+            <motion.div
+              key={t.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: i * 0.05 }}
             >
-              <span>Get Notified</span>
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-          </div>
-        </motion.div>
-
-        {/* Preview Section */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="mb-16"
-        >
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-            Template Preview
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {templates.map((template, idx) => (
-              <motion.div
-                key={template.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 * idx }}
-                whileHover={{ y: -4 }}
-                className="bg-white rounded-xl border-2 border-gray-200 overflow-hidden shadow-sm hover:shadow-xl transition-all group"
-              >
-                <div className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3 className="text-xl font-bold text-gray-900">{template.name}</h3>
-                        {template.popular && (
-                          <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded-full">
-                            Popular
-                          </span>
-                        )}
+              <Link href={`/tools/cv-editor?template=${t.id}`} className="group block">
+                <div className="rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden hover:shadow-xl hover:border-blue-300 dark:hover:border-blue-700 transition-all duration-200">
+                  <div className="h-48 relative" style={{ background: `linear-gradient(135deg, ${t.color}15, ${t.color}05)` }}>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-6">
+                      <div className="w-20 h-2 rounded-full" style={{ backgroundColor: t.color }} />
+                      <div className="w-16 h-1 rounded-full bg-slate-300" />
+                      <div className="flex gap-3 mt-2">
+                        <div className="w-24 space-y-1">
+                          <div className="w-full h-1 rounded-full bg-slate-200" />
+                          <div className="w-3/4 h-1 rounded-full bg-slate-200" />
+                          <div className="w-full h-1 rounded-full bg-slate-200" />
+                        </div>
+                        <div className="w-16 space-y-1">
+                          <div className="w-full h-1 rounded-full bg-slate-200" />
+                          <div className="w-2/3 h-1 rounded-full bg-slate-200" />
+                        </div>
                       </div>
-                      <span className="text-sm text-gray-500">{template.category}</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                      <span className="text-sm font-semibold text-gray-900">{template.rating}</span>
+                    <div className="absolute top-3 right-3">
+                      <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-white/80 text-slate-600 backdrop-blur-sm">{t.category}</span>
                     </div>
                   </div>
-                  
-                  <p className="text-gray-600 mb-4 text-sm leading-relaxed">
-                    {template.description}
-                  </p>
-                  
-                  <div className="space-y-2 mb-4">
-                    {template.features.map((feature, fIdx) => (
-                      <div key={fIdx} className="flex items-center gap-2 text-sm text-gray-600">
-                        <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
-                        <span>{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
-                    <span className="text-xs text-gray-500">
-                      {template.downloads.toLocaleString()} downloads
-                    </span>
-                    <button
-                      disabled
-                      className="px-4 py-2 bg-gray-100 text-gray-400 rounded-lg text-sm font-medium cursor-not-allowed"
-                    >
-                      Coming Soon
-                    </button>
+                  <div className="p-4">
+                    <h3 className="font-bold text-slate-900 dark:text-white">{t.name}</h3>
+                    <p className="text-sm text-slate-500 mt-1">{t.desc}</p>
+                    <div className="flex gap-1.5 mt-3">
+                      {t.industries.map((ind) => (
+                        <span key={ind} className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400">{ind}</span>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </motion.div>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="bg-slate-50 dark:bg-slate-900 py-16">
+        <div className="max-w-6xl mx-auto px-6">
+          <h2 className="text-2xl font-black text-slate-900 dark:text-white text-center mb-10">Why Our CV Builder</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {FEATURES.map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="p-5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                <Icon className="w-8 h-8 text-blue-600 mb-3" />
+                <h3 className="font-bold text-slate-900 dark:text-white">{title}</h3>
+                <p className="text-sm text-slate-500 mt-1">{desc}</p>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
+      </section>
 
-        {/* Features Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-16"
+      {/* CTA */}
+      <section className="max-w-6xl mx-auto px-6 py-16 text-center">
+        <h2 className="text-2xl font-black text-slate-900 dark:text-white">Ready to Build Your Swiss CV?</h2>
+        <p className="text-slate-500 mt-2">Start free. No account required to try the editor.</p>
+        <Link
+          href="/tools/cv-editor"
+          className="inline-flex items-center gap-2 mt-6 px-8 py-3.5 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 shadow-lg shadow-blue-600/25 transition-all text-lg"
         >
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-            Why Our CV Templates?
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                icon: Briefcase,
-                title: 'Swiss Standards',
-                description: 'Designed specifically for Swiss employers and ATS systems'
-              },
-              {
-                icon: GraduationCap,
-                title: 'Multi-Language',
-                description: 'Templates available in German, French, Italian, and English'
-              },
-              {
-                icon: Award,
-                title: 'ATS-Optimized',
-                description: 'Pass applicant tracking systems with proper formatting'
-              },
-              {
-                icon: Download,
-                title: 'Easy to Edit',
-                description: 'Download in Word, PDF, or Google Docs formats'
-              }
-            ].map((feature, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow text-center"
-              >
-                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <feature.icon className="w-6 h-6 text-blue-600" />
-                </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">{feature.title}</h3>
-                <p className="text-sm text-gray-600">{feature.description}</p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* CTA Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl p-12 text-white text-center"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Ready to Land Your Dream Job in Switzerland?
-          </h2>
-          <p className="text-xl text-indigo-100 mb-8 max-w-2xl mx-auto">
-            Get notified when our professional CV templates are available, plus receive exclusive tips for Swiss job applications.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center gap-2 bg-white text-indigo-600 hover:bg-indigo-50 font-semibold px-8 py-4 rounded-lg transition-all"
-            >
-              <span>Get Notified</span>
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link
-              href="/pricing"
-              className="inline-flex items-center justify-center gap-2 bg-indigo-500 hover:bg-indigo-400 font-semibold px-8 py-4 rounded-lg transition-all border-2 border-white/20"
-            >
-              <span>View Pricing</span>
-            </Link>
-          </div>
-        </motion.div>
-      </div>
+          Launch CV Builder <ArrowRight className="w-5 h-5" />
+        </Link>
+      </section>
     </div>
   )
 }

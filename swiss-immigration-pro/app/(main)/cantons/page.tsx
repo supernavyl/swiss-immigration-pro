@@ -12,6 +12,7 @@ import {
   PolarAngleAxis, PolarRadiusAxis, Radar, LineChart, Line 
 } from 'recharts'
 import { CANTONS } from '@/lib/constants'
+import MainHeader from '@/components/layout/MainHeader'
 
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6']
 
@@ -191,40 +192,21 @@ const visaHacks = [
   },
 ]
 
-// Canton Comparison Radar Data
+// Canton Comparison Radar Data — each entry is a metric (spoke), each canton is a series
 const cantonRadarData = [
-  {
-    canton: 'Zurich',
-    successRate: 22,
-    processingSpeed: 60,
-    salaryLevel: 95,
-    costOfLiving: 90,
-    opportunities: 100,
-    languageReq: 85,
-  },
-  {
-    canton: 'Basel',
-    successRate: 85,
-    processingSpeed: 75,
-    salaryLevel: 85,
-    costOfLiving: 75,
-    opportunities: 80,
-    languageReq: 60,
-  },
-  {
-    canton: 'Aargau',
-    successRate: 70,
-    processingSpeed: 80,
-    salaryLevel: 70,
-    costOfLiving: 65,
-    opportunities: 70,
-    languageReq: 60,
-  },
+  { metric: 'Success Rate',     Zurich: 22,  Basel: 85, Aargau: 70 },
+  { metric: 'Processing Speed', Zurich: 60,  Basel: 75, Aargau: 80 },
+  { metric: 'Salary Level',     Zurich: 95,  Basel: 85, Aargau: 70 },
+  { metric: 'Cost of Living',   Zurich: 90,  Basel: 75, Aargau: 65 },
+  { metric: 'Opportunities',    Zurich: 100, Basel: 80, Aargau: 70 },
+  { metric: 'Language Req',     Zurich: 85,  Basel: 60, Aargau: 60 },
 ]
 
 export default function CantonsPage() {
   return (
-    <div className="min-h-screen bg-white py-24">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
+      <MainHeader />
+      <div className="py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -232,10 +214,10 @@ export default function CantonsPage() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
             Cantonal Tips & Visa Hacks
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
             Strategic insights, success rates, and proven shortcuts to maximize your Swiss work permit approval chances
           </p>
         </motion.div>
@@ -249,9 +231,9 @@ export default function CantonsPage() {
           >
             <div className="flex items-center gap-3 mb-4">
               <BarChart3 className="w-8 h-8 text-blue-600" />
-              <h2 className="text-4xl font-bold text-gray-900">Canton Success Rates (2025)</h2>
+              <h2 className="text-4xl font-bold text-gray-900 dark:text-white">Canton Success Rates (2025)</h2>
             </div>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-gray-600 dark:text-gray-400">
               Approval rates vary dramatically by canton - strategic selection can multiply your chances 2-3x
             </p>
           </motion.div>
@@ -263,7 +245,7 @@ export default function CantonsPage() {
             transition={{ delay: 0.1 }}
             className="card p-8 mb-8"
           >
-            <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
               <TrendingUp className="w-6 h-6 text-green-600" />
               Approval Rates by Canton (Non-EU Work Permits)
             </h3>
@@ -288,20 +270,20 @@ export default function CantonsPage() {
             transition={{ delay: 0.2 }}
             className="card p-8"
           >
-            <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
               <Building2 className="w-6 h-6 text-blue-600" />
               Complete Canton Comparison
             </h3>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b-2 border-gray-200">
-                    <th className="text-left py-4 px-4 font-semibold text-gray-900">Canton</th>
-                    <th className="text-right py-4 px-4 font-semibold text-gray-900">Success Rate</th>
-                    <th className="text-right py-4 px-4 font-semibold text-gray-900">Processing (weeks)</th>
-                    <th className="text-right py-4 px-4 font-semibold text-gray-900">Min Salary (k CHF)</th>
-                    <th className="text-left py-4 px-4 font-semibold text-gray-900">Language</th>
-                    <th className="text-left py-4 px-4 font-semibold text-gray-900">Priority Industries</th>
+                  <tr className="border-b-2 border-gray-200 dark:border-gray-700">
+                    <th className="text-left py-4 px-4 font-semibold text-gray-900 dark:text-white">Canton</th>
+                    <th className="text-right py-4 px-4 font-semibold text-gray-900 dark:text-white">Success Rate</th>
+                    <th className="text-right py-4 px-4 font-semibold text-gray-900 dark:text-white">Processing (weeks)</th>
+                    <th className="text-right py-4 px-4 font-semibold text-gray-900 dark:text-white">Min Salary (k CHF)</th>
+                    <th className="text-left py-4 px-4 font-semibold text-gray-900 dark:text-white">Language</th>
+                    <th className="text-left py-4 px-4 font-semibold text-gray-900 dark:text-white">Priority Industries</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -311,11 +293,11 @@ export default function CantonsPage() {
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.3 + idx * 0.05 }}
-                      className={`border-b border-gray-100 hover:bg-blue-50 transition-colors ${
-                        canton.successRate >= 35 ? 'bg-green-50/30' : canton.successRate >= 28 ? 'bg-amber-50/30' : ''
+                      className={`border-b border-gray-100 dark:border-gray-700 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors ${
+                        canton.successRate >= 35 ? 'bg-green-50/30 dark:bg-green-900/20' : canton.successRate >= 28 ? 'bg-amber-50/30 dark:bg-amber-900/20' : ''
                       }`}
                     >
-                      <td className="py-4 px-4 font-medium text-gray-900">{canton.canton}</td>
+                      <td className="py-4 px-4 font-medium text-gray-900 dark:text-white">{canton.canton}</td>
                       <td className="py-4 px-4 text-right">
                         <span className={`font-bold ${
                           canton.successRate >= 35 ? 'text-green-600' : canton.successRate >= 28 ? 'text-amber-600' : 'text-red-600'
@@ -323,10 +305,10 @@ export default function CantonsPage() {
                           {canton.successRate}%
                         </span>
                       </td>
-                      <td className="py-4 px-4 text-right text-gray-700">{canton.processing}</td>
-                      <td className="py-4 px-4 text-right text-gray-700">{canton.minSalary}</td>
-                      <td className="py-4 px-4 text-gray-700">{canton.language}</td>
-                      <td className="py-4 px-4 text-gray-700">{canton.priority}</td>
+                      <td className="py-4 px-4 text-right text-gray-700 dark:text-gray-200">{canton.processing}</td>
+                      <td className="py-4 px-4 text-right text-gray-700 dark:text-gray-200">{canton.minSalary}</td>
+                      <td className="py-4 px-4 text-gray-700 dark:text-gray-200">{canton.language}</td>
+                      <td className="py-4 px-4 text-gray-700 dark:text-gray-200">{canton.priority}</td>
                     </motion.tr>
                   ))}
                 </tbody>
@@ -344,9 +326,9 @@ export default function CantonsPage() {
           >
             <div className="flex items-center gap-3 mb-4">
               <Clock className="w-8 h-8 text-amber-600" />
-              <h2 className="text-4xl font-bold text-gray-900">Quota Exhaustion Timeline</h2>
+              <h2 className="text-4xl font-bold text-gray-900 dark:text-white">Quota Exhaustion Timeline</h2>
             </div>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-gray-600 dark:text-gray-400">
               Track when quotas fill up by canton - timing is critical for approval success
             </p>
           </motion.div>
@@ -357,7 +339,7 @@ export default function CantonsPage() {
             transition={{ delay: 0.1 }}
             className="card p-8"
           >
-            <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
               <TrendingDown className="w-6 h-6 text-amber-600" />
               Quota Usage by Month (% Exhausted)
             </h3>
@@ -411,9 +393,9 @@ export default function CantonsPage() {
           >
             <div className="flex items-center gap-3 mb-4">
               <Briefcase className="w-8 h-8 text-purple-600" />
-              <h2 className="text-4xl font-bold text-gray-900">Industry-Canton Matching</h2>
+              <h2 className="text-4xl font-bold text-gray-900 dark:text-white">Industry-Canton Matching</h2>
             </div>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-gray-600 dark:text-gray-400">
               Match your industry to the best cantons for maximum approval chances
             </p>
           </motion.div>
@@ -441,10 +423,10 @@ export default function CantonsPage() {
                         <div>
                           <h4 className="text-lg font-bold text-gray-900">{canton.canton}</h4>
                           <div className="flex items-center gap-4 mt-2">
-                            <span className="text-sm text-gray-600">
+                            <span className="text-sm text-gray-600 dark:text-gray-400">
                               Match: <span className="font-semibold text-purple-600">{canton.match}%</span>
                             </span>
-                            <span className="text-sm text-gray-600">
+                            <span className="text-sm text-gray-600 dark:text-gray-400">
                               Success: <span className="font-semibold text-green-600">{canton.success}%</span>
                             </span>
                           </div>
@@ -476,9 +458,9 @@ export default function CantonsPage() {
           >
             <div className="flex items-center gap-3 mb-4">
               <Zap className="w-8 h-8 text-amber-600" />
-              <h2 className="text-4xl font-bold text-gray-900">Proven Visa Hacks & Shortcuts</h2>
+              <h2 className="text-4xl font-bold text-gray-900 dark:text-white">Proven Visa Hacks & Shortcuts</h2>
             </div>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-gray-600 dark:text-gray-400">
               Insider strategies and shortcuts to maximize your approval chances and speed up the process
             </p>
           </motion.div>
@@ -550,9 +532,9 @@ export default function CantonsPage() {
           >
             <div className="flex items-center gap-3 mb-4">
               <Target className="w-8 h-8 text-indigo-600" />
-              <h2 className="text-4xl font-bold text-gray-900">Multi-Factor Canton Comparison</h2>
+              <h2 className="text-4xl font-bold text-gray-900 dark:text-white">Multi-Factor Canton Comparison</h2>
             </div>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-gray-600 dark:text-gray-400">
               Compare cantons across multiple dimensions to find your best match
             </p>
           </motion.div>
@@ -566,32 +548,32 @@ export default function CantonsPage() {
             <ResponsiveContainer width="100%" height={500}>
               <RadarChart data={cantonRadarData}>
                 <PolarGrid stroke="#e5e7eb" />
-                <PolarAngleAxis 
-                  dataKey="canton" 
-                  tick={{ fill: '#374151', fontSize: 14, fontWeight: 'bold' }}
+                <PolarAngleAxis
+                  dataKey="metric"
+                  tick={{ fill: '#374151', fontSize: 13, fontWeight: 'bold' }}
                 />
                 <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fill: '#6b7280', fontSize: 12 }} />
-                <Radar 
-                  name="Zurich" 
-                  dataKey="successRate" 
-                  stroke="#ef4444" 
-                  fill="#ef4444" 
+                <Radar
+                  name="Zurich"
+                  dataKey="Zurich"
+                  stroke="#ef4444"
+                  fill="#ef4444"
                   fillOpacity={0.3}
                   strokeWidth={2}
                 />
-                <Radar 
-                  name="Basel" 
-                  dataKey="successRate" 
-                  stroke="#10b981" 
-                  fill="#10b981" 
+                <Radar
+                  name="Basel"
+                  dataKey="Basel"
+                  stroke="#10b981"
+                  fill="#10b981"
                   fillOpacity={0.3}
                   strokeWidth={2}
                 />
-                <Radar 
-                  name="Aargau" 
-                  dataKey="successRate" 
-                  stroke="#3b82f6" 
-                  fill="#3b82f6" 
+                <Radar
+                  name="Aargau"
+                  dataKey="Aargau"
+                  stroke="#3b82f6"
+                  fill="#3b82f6"
                   fillOpacity={0.3}
                   strokeWidth={2}
                 />
@@ -637,7 +619,7 @@ export default function CantonsPage() {
           >
             <div className="flex items-center gap-3 mb-4">
               <Lightbulb className="w-8 h-8 text-amber-600" />
-              <h2 className="text-4xl font-bold text-gray-900">Key Strategic Insights</h2>
+              <h2 className="text-4xl font-bold text-gray-900 dark:text-white">Key Strategic Insights</h2>
             </div>
           </motion.div>
 
@@ -646,7 +628,7 @@ export default function CantonsPage() {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 }}
-              className="card p-8 bg-gradient-to-br from-green-50 to-emerald-50 border-green-200"
+              className="card p-8 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-800 border-green-200 dark:border-gray-700"
             >
               <div className="flex items-center gap-3 mb-4">
                 <CheckCircle className="w-8 h-8 text-green-600" />
@@ -680,32 +662,32 @@ export default function CantonsPage() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
-              className="card p-8 bg-gradient-to-br from-red-50 to-rose-50 border-red-200"
+              className="card p-8 bg-gradient-to-br from-red-50 to-rose-50 dark:from-gray-800 dark:to-gray-800 border-red-200 dark:border-gray-700"
             >
               <div className="flex items-center gap-3 mb-4">
                 <AlertCircle className="w-8 h-8 text-red-600" />
-                <h3 className="text-2xl font-bold text-gray-900">Common Mistakes to Avoid</h3>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Common Mistakes to Avoid</h3>
               </div>
               <ul className="space-y-3">
                 <li className="flex items-start gap-2">
                   <ArrowRight className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
-                  <span className="text-gray-700">Applying in November: &lt;10% approval rates, quotas exhausted</span>
+                  <span className="text-gray-700 dark:text-gray-200">Applying in November: &lt;10% approval rates, quotas exhausted</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <ArrowRight className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
-                  <span className="text-gray-700">Picking Zurich first: 15% success vs 42% in Basel (3x worse)</span>
+                  <span className="text-gray-700 dark:text-gray-200">Picking Zurich first: 15% success vs 42% in Basel (3x worse)</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <ArrowRight className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
-                  <span className="text-gray-700">Salary below cantonal minimum: Automatic rejection in most cases</span>
+                  <span className="text-gray-700 dark:text-gray-200">Salary below cantonal minimum: Automatic rejection in most cases</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <ArrowRight className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
-                  <span className="text-gray-700">Missing language certificates: Major delay or rejection factor</span>
+                  <span className="text-gray-700 dark:text-gray-200">Missing language certificates: Major delay or rejection factor</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <ArrowRight className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
-                  <span className="text-gray-700">Incomplete documentation: 31% of rejections due to missing docs</span>
+                  <span className="text-gray-700 dark:text-gray-200">Incomplete documentation: 31% of rejections due to missing docs</span>
                 </li>
               </ul>
             </motion.div>
@@ -727,11 +709,12 @@ export default function CantonsPage() {
           </p>
           <a 
             href="/pricing" 
-            className="inline-block bg-white text-blue-600 hover:bg-blue-50 font-bold px-8 py-4 rounded-lg transition-all transform hover:scale-105"
+            className="inline-block bg-white dark:bg-gray-800 text-blue-600 hover:bg-blue-50 dark:hover:bg-gray-700 font-bold px-8 py-4 rounded-lg transition-all transform hover:scale-105"
           >
             View Pricing Plans →
           </a>
         </motion.div>
+      </div>
       </div>
     </div>
   )

@@ -1,8 +1,7 @@
 'use client'
 
-import ResumeEditor from '@/components/resume/ResumeEditor'
+import CVEditor from '@/components/cv-builder/CVEditor'
 
 export default function CVEditorPage() {
-  return <ResumeEditor />
+  return <CVEditor />
 }
-

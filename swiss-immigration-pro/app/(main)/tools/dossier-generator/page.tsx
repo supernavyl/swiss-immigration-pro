@@ -100,9 +100,9 @@ export default function DossierGenerator() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 selection:bg-blue-100 selection:text-blue-900">
+    <div className="min-h-screen bg-white dark:bg-gray-950 text-slate-900 dark:text-white selection:bg-blue-100 dark:selection:bg-blue-900/30 selection:text-blue-900 dark:selection:text-blue-200">
       {/* Premium Header */}
-      <header className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 border-b border-slate-100 relative overflow-hidden">
+      <header className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 border-b border-slate-100 dark:border-gray-700 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_-20%,rgba(59,130,246,0.05),transparent_70%)] pointer-events-none" />
         <div className="max-w-5xl mx-auto">
           <motion.div
@@ -110,14 +110,14 @@ export default function DossierGenerator() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 dark:bg-gray-800 text-white text-[10px] font-bold uppercase tracking-widest mb-6">
               <Sparkles className="w-3 h-3 text-blue-400" />
               Swiss Application Standard
             </div>
-            <h1 className="text-5xl md:text-6xl font-black text-slate-900 mb-6 tracking-tight">
+            <h1 className="text-5xl md:text-6xl font-black text-slate-900 dark:text-white mb-6 tracking-tight">
               Application <span className="text-blue-600">Dossier</span>.
             </h1>
-            <p className="text-xl text-slate-500 max-w-2xl mx-auto font-medium leading-relaxed">
+            <p className="text-xl text-slate-500 dark:text-gray-400 max-w-2xl mx-auto font-medium leading-relaxed">
               Generate a professional, Swiss-standard application package that landlords will actually read.
             </p>
           </motion.div>
@@ -128,11 +128,11 @@ export default function DossierGenerator() {
         {/* Progress Tracker */}
         {!generated && (
           <div className="flex items-center justify-between mb-16 relative">
-            <div className="absolute top-1/2 left-0 w-full h-0.5 bg-slate-100 -translate-y-1/2 -z-10" />
+            <div className="absolute top-1/2 left-0 w-full h-0.5 bg-slate-100 dark:bg-gray-700 -translate-y-1/2 -z-10" />
             {[1, 2, 3].map((s) => (
               <div 
                 key={s}
-                className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black transition-all ${step >= s ? 'bg-blue-600 text-white shadow-xl shadow-blue-500/20' : 'bg-white border-2 border-slate-100 text-slate-300'}`}
+                className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black transition-all ${step >= s ? 'bg-blue-600 text-white shadow-xl shadow-blue-500/20' : 'bg-white dark:bg-gray-800 border-2 border-slate-100 dark:border-gray-700 text-slate-300 dark:text-gray-500'}`}
               >
                 {s < step ? <CheckCircle2 className="w-6 h-6" /> : s}
               </div>
@@ -147,59 +147,59 @@ export default function DossierGenerator() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="bg-white rounded-[40px] border border-slate-100 shadow-2xl shadow-blue-900/5 p-8 md:p-12"
+              className="bg-white dark:bg-gray-800 rounded-[40px] border border-slate-100 dark:border-gray-700 shadow-2xl shadow-blue-900/5 p-8 md:p-12"
             >
               {step === 1 && (
                 <div className="space-y-8">
                   <div className="flex items-center gap-4 mb-8">
-                    <div className="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                    <div className="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-900/30 text-blue-600 flex items-center justify-center">
                       <User className="w-7 h-7" />
                     </div>
                     <div>
-                      <h2 className="text-2xl font-black text-slate-900">Personal Profile</h2>
-                      <p className="text-slate-500 font-medium text-sm">Basic details required for the Mietinteressenten form.</p>
+                      <h2 className="text-2xl font-black text-slate-900 dark:text-white">Personal Profile</h2>
+                      <p className="text-slate-500 dark:text-gray-400 font-medium text-sm">Basic details required for the Mietinteressenten form.</p>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label className="text-xs font-black uppercase tracking-widest text-slate-400">Full Name</label>
+                      <label className="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-gray-500">Full Name</label>
                       <input 
                         type="text" 
                         value={data.personal.fullName}
                         onChange={(e) => updatePersonal('fullName', e.target.value)}
                         placeholder="Jean-Pierre Muller"
-                        className="w-full px-6 py-4 bg-slate-50 border-0 focus:ring-2 focus:ring-blue-500/20 rounded-2xl font-bold"
+                        className="w-full px-6 py-4 bg-slate-50 dark:bg-gray-900 border-0 focus:ring-2 focus:ring-blue-500/20 rounded-2xl font-bold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-gray-500"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs font-black uppercase tracking-widest text-slate-400">Nationality</label>
+                      <label className="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-gray-500">Nationality</label>
                       <input 
                         type="text" 
                         value={data.personal.nationality}
                         onChange={(e) => updatePersonal('nationality', e.target.value)}
                         placeholder="French / US / etc."
-                        className="w-full px-6 py-4 bg-slate-50 border-0 focus:ring-2 focus:ring-blue-500/20 rounded-2xl font-bold"
+                        className="w-full px-6 py-4 bg-slate-50 dark:bg-gray-900 border-0 focus:ring-2 focus:ring-blue-500/20 rounded-2xl font-bold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-gray-500"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs font-black uppercase tracking-widest text-slate-400">Email Address</label>
+                      <label className="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-gray-500">Email Address</label>
                       <input 
                         type="email" 
                         value={data.personal.email}
                         onChange={(e) => updatePersonal('email', e.target.value)}
                         placeholder="jean.muller@example.com"
-                        className="w-full px-6 py-4 bg-slate-50 border-0 focus:ring-2 focus:ring-blue-500/20 rounded-2xl font-bold"
+                        className="w-full px-6 py-4 bg-slate-50 dark:bg-gray-900 border-0 focus:ring-2 focus:ring-blue-500/20 rounded-2xl font-bold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-gray-500"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs font-black uppercase tracking-widest text-slate-400">Phone Number</label>
+                      <label className="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-gray-500">Phone Number</label>
                       <input 
                         type="tel" 
                         value={data.personal.phone}
                         onChange={(e) => updatePersonal('phone', e.target.value)}
                         placeholder="+41 79 000 00 00"
-                        className="w-full px-6 py-4 bg-slate-50 border-0 focus:ring-2 focus:ring-blue-500/20 rounded-2xl font-bold"
+                        className="w-full px-6 py-4 bg-slate-50 dark:bg-gray-900 border-0 focus:ring-2 focus:ring-blue-500/20 rounded-2xl font-bold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-gray-500"
                       />
                     </div>
                   </div>
@@ -209,52 +209,52 @@ export default function DossierGenerator() {
               {step === 2 && (
                 <div className="space-y-8">
                   <div className="flex items-center gap-4 mb-8">
-                    <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                    <div className="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 flex items-center justify-center">
                       <Briefcase className="w-7 h-7" />
                     </div>
                     <div>
-                      <h2 className="text-2xl font-black text-slate-900">Employment & Income</h2>
-                      <p className="text-slate-500 font-medium text-sm">Landlords require proof of 3x rent income.</p>
+                      <h2 className="text-2xl font-black text-slate-900 dark:text-white">Employment & Income</h2>
+                      <p className="text-slate-500 dark:text-gray-400 font-medium text-sm">Landlords require proof of 3x rent income.</p>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label className="text-xs font-black uppercase tracking-widest text-slate-400">Current Employer</label>
+                      <label className="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-gray-500">Current Employer</label>
                       <input 
                         type="text" 
                         value={data.employment.employer}
                         onChange={(e) => updateEmployment('employer', e.target.value)}
                         placeholder="Google Switzerland / Credit Suisse / etc."
-                        className="w-full px-6 py-4 bg-slate-50 border-0 focus:ring-2 focus:ring-blue-500/20 rounded-2xl font-bold"
+                        className="w-full px-6 py-4 bg-slate-50 dark:bg-gray-900 border-0 focus:ring-2 focus:ring-blue-500/20 rounded-2xl font-bold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-gray-500"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs font-black uppercase tracking-widest text-slate-400">Position / Job Title</label>
+                      <label className="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-gray-500">Position / Job Title</label>
                       <input 
                         type="text" 
                         value={data.employment.position}
                         onChange={(e) => updateEmployment('position', e.target.value)}
                         placeholder="Software Engineer"
-                        className="w-full px-6 py-4 bg-slate-50 border-0 focus:ring-2 focus:ring-blue-500/20 rounded-2xl font-bold"
+                        className="w-full px-6 py-4 bg-slate-50 dark:bg-gray-900 border-0 focus:ring-2 focus:ring-blue-500/20 rounded-2xl font-bold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-gray-500"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs font-black uppercase tracking-widest text-slate-400">Gross Annual Salary (CHF)</label>
+                      <label className="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-gray-500">Gross Annual Salary (CHF)</label>
                       <input 
                         type="number" 
                         value={data.employment.salary}
                         onChange={(e) => updateEmployment('salary', e.target.value)}
                         placeholder="120000"
-                        className="w-full px-6 py-4 bg-slate-50 border-0 focus:ring-2 focus:ring-blue-500/20 rounded-2xl font-bold"
+                        className="w-full px-6 py-4 bg-slate-50 dark:bg-gray-900 border-0 focus:ring-2 focus:ring-blue-500/20 rounded-2xl font-bold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-gray-500"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs font-black uppercase tracking-widest text-slate-400">Contract Type</label>
+                      <label className="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-gray-500">Contract Type</label>
                       <select 
                         value={data.employment.contractType}
                         onChange={(e) => updateEmployment('contractType', e.target.value)}
-                        className="w-full px-6 py-4 bg-slate-50 border-0 focus:ring-2 focus:ring-blue-500/20 rounded-2xl font-bold appearance-none"
+                        className="w-full px-6 py-4 bg-slate-50 dark:bg-gray-900 border-0 focus:ring-2 focus:ring-blue-500/20 rounded-2xl font-bold text-slate-900 dark:text-white appearance-none"
                       >
                         <option value="Permanent">Permanent (Unlimited)</option>
                         <option value="Fixed-term">Fixed-term</option>
@@ -268,12 +268,12 @@ export default function DossierGenerator() {
               {step === 3 && (
                 <div className="space-y-8">
                   <div className="flex items-center gap-4 mb-8">
-                    <div className="w-14 h-14 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center">
+                    <div className="w-14 h-14 rounded-2xl bg-purple-50 dark:bg-purple-900/30 text-purple-600 flex items-center justify-center">
                       <ShieldCheck className="w-7 h-7" />
                     </div>
                     <div>
-                      <h2 className="text-2xl font-black text-slate-900">Checklist & Verification</h2>
-                      <p className="text-slate-500 font-medium text-sm">Select the documents you have ready to include.</p>
+                      <h2 className="text-2xl font-black text-slate-900 dark:text-white">Checklist & Verification</h2>
+                      <p className="text-slate-500 dark:text-gray-400 font-medium text-sm">Select the documents you have ready to include.</p>
                     </div>
                   </div>
 
@@ -288,13 +288,13 @@ export default function DossierGenerator() {
                       <button
                         key={doc.id}
                         onClick={() => toggleDocument(doc.id as keyof DossierData['documents'])}
-                        className={`w-full flex items-center justify-between p-6 rounded-3xl border-2 transition-all ${data.documents[doc.id as keyof DossierData['documents']] ? 'border-blue-600 bg-blue-50/50 shadow-lg shadow-blue-500/5' : 'border-slate-100 hover:border-slate-200 bg-white'}`}
+                        className={`w-full flex items-center justify-between p-6 rounded-3xl border-2 transition-all ${data.documents[doc.id as keyof DossierData['documents']] ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-900/30 shadow-lg shadow-blue-500/5' : 'border-slate-100 dark:border-gray-700 hover:border-slate-200 dark:hover:border-gray-600 bg-white dark:bg-gray-800'}`}
                       >
                         <div className="text-left">
-                          <div className="font-black text-slate-900">{doc.label}</div>
-                          <div className="text-xs text-slate-500 font-medium mt-1">{doc.desc}</div>
+                          <div className="font-black text-slate-900 dark:text-white">{doc.label}</div>
+                          <div className="text-xs text-slate-500 dark:text-gray-400 font-medium mt-1">{doc.desc}</div>
                         </div>
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${data.documents[doc.id as keyof DossierData['documents']] ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-300'}`}>
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${data.documents[doc.id as keyof DossierData['documents']] ? 'bg-blue-600 text-white' : 'bg-slate-100 dark:bg-gray-700 text-slate-300 dark:text-gray-500'}`}>
                           <CheckCircle2 className="w-5 h-5" />
                         </div>
                       </button>
@@ -303,11 +303,11 @@ export default function DossierGenerator() {
                 </div>
               )}
 
-              <div className="mt-12 flex items-center justify-between pt-12 border-t border-slate-100">
+              <div className="mt-12 flex items-center justify-between pt-12 border-t border-slate-100 dark:border-gray-700">
                 <button
                   onClick={() => setStep(Math.max(1, step - 1))}
                   disabled={step === 1}
-                  className="px-8 py-4 text-slate-500 font-bold hover:text-slate-900 disabled:opacity-0 transition-all"
+                  className="px-8 py-4 text-slate-500 dark:text-gray-400 font-bold hover:text-slate-900 dark:hover:text-white disabled:opacity-0 transition-all"
                 >
                   Back
                 </button>
@@ -340,26 +340,26 @@ export default function DossierGenerator() {
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-white rounded-[48px] border-2 border-slate-100 p-12 text-center"
+              className="bg-white dark:bg-gray-800 rounded-[48px] border-2 border-slate-100 dark:border-gray-700 p-12 text-center"
             >
-              <div className="w-24 h-24 bg-emerald-50 rounded-[32px] flex items-center justify-center mx-auto mb-10 rotate-12 shadow-xl shadow-emerald-500/10">
+              <div className="w-24 h-24 bg-emerald-50 dark:bg-emerald-900/30 rounded-[32px] flex items-center justify-center mx-auto mb-10 rotate-12 shadow-xl shadow-emerald-500/10">
                 <CheckCircle2 className="w-12 h-12 text-emerald-600 -rotate-12" />
               </div>
-              <h2 className="text-4xl font-black text-slate-900 mb-6 tracking-tight">Dossier Ready!</h2>
-              <p className="text-lg text-slate-500 max-w-lg mx-auto font-medium mb-12">
+              <h2 className="text-4xl font-black text-slate-900 dark:text-white mb-6 tracking-tight">Dossier Ready!</h2>
+              <p className="text-lg text-slate-500 dark:text-gray-400 max-w-lg mx-auto font-medium mb-12">
                 Your professional application package has been generated. It includes a tailored cover letter and organized document sheets.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-                <div className="bg-slate-50 p-6 rounded-[32px] border border-slate-100">
+                <div className="bg-slate-50 dark:bg-gray-900 p-6 rounded-[32px] border border-slate-100 dark:border-gray-700">
                   <FileText className="w-8 h-8 text-blue-600 mb-4 mx-auto" />
-                  <div className="font-black text-slate-900 mb-1">Application Form</div>
-                  <div className="text-xs text-slate-500">Filled & Validated</div>
+                  <div className="font-black text-slate-900 dark:text-white mb-1">Application Form</div>
+                  <div className="text-xs text-slate-500 dark:text-gray-400">Filled & Validated</div>
                 </div>
-                <div className="bg-slate-50 p-6 rounded-[32px] border border-slate-100">
+                <div className="bg-slate-50 dark:bg-gray-900 p-6 rounded-[32px] border border-slate-100 dark:border-gray-700">
                   <CreditCard className="w-8 h-8 text-emerald-600 mb-4 mx-auto" />
-                  <div className="font-black text-slate-900 mb-1">Financial Sheet</div>
-                  <div className="text-xs text-slate-500">3.2x Rent Ratio</div>
+                  <div className="font-black text-slate-900 dark:text-white mb-1">Financial Sheet</div>
+                  <div className="text-xs text-slate-500 dark:text-gray-400">3.2x Rent Ratio</div>
                 </div>
               </div>
 
@@ -379,7 +379,7 @@ export default function DossierGenerator() {
 
               <button 
                 onClick={() => {setGenerated(false); setStep(1);}}
-                className="mt-10 text-slate-400 font-bold hover:text-slate-900 transition-all"
+                className="mt-10 text-slate-400 dark:text-gray-500 font-bold hover:text-slate-900 dark:hover:text-white transition-all"
               >
                 Start New Dossier
               </button>
@@ -390,21 +390,21 @@ export default function DossierGenerator() {
         {/* Pro Tips Section */}
         {!generated && (
           <div className="mt-24 grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="p-8 bg-slate-50 rounded-[40px] border border-slate-100">
-              <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+            <div className="p-8 bg-slate-50 dark:bg-gray-900 rounded-[40px] border border-slate-100 dark:border-gray-700">
+              <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
                 <Info className="w-6 h-6 text-blue-600" />
               </div>
-              <h4 className="text-xl font-black text-slate-900 mb-3">Swiss Application Secret</h4>
-              <p className="text-slate-500 font-medium leading-relaxed">
+              <h4 className="text-xl font-black text-slate-900 dark:text-white mb-3">Swiss Application Secret</h4>
+              <p className="text-slate-500 dark:text-gray-400 font-medium leading-relaxed">
                 Landlords in Switzerland receive hundreds of emails. A professionally organized PDF dossier with a clear summary page increases your response rate by 65%.
               </p>
             </div>
-            <div className="p-8 bg-slate-50 rounded-[40px] border border-slate-100">
-              <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+            <div className="p-8 bg-slate-50 dark:bg-gray-900 rounded-[40px] border border-slate-100 dark:border-gray-700">
+              <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
                 <ShieldCheck className="w-6 h-6 text-emerald-600" />
               </div>
-              <h4 className="text-xl font-black text-slate-900 mb-3">Privacy First</h4>
-              <p className="text-slate-500 font-medium leading-relaxed">
+              <h4 className="text-xl font-black text-slate-900 dark:text-white mb-3">Privacy First</h4>
+              <p className="text-slate-500 dark:text-gray-400 font-medium leading-relaxed">
                 Your sensitive employment and identity data is processed locally. We don't store your personal documents on our servers.
               </p>
             </div>
