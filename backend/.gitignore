@@ -1,0 +1,30 @@
+# Virtual environment
+.venv/
+venv/
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ruff cache
+.ruff_cache/
+
+# IDE
+.vscode/
+.idea/
+
+# Runtime
+uploads/
+*.log
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/

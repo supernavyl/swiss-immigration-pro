@@ -1,0 +1,9 @@
+{
+  "include": ["app", "tests"],
+  "pythonPath": "/home/supernovyl/sip/backend/.venv/bin/python",
+  "venvPath": "/home/supernovyl/sip/backend",
+  "venv": ".venv",
+  "pythonVersion": "3.14",
+  "typeCheckingMode": "standard",
+  "reportMissingTypeStubs": false
+}

@@ -1,0 +1,29 @@
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+sqlalchemy[asyncio]>=2.0.36
+asyncpg>=0.30.0
+alembic>=1.14.0
+pydantic[email]>=2.10.0
+pydantic-settings>=2.7.0
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4
+stripe>=11.0.0
+resend>=2.5.0
+groq>=0.13.0
+google-generativeai>=0.8.0
+openai>=1.57.0
+reportlab>=4.2.0
+httpx>=0.28.0
+python-multipart>=0.0.18
+python-dotenv>=1.0.1
+slowapi>=0.1.9
+redis>=5.0.0
+sentry-sdk[fastapi]>=2.0.0
+celery[redis]>=5.4.0
+# ML deps moved to requirements-ml.txt for CPU-only PyTorch (saves ~6GB)
+# Install with: pip install --extra-index-url https://download.pytorch.org/whl/cpu -r requirements-ml.txt
+numpy>=1.26.0
+PyMuPDF>=1.24.0
+python-docx>=1.1.0
+pytesseract>=0.3.10
+Pillow>=10.0.0

@@ -1,0 +1,4 @@
+# ML/RAG dependencies — install separately with CPU-only PyTorch
+# Usage: pip install --extra-index-url https://download.pytorch.org/whl/cpu -r requirements-ml.txt
+sentence-transformers>=3.0.0
+numpy>=1.26.0
