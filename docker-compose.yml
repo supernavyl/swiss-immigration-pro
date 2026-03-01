@@ -83,6 +83,9 @@ services:
       SENTRY_DSN: ${SENTRY_DSN:-}
       DEBUG: ${DEBUG:-false}
       CORS_ORIGINS: '["http://localhost:3000","http://localhost","http://frontend:3000"]'
+      HF_HOME: /app/.cache/huggingface
+      TRANSFORMERS_CACHE: /app/.cache/huggingface
+      WEB_CONCURRENCY: "2"
     networks:
       - backend-net
       - frontend-net
@@ -125,6 +128,8 @@ services:
       GROQ_API_KEY: ${GROQ_API_KEY:-}
       GOOGLE_GEMINI_API_KEY: ${GOOGLE_GEMINI_API_KEY:-}
       APP_URL: ${APP_URL:-http://localhost}
+      HF_HOME: /app/.cache/huggingface
+      TRANSFORMERS_CACHE: /app/.cache/huggingface
     networks:
       - backend-net
     volumes:

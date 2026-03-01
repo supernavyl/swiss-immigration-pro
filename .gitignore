@@ -1,72 +1,158 @@
-# Personal files and directories
-.VirtualBox/
-.android/
-.cargo/
-.chocolatey/
-.claude.json
-.claude.json.backup
-.claude/
-.cursor/
-.dbus-keyrings/
-.docker/
-.dotnet/
-.env.local
-.gitconfig
-.ipython/
-.lesshst
-.nuget/
-.ollama/
-.pkg-cache/
-.qtemu/
-.rustup/
-.ssh/
-.vscode/
-.yarnrc
-AppData/
-BrawlhallaReplays/
-Contacts/
-Desktop/
-Documents/
-Downloads/
-Favorites/
-Library/
-Links/
-Logs/
-Music/
-My project*/
-NTUSER.DAT*
-ntuser.dat.*
-ntuser.ini
-OneDrive/
-Packages/
-Pictures/
-Saved Games/
-Searches/
-UserSettings/
-Videos/
-VirtualBox VMs/
+# ========================
+# Python
+# ========================
 __pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+env/
+.env/
+ENV/
+*.egg-info/
+dist/
+build/
+.eggs/
+pip-wheel-metadata/
+share/python-wheels/
+.installed.cfg
+*.egg
+MANIFEST
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.ruff_cache/
+.pytype/
+.pyre/
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+nosetests.xml
+.tox/
+.nox/
+*.mo
+*.pot
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+instance/
+.webassets-cache
+.scrapy
+docs/_build/
+.pybuilder/
+target/
+.ipynb_checkpoints
+profile_default/
+ipython_config.py
+
+# ========================
+# Node / JavaScript
+# ========================
 node_modules/
-myenv/
-w64devkit/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.pnpm-store/
+.npm/
 
-# Log files
+# Next.js
+.next/
+out/
+.vercel/
+.netlify/
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+.turbo/
+
+# Testing
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
+
+# ========================
+# Environment & Secrets
+# ========================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.staging
+.env.production
+*.pem
+*.key
+secrets/
+
+# ========================
+# Docker
+# ========================
+.docker/
+
+# ========================
+# Database
+# ========================
+*.sqlite
+*.sqlite3
+*.db
+dump.sql
+*.sql.gz
+
+# ========================
+# Logs & Runtime
+# ========================
 *.log
-AMDRM_Install.log
-AMD_RyzenMaster.log
-debug.log
+logs/
+*.pid
+*.pid.lock
+*.seed
 
-# Temporary files
-*.tmp
-*.temp
-*.save
-s.save
-uu.txt
-uu.txt#
-injection.txt
-where
+# ========================
+# OS & Editor
+# ========================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
 
-# Project specific
+.idea/
+*.iml
+*.iws
+.vscode/
+*.code-workspace
+*.swp
+*.swo
+*~
+
+# ========================
+# Misc
+# ========================
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+.sass-cache/
+storybook-static/
+
+# ========================
+# Project Specific
+# ========================
+
+# Frontend
 swiss-immigration-pro/node_modules/
 swiss-immigration-pro/.next/
 swiss-immigration-pro/out/
@@ -76,30 +162,37 @@ swiss-immigration-pro/.vercel
 swiss-immigration-pro/*.tsbuildinfo
 swiss-immigration-pro/next-env.d.ts
 
-# Other projects
-discord-example-app/
-discord-id_to_ip-address/
-mu_code/
-privacy-shield-hub/
-Raven-Storm/
-source/
-temp-app/
-trai/
-v/
-PayloadsAllTheThings/
+# Backend
+backend/__pycache__/
+backend/app/__pycache__/
+backend/**/__pycache__/
+backend/venv/
+backend/.venv/
+backend/*.pyc
 
-# System files
-Local Settings/
-My Documents/
-NetHood/
-PrintHood/
-Recent/
-SendTo/
-Start Menu/
-Templates/
-Application Data/
-Cookies/
+# CV Backend
+cv-backend/__pycache__/
+cv-backend/**/__pycache__/
+cv-backend/venv/
+cv-backend/.venv/
+cv-backend/storage/
 
+# Docker data
+postgres_data/
 
 # Local Netlify folder
 .netlify
+
+# Project artifacts (temp/debug)
+screenshots/
+audit.js
+deep-audit.js
+final-audit.js
+mobile-audit.js
+more-audit.js
+screenshots-final.js
+
+# SSH keys
+*_key
+*.rsa
+*.ed25519
