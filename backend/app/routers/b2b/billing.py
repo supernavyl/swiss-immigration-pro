@@ -2,6 +2,7 @@
 B2B Billing router -- Stripe subscription management for companies.
 """
 
+import asyncio
 import logging
 import uuid
 
@@ -109,7 +110,8 @@ async def create_b2b_checkout(
     mode = "subscription"
 
     try:
-        session = stripe_lib.checkout.Session.create(
+        session = await asyncio.to_thread(
+            stripe_lib.checkout.Session.create,
             mode=mode,
             line_items=[{
                 "price_data": {

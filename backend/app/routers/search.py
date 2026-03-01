@@ -133,4 +133,4 @@ async def search(body: SearchRequest):
     for r in results:
         r.pop("_score", None)
 
-    return {"results": results[:8], "aiSuggestion": None, "directAnswer": None, "hasAI": False}
+    return {"results": results[:8], "aiSuggestion": None, "directAnswer": None, "hasAI": False, "source": "static"}

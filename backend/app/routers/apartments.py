@@ -91,4 +91,4 @@ async def get_apartments(
     if elevator is not None:
         results = [p for p in results if p["elevator"] == elevator]
 
-    return {"properties": results, "total": len(results)}
+    return {"properties": results, "total": len(results), "demo": True}

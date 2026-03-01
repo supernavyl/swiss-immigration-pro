@@ -78,7 +78,8 @@ async def register(request: Request, body: RegisterRequest, db: DbSession):
     if result.scalar_one_or_none():
         raise HTTPException(status_code=400, detail="User with this email already exists")
 
-    # Create user
+    # Create user — auto-verified for MVP. Future: send verification email
+    # before unlocking premium features (purchase, B2B, consultations).
     user = User(email=body.email, password_hash=hash_password(body.password), email_verified=True)
     db.add(user)
     await db.flush()

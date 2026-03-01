@@ -81,6 +81,17 @@ async def client(db_session: AsyncSession) -> AsyncGenerator[AsyncClient, None]:
 
 
 @pytest.fixture
+async def no_db_client() -> AsyncGenerator[AsyncClient, None]:
+    """Lightweight client that doesn't need a running database.
+
+    Use for routers that don't touch the DB (translate, search, apartments, etc.).
+    """
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://testserver") as ac:
+        yield ac
+
+
+@pytest.fixture
 def auth_headers() -> dict[str, str]:
     """Generate a valid JWT for test requests."""
     from app.services.auth_service import create_access_token
