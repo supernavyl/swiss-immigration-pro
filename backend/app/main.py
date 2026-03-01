@@ -1,5 +1,6 @@
 import logging
 import os
+import threading
 import time
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
@@ -71,16 +72,33 @@ logger = logging.getLogger(__name__)
 settings = get_settings()
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    logger.info("Starting %s API v3.0.0", settings.app_name)
+def _rag_init_thread() -> None:
+    """Load the sentence-transformers model in a daemon thread.
+
+    PyTorch model loading is CPU-bound and blocks the event loop for several
+    minutes.  Running it here lets FastAPI start accepting connections (and
+    pass healthchecks) immediately.  The chatbot will block on the first
+    request only if the model hasn't finished loading yet.
+    """
+    import asyncio as _asyncio
+
+    loop = _asyncio.new_event_loop()
+    _asyncio.set_event_loop(loop)
     try:
         from app.services.rag import initialize as init_rag
 
-        await init_rag()
+        loop.run_until_complete(init_rag())
         logger.info("RAG pipeline initialized")
     except Exception as exc:
-        logger.warning("RAG init deferred (will init on first request): %s", exc)
+        logger.warning("RAG init failed: %s", exc)
+    finally:
+        loop.close()
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+    logger.info("Starting %s API v3.0.0", settings.app_name)
+    threading.Thread(target=_rag_init_thread, daemon=True, name="rag-init").start()
     yield
     logger.info("Shutting down %s API", settings.app_name)
 
