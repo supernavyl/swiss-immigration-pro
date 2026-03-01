@@ -173,22 +173,6 @@ export default function RootLayout({
             `,
           }}
         />
-        {/* Sentry browser SDK — only injected when NEXT_PUBLIC_SENTRY_DSN is set */}
-        {process.env.NEXT_PUBLIC_SENTRY_DSN && (
-          <>
-            <script
-              src="https://browser.sentry-cdn.com/7.119.0/bundle.tracing.min.js"
-              crossOrigin="anonymous"
-            />
-            <script
-              data-sentry-dsn={process.env.NEXT_PUBLIC_SENTRY_DSN}
-              data-sentry-env={process.env.NODE_ENV || 'production'}
-              dangerouslySetInnerHTML={{
-                __html: `(function(){try{var s=document.currentScript;window.Sentry&&window.Sentry.init({dsn:s.dataset.sentryDsn,tracesSampleRate:0.1,environment:s.dataset.sentryEnv});}catch(e){}})();`,
-              }}
-            />
-          </>
-        )}
       </head>
       <body className={`${inter.variable} antialiased bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 touch-pan-y`} suppressHydrationWarning>
         {/* Skip to main content for accessibility */}
