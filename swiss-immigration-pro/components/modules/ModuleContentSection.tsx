@@ -38,32 +38,37 @@ function getReadingTime(content: string): number {
   return Math.ceil(words / 200)
 }
 
+// react-markdown v9 component overrides — destructure `node` out so it doesn't
+// land on DOM elements, spread remaining HTML-safe props.
+type MdProps = React.HTMLAttributes<HTMLElement> & { node?: unknown }
+const md = ({ node: _n, ...props }: MdProps) => props
+
 const mdComponents = {
-  h1: ({ node, ...props }: Record<string, unknown>) => <h4 className="text-xl font-bold text-gray-900 dark:text-gray-100 mt-8 mb-4" {...props} />,
-  h2: ({ node, ...props }: Record<string, unknown>) => <h5 className="text-lg font-bold text-gray-900 dark:text-gray-100 mt-6 mb-3" {...props} />,
-  h3: ({ node, ...props }: Record<string, unknown>) => <h6 className="text-base font-bold text-gray-900 dark:text-gray-100 mt-5 mb-2" {...props} />,
-  h4: ({ node, ...props }: Record<string, unknown>) => <h4 className="text-base font-bold text-gray-900 dark:text-gray-100 mt-4 mb-2" {...props} />,
-  h5: ({ node, ...props }: Record<string, unknown>) => <h5 className="text-sm font-bold text-gray-900 dark:text-gray-100 mt-3 mb-2" {...props} />,
-  h6: ({ node, ...props }: Record<string, unknown>) => <h6 className="text-sm font-bold text-gray-900 dark:text-gray-100 mt-3 mb-2" {...props} />,
-  p: ({ node, ...props }: Record<string, unknown>) => <p className="mb-5 text-gray-800 dark:text-gray-200 text-base leading-loose" {...props} />,
-  ul: ({ node, ...props }: Record<string, unknown>) => <ul className="list-disc list-outside ml-6 space-y-2 mb-5 text-gray-800 dark:text-gray-200" {...props} />,
-  ol: ({ node, ...props }: Record<string, unknown>) => <ol className="list-decimal list-outside ml-6 space-y-2 mb-5 text-gray-800 dark:text-gray-200" {...props} />,
-  li: ({ node, ...props }: Record<string, unknown>) => <li className="pl-1 leading-relaxed text-gray-800 dark:text-gray-200" {...props} />,
-  blockquote: ({ node, ...props }: Record<string, unknown>) => (
-    <blockquote className="border-l-4 border-blue-600 dark:border-blue-400 pl-4 sm:pl-5 py-3 my-4 sm:my-6 bg-blue-50 dark:bg-blue-950/40 text-gray-800 dark:text-gray-200 rounded-r-lg" {...props} />
+  h1: (p: MdProps) => <h4 className="text-xl font-bold text-gray-900 dark:text-gray-100 mt-8 mb-4" {...md(p)} />,
+  h2: (p: MdProps) => <h5 className="text-lg font-bold text-gray-900 dark:text-gray-100 mt-6 mb-3" {...md(p)} />,
+  h3: (p: MdProps) => <h6 className="text-base font-bold text-gray-900 dark:text-gray-100 mt-5 mb-2" {...md(p)} />,
+  h4: (p: MdProps) => <h4 className="text-base font-bold text-gray-900 dark:text-gray-100 mt-4 mb-2" {...md(p)} />,
+  h5: (p: MdProps) => <h5 className="text-sm font-bold text-gray-900 dark:text-gray-100 mt-3 mb-2" {...md(p)} />,
+  h6: (p: MdProps) => <h6 className="text-sm font-bold text-gray-900 dark:text-gray-100 mt-3 mb-2" {...md(p)} />,
+  p: (p: MdProps) => <p className="mb-5 text-gray-800 dark:text-gray-200 text-base leading-loose" {...md(p)} />,
+  ul: (p: MdProps) => <ul className="list-disc list-outside ml-6 space-y-2 mb-5 text-gray-800 dark:text-gray-200" {...md(p)} />,
+  ol: (p: MdProps) => <ol className="list-decimal list-outside ml-6 space-y-2 mb-5 text-gray-800 dark:text-gray-200" {...md(p)} />,
+  li: (p: MdProps) => <li className="pl-1 leading-relaxed text-gray-800 dark:text-gray-200" {...md(p)} />,
+  blockquote: (p: MdProps) => (
+    <blockquote className="border-l-4 border-blue-600 dark:border-blue-400 pl-4 sm:pl-5 py-3 my-4 sm:my-6 bg-blue-50 dark:bg-blue-950/40 text-gray-800 dark:text-gray-200 rounded-r-lg" {...md(p)} />
   ),
-  table: ({ node, ...props }: Record<string, unknown>) => (
+  table: (p: MdProps) => (
     <div className="overflow-x-auto my-4 sm:my-6 border-2 border-blue-600 dark:border-blue-500 rounded-lg">
-      <table className="min-w-full divide-y divide-blue-200 dark:divide-blue-700" {...props} />
+      <table className="min-w-full divide-y divide-blue-200 dark:divide-blue-700" {...md(p)} />
     </div>
   ),
-  thead: ({ node, ...props }: Record<string, unknown>) => <thead className="bg-gradient-to-r from-blue-600 to-blue-700" {...props} />,
-  th: ({ node, ...props }: Record<string, unknown>) => <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-bold text-white uppercase tracking-wide border-b-2 border-blue-800" {...props} />,
-  td: ({ node, ...props }: Record<string, unknown>) => <td className="px-3 sm:px-4 py-2 sm:py-3 text-gray-800 dark:text-gray-200 border-b border-blue-200 dark:border-blue-800" {...props} />,
-  a: ({ node, ...props }: Record<string, unknown>) => (
-    <a className="text-blue-700 dark:text-blue-400 font-semibold underline hover:text-blue-900 dark:hover:text-blue-300 hover:no-underline transition-all" target="_blank" rel="noopener noreferrer" {...props} />
+  thead: (p: MdProps) => <thead className="bg-gradient-to-r from-blue-600 to-blue-700" {...md(p)} />,
+  th: (p: MdProps) => <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-bold text-white uppercase tracking-wide border-b-2 border-blue-800" {...md(p)} />,
+  td: (p: MdProps) => <td className="px-3 sm:px-4 py-2 sm:py-3 text-gray-800 dark:text-gray-200 border-b border-blue-200 dark:border-blue-800" {...md(p)} />,
+  a: (p: MdProps) => (
+    <a className="text-blue-700 dark:text-blue-400 font-semibold underline hover:text-blue-900 dark:hover:text-blue-300 hover:no-underline transition-all" target="_blank" rel="noopener noreferrer" {...md(p)} />
   ),
-  strong: ({ node, ...props }: Record<string, unknown>) => <strong className="font-bold text-gray-900 dark:text-white" {...props} />,
+  strong: (p: MdProps) => <strong className="font-bold text-gray-900 dark:text-white" {...md(p)} />,
 }
 
 export function ModuleContentSection({
