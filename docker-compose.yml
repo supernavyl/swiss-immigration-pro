@@ -210,8 +210,6 @@ services:
       NEXT_PUBLIC_API_URL: http://backend:8000
       NEXT_PUBLIC_APP_URL: ${APP_URL:-http://localhost}
       NEXT_PUBLIC_PLAUSIBLE_DOMAIN: ${PLAUSIBLE_DOMAIN:-}
-    ports:
-      - "3000:3000"
 
   nginx:
     image: nginx:alpine
