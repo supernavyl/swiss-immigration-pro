@@ -1,752 +1,1307 @@
-'use client'
+"use client";
 
-import { useState, useRef, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { 
-  Scale, 
-  FileText, 
-  ShieldCheck, 
-  Send, 
-  CheckCircle2, 
-  TrendingUp,
-  Menu,
-  Briefcase,
-  Mail,
-  FileCheck,
-  Sparkles,
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Scale,
+  ArrowLeft,
   Plus,
-  Award,
+  MessageSquare,
+  FileText,
+  Link2,
   Search,
-  Filter,
-  Clock,
-  Star,
-  Archive,
-  Settings,
-  HelpCircle,
-  BookOpen,
-  X,
-  ChevronRight,
-  Folder,
-  Download,
-  Trash2,
-  Edit,
   Upload,
-  LogOut
-} from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
+  Trash2,
+  Send,
+  Copy,
+  Check,
+  Pin,
+  PinOff,
+  ChevronDown,
+  ChevronRight,
+  Mic,
+  MicOff,
+  Download,
+  FolderOpen,
+  AlertTriangle,
+  Clock,
+  DollarSign,
+  BookOpen,
+  WifiOff,
+  LogIn,
+  X,
+  Briefcase,
+  Menu,
+  Keyboard,
+  PhoneCall,
+} from "lucide-react";
+import { useT } from "@/lib/i18n/useTranslation";
+import {
+  useLawyerChat,
+  type LawyerMessage,
+  type LawyerCaseData,
+} from "@/lib/useLawyerChat";
+import { TypewriterMarkdown } from "./TypewriterMarkdown";
+import { analytics } from "@/lib/analytics";
 
-// Types
-interface Consultation {
-  id: string
-  title: string
-  date: Date
-  summary: string
+// ---------------------------------------------------------------------------
+// Quick-start prompt tiles
+// ---------------------------------------------------------------------------
+
+const QUICK_PROMPTS = [
+  {
+    key: "workPermit",
+    icon: Briefcase,
+    question:
+      "I need a work permit for Switzerland. What are the requirements and process for a third-country national?",
+  },
+  {
+    key: "appeal",
+    icon: AlertTriangle,
+    question:
+      "My permit application was rejected. What are my legal options to appeal this decision?",
+  },
+  {
+    key: "citizenship",
+    icon: BookOpen,
+    question:
+      "I want to apply for Swiss citizenship through ordinary naturalization. What are the requirements?",
+  },
+  {
+    key: "family",
+    icon: FolderOpen,
+    question:
+      "I have a B permit and want to bring my spouse and children to Switzerland. What is the family reunification process?",
+  },
+  {
+    key: "bPermit",
+    icon: FileText,
+    question:
+      "What are my rights and obligations as a B permit holder in Switzerland?",
+  },
+  {
+    key: "employer",
+    icon: Scale,
+    question:
+      "Can I change employers while on a work permit in Switzerland? What is the process?",
+  },
+] as const;
+
+// ---------------------------------------------------------------------------
+// Complexity badge
+// ---------------------------------------------------------------------------
+
+function ComplexityBadge({
+  complexity,
+  t,
+}: {
+  complexity?: string;
+  t: (key: string) => string;
+}) {
+  if (!complexity || complexity === "simple") return null;
+  const config = {
+    moderate: {
+      bg: "bg-amber-100 dark:bg-amber-900/30",
+      text: "text-amber-700 dark:text-amber-400",
+      label: t("lawyer.complexity.moderate"),
+    },
+    complex: {
+      bg: "bg-orange-100 dark:bg-orange-900/30",
+      text: "text-orange-700 dark:text-orange-400",
+      label: t("lawyer.complexity.complex"),
+    },
+    "requires-lawyer": {
+      bg: "bg-red-100 dark:bg-red-900/30",
+      text: "text-red-700 dark:text-red-400",
+      label: t("lawyer.complexity.requiresLawyer"),
+    },
+  }[complexity];
+  if (!config) return null;
+  return (
+    <span
+      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${config.bg} ${config.text}`}
+    >
+      <AlertTriangle className="w-3 h-3" />
+      {config.label}
+    </span>
+  );
 }
 
-interface Document {
-  id: string
-  name: string
-  type: 'CV' | 'Letter' | 'Application'
-  createdAt: Date
-  content?: string
-}
+// ---------------------------------------------------------------------------
+// Collapsible section
+// ---------------------------------------------------------------------------
 
-interface Message {
-  id: string
-  role: 'user' | 'assistant'
-  content: string
-  timestamp: Date
-  legalBasis?: string[]
-  probability?: number
-  nextSteps?: string[]
-}
-
-export default function SwissVirtualLawyer() {
-  const router = useRouter()
-  const [sidebarOpen, setSidebarOpen] = useState(true)
-  const [activeSidebarTab, setActiveSidebarTab] = useState<'consultations' | 'documents' | 'resources'>('consultations')
-  const [searchQuery, setSearchQuery] = useState('')
-  const [consultations, setConsultations] = useState<Consultation[]>([])
-  const [documents, setDocuments] = useState<Document[]>([])
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      role: 'assistant',
-      content: 'Welcome. I\'m your AI legal assistant specializing in Swiss immigration and residency law. I can help you understand complex legal frameworks, review documents, draft legal correspondence, and provide strategic guidance on your immigration journey. How can I assist you today?',
-      timestamp: new Date()
-    }
-  ])
-  const [inputValue, setInputValue] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [uploading, setUploading] = useState(false)
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
-
-  useEffect(() => {
-    scrollToBottom()
-  }, [messages])
-
-  const handleSend = async () => {
-    if (!inputValue.trim() || isLoading) return
-
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: inputValue,
-      timestamp: new Date()
-    }
-
-    setMessages(prev => [...prev, userMessage])
-    setInputValue('')
-    setIsLoading(true)
-
-    // Simulate AI response
-    setTimeout(() => {
-      const aiResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: 'Based on Swiss Federal Law and the Foreign Nationals and Integration Act (FNIA), EU/EFTA nationals holding a residence permit have specific rights and obligations regarding employment. After the initial 12-month period, permit holders generally have the right to change employers, subject to notification requirements. The employer must notify the cantonal migration authority within 14 days of employment commencement.',
-        timestamp: new Date(),
-        legalBasis: [
-          'Art. 25 FNIA - Free Movement of Persons',
-          'Art. 21 FNIA - Employment Rights and Obligations',
-          'Swiss-EU Bilateral Agreement on Free Movement of Persons',
-          'Art. 24 FNIA - Notification Requirements'
-        ],
-        probability: 95,
-        nextSteps: [
-          'Verify your employer has submitted the required notification to cantonal authorities',
-          'Maintain comprehensive records of all employment-related documentation',
-          'Consult with your cantonal migration office if any discrepancies arise',
-          'Review your current permit status and expiration date'
-        ]
-      }
-      setMessages(prev => [...prev, aiResponse])
-      setIsLoading(false)
-    }, 1500)
-  }
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSend()
-    }
-  }
-
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (!files || files.length === 0) return
-
-    setUploading(true)
-
-    // Process each file
-    for (const file of Array.from(files)) {
-      // Determine file type based on name or extension
-      const fileName = file.name.toLowerCase()
-      let docType: 'CV' | 'Letter' | 'Application' = 'Letter'
-      
-      if (fileName.includes('cv') || fileName.includes('resume')) {
-        docType = 'CV'
-      } else if (fileName.includes('application') || fileName.includes('form')) {
-        docType = 'Application'
-      }
-
-      // Create document entry
-      const newDoc: Document = {
-        id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
-        name: file.name,
-        type: docType,
-        createdAt: new Date(),
-      }
-
-      // Read file content if it's a text file
-      if (file.type.startsWith('text/') || file.name.endsWith('.md') || file.name.endsWith('.txt')) {
-        const reader = new FileReader()
-        reader.onload = (event) => {
-          newDoc.content = event.target?.result as string
-        }
-        reader.readAsText(file)
-      }
-
-      setDocuments(prev => [newDoc, ...prev])
-    }
-
-    setUploading(false)
-    
-    // Reset file input
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
-    }
-  }
-
-  const handleDeleteDocument = (docId: string) => {
-    setDocuments(prev => prev.filter(doc => doc.id !== docId))
-  }
-
-  const handleDownloadDocument = (doc: Document) => {
-    if (doc.content) {
-      const blob = new Blob([doc.content], { type: 'text/plain' })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = doc.name
-      document.body.appendChild(a)
-      a.click()
-      document.body.removeChild(a)
-      URL.revokeObjectURL(url)
-    }
-  }
+function CollapsibleSection({
+  title,
+  icon: Icon,
+  children,
+  defaultOpen = true,
+  color = "blue",
+  onCopy,
+}: {
+  title: string;
+  icon: React.ElementType;
+  children: React.ReactNode;
+  defaultOpen?: boolean;
+  color?: string;
+  onCopy?: () => void;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  const colorMap: Record<string, string> = {
+    blue: "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800",
+    emerald:
+      "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800",
+    amber:
+      "bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800",
+    violet:
+      "bg-violet-50 dark:bg-violet-900/20 border-violet-200 dark:border-violet-800",
+    slate:
+      "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700",
+  };
 
   return (
-    <div className="h-screen w-full bg-white flex flex-col overflow-hidden">
-      {/* Top Header */}
-      <div className="h-14 border-b border-gray-200 bg-white flex items-center justify-between px-4 shrink-0">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
-            title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
-          >
-            <Menu className="w-5 h-5 text-gray-700" />
-          </button>
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg">
-              <HelpCircle className="w-4 h-4 text-blue-600" />
-            </div>
-            <span className="font-semibold text-gray-900">Swiss Legal Assistant</span>
-            <Award className="w-4 h-4 text-amber-500" />
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
-            <ShieldCheck className="w-4 h-4 text-blue-600" />
-            <span className="text-sm font-semibold text-blue-900">Expert Legal Guidance</span>
-          </div>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => router.push('/')}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors cursor-pointer"
-            title="Exit Virtual Lawyer"
-          >
-            <LogOut className="w-4 h-4" />
-            <span className="text-sm font-medium hidden sm:inline">Exit</span>
-          </motion.button>
-        </div>
-      </div>
-
-      <div className="flex-1 flex overflow-hidden">
-        {/* Left Sidebar - Enhanced & Collapsible */}
-        <AnimatePresence>
-          {sidebarOpen && (
-            <motion.div
-              initial={{ width: 0, opacity: 0 }}
-              animate={{ width: 260, opacity: 1 }}
-              exit={{ width: 0, opacity: 0 }}
-              transition={{ duration: 0.25, ease: 'easeInOut' }}
-              className="bg-white border-r border-gray-200 flex flex-col overflow-hidden"
+    <div
+      className={`mt-3 rounded-lg border ${colorMap[color] || colorMap.blue}`}
+    >
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center justify-between w-full px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-300"
+        aria-expanded={open}
+      >
+        <span className="flex items-center gap-1.5">
+          <Icon className="w-3.5 h-3.5" />
+          {title}
+        </span>
+        <span className="flex items-center gap-1">
+          {onCopy && (
+            <span
+              role="button"
+              tabIndex={0}
+              onClick={(e) => {
+                e.stopPropagation();
+                onCopy();
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.stopPropagation();
+                  onCopy?.();
+                }
+              }}
+              className="p-0.5 hover:bg-black/5 dark:hover:bg-white/10 rounded"
+              aria-label="Copy section"
             >
-              {/* Sidebar Header */}
-              <div className="p-3 border-b border-gray-200 bg-white">
-                <div className="flex items-center justify-between mb-2.5">
-                  <h2 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Workspace</h2>
-                  <button
-                    onClick={() => setSidebarOpen(false)}
-                    className="p-1 hover:bg-gray-100 rounded transition-colors cursor-pointer"
-                    title="Collapse sidebar"
-                  >
-                    <X className="w-3.5 h-3.5 text-gray-400" />
-                  </button>
-                </div>
-                
-                {/* New Consultation Button */}
-                <motion.button
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                  className="w-full flex items-center justify-center gap-1.5 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-xs font-medium cursor-pointer"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                  <span>New Consultation</span>
-                </motion.button>
+              <Copy className="w-3 h-3" />
+            </span>
+          )}
+          {open ? (
+            <ChevronDown className="w-3.5 h-3.5" />
+          ) : (
+            <ChevronRight className="w-3.5 h-3.5" />
+          )}
+        </span>
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <div className="px-3 pb-2 text-xs text-gray-700 dark:text-gray-300">
+              {children}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
-                {/* Search Bar */}
-                <div className="mt-2 relative">
-                  <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search..."
-                    className="w-full pl-8 pr-2.5 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-xs text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                  />
-                </div>
+// ---------------------------------------------------------------------------
+// Main component
+// ---------------------------------------------------------------------------
+
+export default function SwissVirtualLawyer() {
+  const router = useRouter();
+  const { t } = useT();
+  const chat = useLawyerChat();
+
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarTab, setSidebarTab] = useState<
+    "history" | "documents" | "resources" | "cases"
+  >("history");
+  const [inputValue, setInputValue] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
+  const [newCaseTitle, setNewCaseTitle] = useState("");
+  const [newCaseCategory, setNewCaseCategory] = useState("other");
+  const [showNewCase, setShowNewCase] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<string | null>(null);
+
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const recognitionRef = useRef<any>(null);
+
+  // Auto-scroll
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chat.messages]);
+
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 150)}px`;
+    }
+  }, [inputValue]);
+
+  // Desktop sidebar default open
+  useEffect(() => {
+    if (window.innerWidth >= 1024) setSidebarOpen(true);
+  }, []);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      const mod = e.metaKey || e.ctrlKey;
+      if (mod && e.key === "n") {
+        e.preventDefault();
+        chat.newConversation();
+      }
+      if (mod && e.key === "k") {
+        e.preventDefault();
+        setSidebarOpen(true);
+        setSidebarTab("history");
+        setTimeout(
+          () => document.getElementById("lawyer-search")?.focus(),
+          100,
+        );
+      }
+      if (mod && e.key === "e") {
+        e.preventDefault();
+        if (chat.activeConversationId && chat.isAuthenticated)
+          chat.exportPdf(chat.activeConversationId);
+      }
+      if (e.key === "Escape") {
+        if (sidebarOpen && window.innerWidth < 1024) setSidebarOpen(false);
+        setShowShortcuts(false);
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chat.activeConversationId, chat.isAuthenticated, sidebarOpen]);
+
+  // -----------------------------------------------------------------------
+  // Handlers
+  // -----------------------------------------------------------------------
+
+  const handleSend = useCallback(() => {
+    if (!inputValue.trim() || chat.isLoading) return;
+    chat.sendMessage(inputValue);
+    setInputValue("");
+  }, [inputValue, chat]);
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        handleSend();
+      }
+    },
+    [handleSend],
+  );
+
+  const handleCopy = useCallback(async (text: string, id: string) => {
+    await navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  }, []);
+
+  const handleFileUpload = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      setUploadProgress(file.name);
+      await chat.uploadDocument(file);
+      setUploadProgress(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    },
+    [chat],
+  );
+
+  // Voice input
+  const toggleVoice = useCallback(() => {
+    if (isRecording) {
+      recognitionRef.current?.stop();
+      setIsRecording(false);
+      return;
+    }
+
+    const SpeechRecognition =
+      (window as any).SpeechRecognition ||
+      (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) return;
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.lang =
+      { en: "en-US", fr: "fr-FR", de: "de-CH", it: "it-CH" }[
+        t("__lang") || "en"
+      ] || "en-US";
+
+    recognition.onresult = (event: any) => {
+      const transcript = Array.from(event.results)
+        .map((r: any) => r[0].transcript)
+        .join("");
+      setInputValue(transcript);
+    };
+    recognition.onend = () => setIsRecording(false);
+    recognition.onerror = () => setIsRecording(false);
+
+    recognitionRef.current = recognition;
+    recognition.start();
+    setIsRecording(true);
+  }, [isRecording, t]);
+
+  const handleCreateCase = useCallback(async () => {
+    if (!newCaseTitle.trim()) return;
+    await chat.createCase(newCaseTitle.trim(), newCaseCategory);
+    setNewCaseTitle("");
+    setNewCaseCategory("other");
+    setShowNewCase(false);
+  }, [newCaseTitle, newCaseCategory, chat]);
+
+  // Filter conversations
+  const filteredConversations = searchQuery
+    ? chat.conversations.filter((c) =>
+        c.title.toLowerCase().includes(searchQuery.toLowerCase()),
+      )
+    : chat.conversations;
+
+  const showQuickPrompts = chat.messages.length <= 1;
+
+  // -----------------------------------------------------------------------
+  // Render
+  // -----------------------------------------------------------------------
+
+  return (
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-950">
+      {/* ─── Sidebar ─── */}
+      <AnimatePresence>
+        {sidebarOpen && (
+          <>
+            {/* Mobile overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/30 z-30 lg:hidden"
+              onClick={() => setSidebarOpen(false)}
+            />
+            <motion.aside
+              initial={{ x: -280 }}
+              animate={{ x: 0 }}
+              exit={{ x: -280 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="fixed lg:relative z-40 w-[280px] h-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col"
+            >
+              {/* New chat button */}
+              <div className="p-3 border-b border-gray-200 dark:border-gray-800">
+                <button
+                  onClick={() => {
+                    chat.newConversation();
+                    if (window.innerWidth < 1024) setSidebarOpen(false);
+                  }}
+                  className="flex items-center gap-2 w-full px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                  aria-label={t("lawyer.newChat")}
+                >
+                  <Plus className="w-4 h-4" />
+                  {t("lawyer.newChat")}
+                </button>
               </div>
 
-              {/* Sidebar Tabs */}
-              <div className="flex border-b border-gray-200 bg-gray-50">
-                <button
-                  onClick={() => setActiveSidebarTab('consultations')}
-                  className={`flex-1 px-2 py-2 text-xs font-medium transition-colors relative cursor-pointer ${
-                    activeSidebarTab === 'consultations'
-                      ? 'text-blue-600 bg-white'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  <div className="flex items-center justify-center gap-1">
-                    <FileText className="w-3 h-3" />
-                    <span className="hidden sm:inline">Consultations</span>
-                  </div>
-                  {activeSidebarTab === 'consultations' && (
-                    <motion.div
-                      layoutId="activeTab"
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600"
-                      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                    />
-                  )}
-                </button>
-                <button
-                  onClick={() => setActiveSidebarTab('documents')}
-                  className={`flex-1 px-2 py-2 text-xs font-medium transition-colors relative cursor-pointer ${
-                    activeSidebarTab === 'documents'
-                      ? 'text-blue-600 bg-white'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  <div className="flex items-center justify-center gap-1">
-                    <Folder className="w-3 h-3" />
-                    <span className="hidden sm:inline">Documents</span>
-                  </div>
-                  {activeSidebarTab === 'documents' && (
-                    <motion.div
-                      layoutId="activeTab"
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600"
-                      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                    />
-                  )}
-                </button>
-                <button
-                  onClick={() => setActiveSidebarTab('resources')}
-                  className={`flex-1 px-2 py-2 text-xs font-medium transition-colors relative cursor-pointer ${
-                    activeSidebarTab === 'resources'
-                      ? 'text-blue-600 bg-white'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  <div className="flex items-center justify-center gap-1">
-                    <BookOpen className="w-3 h-3" />
-                    <span className="hidden sm:inline">Resources</span>
-                  </div>
-                  {activeSidebarTab === 'resources' && (
-                    <motion.div
-                      layoutId="activeTab"
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600"
-                      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                    />
-                  )}
-                </button>
+              {/* Tab bar */}
+              <div className="flex border-b border-gray-200 dark:border-gray-800">
+                {(["history", "cases", "documents", "resources"] as const).map(
+                  (tab) => {
+                    const icons = {
+                      history: MessageSquare,
+                      cases: FolderOpen,
+                      documents: FileText,
+                      resources: Link2,
+                    };
+                    const labels = {
+                      history: t("lawyer.sidebarHistory"),
+                      cases: t("lawyer.sidebarCases"),
+                      documents: t("lawyer.sidebarDocuments"),
+                      resources: t("lawyer.sidebarResources"),
+                    };
+                    const Icon = icons[tab];
+                    return (
+                      <button
+                        key={tab}
+                        onClick={() => setSidebarTab(tab)}
+                        className={`flex-1 flex flex-col items-center gap-0.5 py-2 text-xs transition-colors ${
+                          sidebarTab === tab
+                            ? "text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400"
+                            : "text-gray-500 dark:text-gray-400 hover:text-gray-700"
+                        }`}
+                        aria-selected={sidebarTab === tab}
+                        role="tab"
+                      >
+                        <Icon className="w-4 h-4" />
+                        {labels[tab]}
+                      </button>
+                    );
+                  },
+                )}
               </div>
 
-              {/* Tab Content */}
+              {/* Tab content */}
               <div className="flex-1 overflow-y-auto">
-                {activeSidebarTab === 'consultations' && (
-                  <div className="p-2.5 space-y-2">
-                    {/* Quick Stats */}
-                    <div className="grid grid-cols-2 gap-1.5 mb-2">
-                      <div className="bg-blue-50 rounded p-2 border border-blue-100">
-                        <div className="flex items-center gap-1 mb-0.5">
-                          <FileText className="w-3 h-3 text-blue-600" />
-                          <span className="text-xs font-medium text-blue-900">Active</span>
-                        </div>
-                        <p className="text-sm font-bold text-blue-900">{consultations.length}</p>
-                      </div>
-                      <div className="bg-green-50 rounded p-2 border border-green-100">
-                        <div className="flex items-center gap-1 mb-0.5">
-                          <CheckCircle2 className="w-3 h-3 text-green-600" />
-                          <span className="text-xs font-medium text-green-900">Done</span>
-                        </div>
-                        <p className="text-sm font-bold text-green-900">0</p>
+                {/* History tab */}
+                {sidebarTab === "history" && (
+                  <div className="p-2">
+                    <div className="mb-2">
+                      <div className="relative">
+                        <Search className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-gray-400" />
+                        <input
+                          id="lawyer-search"
+                          type="text"
+                          placeholder={t("lawyer.searchConversations")}
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="w-full pl-8 pr-3 py-2 text-xs bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          aria-label={t("lawyer.searchConversations")}
+                        />
                       </div>
                     </div>
-
-                    {/* Consultations List */}
-                    <div className="space-y-1.5">
-                      {consultations
-                        .filter(consultation => 
-                          searchQuery === '' || 
-                          consultation.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          consultation.summary.toLowerCase().includes(searchQuery.toLowerCase())
-                        )
-                        .map((consultation) => (
-                        <motion.button
-                          key={consultation.id}
-                          whileHover={{ x: 2 }}
-                          className="w-full text-left p-2 bg-white border border-gray-200 rounded-md hover:border-blue-300 hover:bg-blue-50/50 transition-all group cursor-pointer"
-                        >
-                          <h4 className="text-xs font-medium text-gray-900 line-clamp-1 group-hover:text-blue-600 transition-colors mb-0.5">
-                            {consultation.title}
-                          </h4>
-                          <div className="flex items-center gap-2 text-xs text-gray-500">
-                            <Clock className="w-3 h-3" />
-                            <span>{consultation.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
-                          </div>
-                        </motion.button>
-                      ))}
-                    </div>
-
-                    {consultations.length === 0 && (
-                      <div className="text-center py-6">
-                        <FileText className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-                        <p className="text-xs text-gray-500">No consultations yet</p>
-                      </div>
+                    {filteredConversations.length === 0 && (
+                      <p className="text-xs text-gray-400 text-center py-4">
+                        {t("lawyer.noConversations")}
+                      </p>
                     )}
+                    {filteredConversations.map((convo) => (
+                      <button
+                        key={convo.id}
+                        onClick={() => {
+                          chat.switchConversation(convo.id);
+                          if (window.innerWidth < 1024) setSidebarOpen(false);
+                        }}
+                        className={`group w-full text-left px-3 py-2 mb-1 rounded-lg text-xs transition-colors ${
+                          chat.activeConversationId === convo.id
+                            ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300"
+                            : "hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="truncate flex-1">{convo.title}</span>
+                          <span
+                            role="button"
+                            tabIndex={0}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              chat.deleteConversation(convo.id);
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                e.stopPropagation();
+                                chat.deleteConversation(convo.id);
+                              }
+                            }}
+                            className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-500 transition-opacity"
+                            aria-label={t("lawyer.deleteConversation")}
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </span>
+                        </div>
+                        <div className="text-[10px] text-gray-400 mt-0.5">
+                          {new Date(
+                            convo.updatedAt || convo.createdAt,
+                          ).toLocaleDateString()}
+                        </div>
+                      </button>
+                    ))}
                   </div>
                 )}
 
-                {activeSidebarTab === 'documents' && (
-                  <div className="p-2.5 space-y-2">
-                    {/* Upload Button */}
-                    <div>
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        multiple
-                        accept=".pdf,.doc,.docx,.txt,.md,.jpg,.jpeg,.png"
-                        onChange={handleFileUpload}
-                        className="hidden"
-                      />
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => fileInputRef.current?.click()}
-                        disabled={uploading}
-                        className="w-full flex items-center justify-center gap-1.5 px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-xs font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {uploading ? (
-                          <>
+                {/* Cases tab */}
+                {sidebarTab === "cases" && (
+                  <div className="p-2">
+                    {!chat.isAuthenticated ? (
+                      <p className="text-xs text-gray-400 text-center py-4">
+                        {t("lawyer.loginRequired")}
+                      </p>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => setShowNewCase(!showNewCase)}
+                          className="flex items-center gap-2 w-full px-3 py-2 mb-2 text-xs font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg"
+                        >
+                          <Plus className="w-3.5 h-3.5" /> {t("lawyer.caseNew")}
+                        </button>
+                        <AnimatePresence>
+                          {showNewCase && (
                             <motion.div
-                              animate={{ rotate: 360 }}
-                              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              className="overflow-hidden mb-2"
                             >
-                              <Upload className="w-3.5 h-3.5" />
-                            </motion.div>
-                            <span>Uploading...</span>
-                          </>
-                        ) : (
-                          <>
-                            <Upload className="w-3.5 h-3.5" />
-                            <span>Upload Document</span>
-                          </>
-                        )}
-                      </motion.button>
-                      <p className="text-xs text-gray-500 mt-1.5 text-center">PDF, DOC, TXT, Images</p>
-                    </div>
-
-                    {/* Documents List */}
-                    <div className="space-y-1.5">
-                      {documents.map((doc) => {
-                        const Icon = doc.type === 'CV' ? Briefcase : doc.type === 'Letter' ? Mail : FileCheck
-                        const typeColors = {
-                          'CV': 'bg-purple-100 text-purple-600',
-                          'Letter': 'bg-blue-100 text-blue-600',
-                          'Application': 'bg-green-100 text-green-600'
-                        }
-                        return (
-                          <motion.div
-                            key={doc.id}
-                            whileHover={{ x: 2 }}
-                            className="group p-2 bg-white border border-gray-200 rounded-md hover:border-blue-300 hover:bg-blue-50/50 transition-all"
-                          >
-                            <div className="flex items-center gap-2">
-                              <div className={`w-7 h-7 rounded ${typeColors[doc.type] || 'bg-gray-100 text-gray-600'} flex items-center justify-center shrink-0`}>
-                                <Icon className="w-3.5 h-3.5" />
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <h4 className="text-xs font-medium text-gray-900 truncate group-hover:text-blue-600 transition-colors">
-                                  {doc.name}
-                                </h4>
-                                <div className="flex items-center gap-1.5 mt-0.5">
-                                  <span className="text-xs text-gray-500">{doc.type}</span>
-                                  <span className="text-xs text-gray-400">•</span>
-                                  <span className="text-xs text-gray-500">{doc.createdAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                                {doc.content && (
-                                  <button 
-                                    onClick={(e) => {
-                                      e.stopPropagation()
-                                      handleDownloadDocument(doc)
-                                    }}
-                                    className="p-1 hover:bg-gray-100 rounded transition-colors cursor-pointer" 
-                                    title="Download"
-                                  >
-                                    <Download className="w-3 h-3 text-gray-600" />
-                                  </button>
-                                )}
-                                <button 
-                                  onClick={(e) => {
-                                  e.stopPropagation()
-                                  handleDeleteDocument(doc.id)
-                                }}
-                                  className="p-1 hover:bg-red-50 rounded transition-colors cursor-pointer" 
-                                  title="Delete"
+                              <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg space-y-2">
+                                <input
+                                  type="text"
+                                  placeholder={t("lawyer.caseTitle")}
+                                  value={newCaseTitle}
+                                  onChange={(e) =>
+                                    setNewCaseTitle(e.target.value)
+                                  }
+                                  className="w-full px-2 py-1.5 text-xs bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded"
+                                />
+                                <select
+                                  value={newCaseCategory}
+                                  onChange={(e) =>
+                                    setNewCaseCategory(e.target.value)
+                                  }
+                                  className="w-full px-2 py-1.5 text-xs bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded"
+                                  aria-label={t("lawyer.caseCategory")}
                                 >
-                                  <Trash2 className="w-3 h-3 text-gray-600 hover:text-red-600" />
+                                  {[
+                                    "permits",
+                                    "citizenship",
+                                    "employment",
+                                    "family",
+                                    "appeals",
+                                    "other",
+                                  ].map((cat) => (
+                                    <option key={cat} value={cat}>
+                                      {t(
+                                        `lawyer.caseCategory${cat.charAt(0).toUpperCase() + cat.slice(1)}`,
+                                      )}
+                                    </option>
+                                  ))}
+                                </select>
+                                <button
+                                  onClick={handleCreateCase}
+                                  className="w-full py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded"
+                                >
+                                  {t("lawyer.caseNew")}
                                 </button>
                               </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                        {chat.cases.length === 0 && !showNewCase && (
+                          <p className="text-xs text-gray-400 text-center py-4">
+                            {t("lawyer.noCases")}
+                          </p>
+                        )}
+                        {chat.cases.map((c) => {
+                          const statusColors: Record<string, string> = {
+                            open: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+                            in_progress:
+                              "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+                            resolved:
+                              "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
+                            archived:
+                              "bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500",
+                          };
+                          return (
+                            <div
+                              key={c.id}
+                              className="group px-3 py-2 mb-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="text-xs font-medium text-gray-700 dark:text-gray-300 truncate flex-1">
+                                  {c.title}
+                                </span>
+                                <span
+                                  role="button"
+                                  tabIndex={0}
+                                  onClick={() => chat.deleteCase(c.id)}
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter")
+                                      chat.deleteCase(c.id);
+                                  }}
+                                  className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-500"
+                                  aria-label={t("lawyer.deleteCase")}
+                                >
+                                  <Trash2 className="w-3 h-3" />
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2 mt-1">
+                                <span
+                                  className={`text-[10px] px-1.5 py-0.5 rounded-full ${statusColors[c.status] || statusColors.open}`}
+                                >
+                                  {t(
+                                    `lawyer.caseStatus${c.status.charAt(0).toUpperCase() + c.status.slice(1).replace("_p", "P")}`,
+                                  )}
+                                </span>
+                                <span className="text-[10px] text-gray-400">
+                                  {c.category}
+                                </span>
+                              </div>
                             </div>
-                          </motion.div>
-                        )
-                      })}
-                    </div>
-
-                    {/* Empty State */}
-                    {documents.length === 0 && (
-                      <div className="text-center py-6">
-                        <Folder className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-                        <p className="text-xs text-gray-500 mb-1">No documents yet</p>
-                        <p className="text-xs text-gray-400">Upload files to review</p>
-                      </div>
+                          );
+                        })}
+                      </>
                     )}
                   </div>
                 )}
 
-                {activeSidebarTab === 'resources' && (
-                  <div className="p-2.5 space-y-1.5">
-                    <motion.button
-                      whileHover={{ x: 2 }}
-                      className="w-full text-left p-2 bg-white border border-gray-200 rounded-md hover:border-blue-300 hover:bg-blue-50/50 transition-all group cursor-pointer"
-                    >
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded bg-indigo-100 flex items-center justify-center shrink-0">
-                          <BookOpen className="w-3.5 h-3.5 text-indigo-600" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h4 className="text-xs font-medium text-gray-900 group-hover:text-blue-600 transition-colors truncate">
-                            Legal Framework
-                          </h4>
-                        </div>
-                        <ChevronRight className="w-3 h-3 text-gray-400" />
-                      </div>
-                    </motion.button>
+                {/* Documents tab */}
+                {sidebarTab === "documents" && (
+                  <div className="p-2">
+                    {!chat.isAuthenticated ? (
+                      <p className="text-xs text-gray-400 text-center py-4">
+                        {t("lawyer.loginRequired")}
+                      </p>
+                    ) : (
+                      <>
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept=".pdf,.docx,.doc,.txt,.png,.jpg,.jpeg,.webp"
+                          onChange={handleFileUpload}
+                          className="hidden"
+                        />
+                        <button
+                          onClick={() => fileInputRef.current?.click()}
+                          disabled={!!uploadProgress}
+                          className="flex items-center gap-2 w-full px-3 py-2 mb-2 text-xs font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg disabled:opacity-50"
+                        >
+                          <Upload className="w-3.5 h-3.5" />
+                          {uploadProgress
+                            ? t("lawyer.uploading")
+                            : t("lawyer.uploadDocument")}
+                        </button>
+                        <p className="text-[10px] text-gray-400 mb-2 px-1">
+                          {t("lawyer.uploadHint")}
+                        </p>
+                        {chat.uploadedDocs.length === 0 && (
+                          <p className="text-xs text-gray-400 text-center py-4">
+                            {t("lawyer.noDocuments")}
+                          </p>
+                        )}
+                        {chat.uploadedDocs.map((doc) => (
+                          <div
+                            key={doc.id}
+                            className="group flex items-center gap-2 px-3 py-2 mb-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+                          >
+                            <FileText className="w-4 h-4 text-blue-500 shrink-0" />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs text-gray-700 dark:text-gray-300 truncate">
+                                {doc.filename}
+                              </p>
+                              <p className="text-[10px] text-gray-400">
+                                {(doc.file_size / 1024).toFixed(0)} KB ·{" "}
+                                {doc.extracted_length} chars
+                              </p>
+                            </div>
+                            <button
+                              onClick={() => chat.removeDocument(doc.id)}
+                              className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-500"
+                              aria-label={t("lawyer.removeDocument")}
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ))}
+                      </>
+                    )}
+                  </div>
+                )}
 
-                    <motion.button
-                      whileHover={{ x: 2 }}
-                      className="w-full text-left p-2 bg-white border border-gray-200 rounded-md hover:border-blue-300 hover:bg-blue-50/50 transition-all group cursor-pointer"
-                    >
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded bg-green-100 flex items-center justify-center shrink-0">
-                          <FileCheck className="w-3.5 h-3.5 text-green-600" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h4 className="text-xs font-medium text-gray-900 group-hover:text-blue-600 transition-colors truncate">
-                            Templates
-                          </h4>
-                        </div>
-                        <ChevronRight className="w-3 h-3 text-gray-400" />
-                      </div>
-                    </motion.button>
-
-                    <motion.button
-                      whileHover={{ x: 2 }}
-                      className="w-full text-left p-2 bg-white border border-gray-200 rounded-md hover:border-blue-300 hover:bg-blue-50/50 transition-all group cursor-pointer"
-                    >
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded bg-amber-100 flex items-center justify-center shrink-0">
-                          <HelpCircle className="w-3.5 h-3.5 text-amber-600" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h4 className="text-xs font-medium text-gray-900 group-hover:text-blue-600 transition-colors truncate">
-                            FAQ & Help
-                          </h4>
-                        </div>
-                        <ChevronRight className="w-3 h-3 text-gray-400" />
-                      </div>
-                    </motion.button>
+                {/* Resources tab */}
+                {sidebarTab === "resources" && (
+                  <div className="p-2 space-y-1">
+                    {[
+                      {
+                        href: "/visas",
+                        label: t("lawyer.resourceVisas"),
+                        icon: FileText,
+                      },
+                      {
+                        href: "/marketplace",
+                        label: t("lawyer.resourceMarketplace"),
+                        icon: Scale,
+                      },
+                      {
+                        href: "/faq",
+                        label: t("lawyer.resourceFaq"),
+                        icon: MessageSquare,
+                      },
+                      {
+                        href: "/resources",
+                        label: t("lawyer.resourceResources"),
+                        icon: Link2,
+                      },
+                    ].map((link) => (
+                      <a
+                        key={link.href}
+                        href={link.href}
+                        className="flex items-center gap-2 px-3 py-2 text-xs text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                      >
+                        <link.icon className="w-4 h-4" />
+                        {link.label}
+                      </a>
+                    ))}
                   </div>
                 )}
               </div>
 
-              {/* Sidebar Footer */}
-              <div className="p-2 border-t border-gray-200 bg-gray-50">
-                <div className="flex items-center gap-1.5">
-                  <ShieldCheck className="w-3 h-3 text-blue-600 shrink-0" />
-                  <p className="text-xs font-medium text-gray-700">Certified Legal AI</p>
-                </div>
+              {/* Shortcuts hint */}
+              <div className="p-2 border-t border-gray-200 dark:border-gray-800">
+                <button
+                  onClick={() => setShowShortcuts(!showShortcuts)}
+                  className="flex items-center gap-1.5 w-full px-2 py-1 text-[10px] text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                >
+                  <Keyboard className="w-3 h-3" /> {t("lawyer.shortcuts")}
+                </button>
+              </div>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* ─── Main area ─── */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Header */}
+        <header className="flex items-center justify-between px-4 py-2.5 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+              aria-label="Toggle sidebar"
+            >
+              <Menu className="w-5 h-5 text-gray-500" />
+            </button>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center">
+                <Scale className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <h1 className="text-sm font-bold text-gray-900 dark:text-white">
+                  {t("lawyer.title")}
+                </h1>
+                <p className="text-[10px] text-blue-600 dark:text-blue-400 font-medium">
+                  {t("lawyer.subtitle")}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            {!chat.isOnline && (
+              <span className="flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400">
+                <WifiOff className="w-3.5 h-3.5" /> {t("lawyer.offline")}
+              </span>
+            )}
+            {chat.isAuthenticated && chat.activeConversationId && (
+              <button
+                onClick={() => chat.exportPdf(chat.activeConversationId!)}
+                className="flex items-center gap-1 px-2.5 py-1.5 text-xs text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+                aria-label={t("lawyer.exportPdf")}
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">
+                  {t("lawyer.exportPdf")}
+                </span>
+              </button>
+            )}
+            <button
+              onClick={() => router.push("/")}
+              className="flex items-center gap-1 px-2.5 py-1.5 text-xs text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              {t("lawyer.exit")}
+            </button>
+          </div>
+        </header>
+
+        {/* Messages area */}
+        <div
+          className="flex-1 overflow-y-auto px-4 py-4"
+          role="log"
+          aria-label="Chat messages"
+        >
+          {/* Auth gate for anonymous users */}
+          {!chat.isAuthenticated && chat.limitReached && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="max-w-lg mx-auto mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <LogIn className="w-5 h-5 text-blue-600" />
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+                  {t("lawyer.loginRequired")}
+                </h3>
+              </div>
+              <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">
+                {t("lawyer.loginPrompt")}
+              </p>
+              <div className="flex gap-2">
+                <a
+                  href="/auth/login"
+                  className="flex-1 py-2 text-center text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg"
+                >
+                  {t("lawyer.signIn")}
+                </a>
+                <a
+                  href="/auth/register"
+                  className="flex-1 py-2 text-center text-xs font-medium text-blue-600 dark:text-blue-400 bg-white dark:bg-gray-800 border border-blue-200 dark:border-blue-800 hover:bg-blue-50 rounded-lg"
+                >
+                  {t("lawyer.register")}
+                </a>
               </div>
             </motion.div>
           )}
-        </AnimatePresence>
 
-        {/* Main Chat Area */}
-        <div className="flex-1 flex flex-col bg-white min-w-0">
-          {/* Chat Messages */}
-          <div className="flex-1 overflow-y-auto">
-            <div className="max-w-3xl mx-auto px-4 py-8 space-y-8">
-              {messages.map((message, index) => (
-                <AnimatePresence key={message.id}>
-                  {message.role === 'user' ? (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      className="flex justify-end"
-                    >
-                      <div className="max-w-[85%] bg-gray-900 text-white rounded-2xl rounded-tr-md px-4 py-3">
-                        <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
-                      </div>
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      className="flex gap-4"
-                    >
-                      <div className="shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 shadow-sm flex items-center justify-center ring-2 ring-blue-100">
-                        <HelpCircle className="w-4 h-4 text-white" />
-                      </div>
-                      <div className="flex-1 space-y-4">
-                        <div className="prose prose-sm max-w-none">
-                          <p className="text-gray-900 leading-relaxed whitespace-pre-wrap">{message.content}</p>
-                        </div>
-
-                        {/* Legal Basis */}
-                        {message.legalBasis && message.legalBasis.length > 0 && (
-                          <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                            <div className="flex items-center gap-2 mb-3">
-                              <FileText className="w-4 h-4 text-blue-600" />
-                              <span className="text-xs font-semibold text-gray-900">Legal Basis</span>
-                            </div>
-                            <ul className="space-y-2">
-                              {message.legalBasis.map((basis, idx) => (
-                                <li key={idx} className="text-xs text-gray-700 flex items-start gap-2">
-                                  <span className="text-blue-600 mt-0.5">•</span>
-                                  <span>{basis}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
+          {/* Quick prompts */}
+          {showQuickPrompts && !chat.limitReached && (
+            <div className="max-w-2xl mx-auto mb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {QUICK_PROMPTS.map((prompt) => (
+                  <button
+                    key={prompt.key}
+                    onClick={() => {
+                      setInputValue("");
+                      chat.sendMessage(prompt.question);
+                    }}
+                    className="group p-3 text-left bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-md transition-all"
+                  >
+                    <div className="flex items-center gap-2 mb-1">
+                      <prompt.icon className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                      <span className="text-xs font-semibold text-gray-900 dark:text-white">
+                        {t(
+                          `lawyer.quick${prompt.key.charAt(0).toUpperCase() + prompt.key.slice(1)}`,
                         )}
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-gray-500 dark:text-gray-400">
+                      {t(
+                        `lawyer.quick${prompt.key.charAt(0).toUpperCase() + prompt.key.slice(1)}Desc`,
+                      )}
+                    </p>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
-                        {/* Probability & Next Steps */}
-                        {(message.probability !== undefined || message.nextSteps) && (
-                          <div className="grid grid-cols-1 gap-3">
-                            {message.probability !== undefined && (
-                              <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                                <div className="flex items-center justify-between mb-2">
-                                  <div className="flex items-center gap-2">
-                                    <TrendingUp className="w-4 h-4 text-blue-600" />
-                                    <span className="text-xs font-semibold text-gray-900">Success Probability</span>
-                                  </div>
-                                  <span className="text-sm font-bold text-blue-600">{message.probability}%</span>
-                                </div>
-                                <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                                  <motion.div
-                                    initial={{ width: 0 }}
-                                    animate={{ width: `${message.probability}%` }}
-                                    transition={{ duration: 0.8, ease: 'easeOut' }}
-                                    className="h-full bg-gradient-to-r from-blue-600 to-blue-500 rounded-full"
-                                  />
-                                </div>
-                              </div>
-                            )}
+          {/* Messages */}
+          <div className="max-w-3xl mx-auto space-y-4">
+            {chat.messages.map((msg, idx) => (
+              <MessageBubble
+                key={msg.id}
+                msg={msg}
+                isLatest={
+                  idx === chat.messages.length - 1 && msg.role === "assistant"
+                }
+                copiedId={copiedId}
+                onCopy={handleCopy}
+                onTogglePin={chat.togglePin}
+                t={t}
+              />
+            ))}
 
-                            {message.nextSteps && message.nextSteps.length > 0 && (
-                              <div className="border border-green-200 rounded-lg p-4 bg-green-50">
-                                <div className="flex items-center gap-2 mb-3">
-                                  <CheckCircle2 className="w-4 h-4 text-green-700" />
-                                  <span className="text-xs font-semibold text-green-900">Next Steps</span>
-                                </div>
-                                <ul className="space-y-2">
-                                  {message.nextSteps.map((step, idx) => (
-                                    <li key={idx} className="flex items-start gap-2 text-xs text-green-900">
-                                      <input
-                                        type="checkbox"
-                                        className="mt-0.5 w-4 h-4 text-green-600 rounded border-green-300 focus:ring-green-500"
-                                      />
-                                      <span>{step}</span>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              ))}
+            {/* Loading indicator */}
+            {chat.isLoading && !chat.messages.some((m) => m.isStreaming) && (
+              <div className="flex items-center gap-2 text-sm text-gray-400">
+                <div className="flex gap-1">
+                  <span
+                    className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"
+                    style={{ animationDelay: "0ms" }}
+                  />
+                  <span
+                    className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"
+                    style={{ animationDelay: "150ms" }}
+                  />
+                  <span
+                    className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"
+                    style={{ animationDelay: "300ms" }}
+                  />
+                </div>
+              </div>
+            )}
 
-              {/* Loading Indicator */}
-              {isLoading && (
+            {/* Follow-ups */}
+            {chat.followUps.length > 0 && !chat.isLoading && (
+              <div className="flex flex-wrap gap-2 pt-2">
+                {chat.followUps.map((q, i) => (
+                  <button
+                    key={i}
+                    onClick={() => chat.sendMessage(q)}
+                    className="px-3 py-1.5 text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-full hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors"
+                  >
+                    {q}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Consultation upsell — appears after 5 user messages */}
+            {chat.messages.filter((m) => m.role === "user").length >= 5 &&
+              !chat.isLoading && (
                 <motion.div
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex gap-4"
+                  transition={{ duration: 0.35 }}
+                  className="rounded-xl border border-blue-200 dark:border-blue-800 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-4 flex flex-col sm:flex-row items-start sm:items-center gap-3"
                 >
-                  <div className="shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 shadow-sm flex items-center justify-center ring-2 ring-blue-100">
-                    <HelpCircle className="w-4 h-4 text-white" />
+                  <div className="p-2 bg-blue-100 dark:bg-blue-800/40 rounded-full shrink-0">
+                    <PhoneCall className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                   </div>
-                  <div className="flex gap-1.5 pt-2">
-                    <motion.div
-                      animate={{ y: [0, -6, 0] }}
-                      transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
-                      className="w-2 h-2 bg-gray-400 rounded-full"
-                    />
-                    <motion.div
-                      animate={{ y: [0, -6, 0] }}
-                      transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
-                      className="w-2 h-2 bg-gray-400 rounded-full"
-                    />
-                    <motion.div
-                      animate={{ y: [0, -6, 0] }}
-                      transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
-                      className="w-2 h-2 bg-gray-400 rounded-full"
-                    />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                      Need a definitive answer?
+                    </p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                      Speak directly with a Swiss immigration lawyer — get
+                      personalised legal advice in 30 minutes.
+                    </p>
                   </div>
+                  <a
+                    href="/consultation"
+                    className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors whitespace-nowrap"
+                    onClick={() =>
+                      analytics.checkoutStarted("consultation_quick")
+                    }
+                  >
+                    Book — CHF 80
+                  </a>
                 </motion.div>
               )}
 
-              <div ref={messagesEndRef} />
-            </div>
+            <div ref={messagesEndRef} />
           </div>
+        </div>
 
-          {/* Input Area */}
-          <div className="border-t border-gray-200 bg-white p-4">
-            <div className="max-w-3xl mx-auto">
-              <div className="relative bg-gray-50 rounded-2xl border border-gray-300 hover:border-gray-400 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all">
+        {/* Input area */}
+        <div className="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-4 py-3">
+          <div className="max-w-3xl mx-auto">
+            <div className="flex items-end gap-2">
+              {chat.isAuthenticated && (
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg shrink-0"
+                  aria-label={t("lawyer.uploadDocument")}
+                >
+                  <Upload className="w-5 h-5" />
+                </button>
+              )}
+              <div className="flex-1 relative">
                 <textarea
+                  ref={textareaRef}
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
-                  onKeyDown={handleKeyPress}
-                  placeholder="Ask about Swiss immigration law, legal documentation, residency requirements, or any legal matter..."
+                  onKeyDown={handleKeyDown}
+                  placeholder={t("lawyer.placeholder")}
+                  disabled={chat.limitReached && !chat.isAuthenticated}
                   rows={1}
-                  className="w-full px-4 py-3 pr-12 bg-transparent border-0 focus:outline-none resize-none text-sm text-gray-900 placeholder:text-gray-500 max-h-32 overflow-y-auto"
-                  style={{ minHeight: '52px' }}
+                  className="w-full resize-none px-4 py-2.5 text-sm bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
+                  aria-label={t("lawyer.placeholder")}
                 />
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleSend}
-                  disabled={!inputValue.trim() || isLoading}
-                  className="absolute right-2 bottom-2 p-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors shadow-sm"
-                >
-                  <Send className="w-4 h-4" />
-                </motion.button>
               </div>
-              <p className="text-xs text-gray-500 mt-2 px-1 text-center">
-                This AI legal assistant provides informational guidance only. For binding legal advice, consult with a licensed attorney.
-              </p>
+              <button
+                onClick={toggleVoice}
+                className={`p-2 rounded-lg shrink-0 transition-colors ${
+                  isRecording
+                    ? "text-red-500 bg-red-50 dark:bg-red-900/20 animate-pulse"
+                    : "text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                }`}
+                aria-label={
+                  isRecording
+                    ? t("lawyer.voiceListening")
+                    : t("lawyer.voiceInput")
+                }
+              >
+                {isRecording ? (
+                  <MicOff className="w-5 h-5" />
+                ) : (
+                  <Mic className="w-5 h-5" />
+                )}
+              </button>
+              <button
+                onClick={handleSend}
+                disabled={
+                  !inputValue.trim() ||
+                  chat.isLoading ||
+                  (chat.limitReached && !chat.isAuthenticated)
+                }
+                className="p-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl disabled:opacity-50 disabled:cursor-not-allowed shrink-0 transition-colors"
+                aria-label={t("lawyer.send")}
+              >
+                <Send className="w-5 h-5" />
+              </button>
             </div>
+            <p className="text-[10px] text-gray-400 mt-1.5 text-center">
+              {t("lawyer.disclaimer")}{" "}
+              <a href="/marketplace" className="text-blue-500 hover:underline">
+                {t("lawyer.findRealLawyer")}
+              </a>
+            </p>
           </div>
         </div>
       </div>
+
+      {/* Keyboard shortcuts modal */}
+      <AnimatePresence>
+        {showShortcuts && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center"
+            onClick={() => setShowShortcuts(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.95 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white dark:bg-gray-900 rounded-xl shadow-xl p-6 w-80"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-bold text-gray-900 dark:text-white">
+                  {t("lawyer.shortcuts")}
+                </h3>
+                <button
+                  onClick={() => setShowShortcuts(false)}
+                  className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="space-y-2 text-xs">
+                {[
+                  { keys: "⌘/Ctrl + N", desc: t("lawyer.shortcutNewChat") },
+                  { keys: "⌘/Ctrl + K", desc: t("lawyer.shortcutSearch") },
+                  { keys: "⌘/Ctrl + E", desc: t("lawyer.shortcutExport") },
+                  { keys: "Escape", desc: "Close sidebar / modal" },
+                  { keys: "Enter", desc: t("lawyer.send") },
+                  { keys: "Shift + Enter", desc: "New line" },
+                ].map((s) => (
+                  <div
+                    key={s.keys}
+                    className="flex items-center justify-between"
+                  >
+                    <span className="text-gray-600 dark:text-gray-400">
+                      {s.desc}
+                    </span>
+                    <kbd className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-[10px] font-mono">
+                      {s.keys}
+                    </kbd>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
-  )
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Message bubble (extracted for readability)
+// ---------------------------------------------------------------------------
+
+function MessageBubble({
+  msg,
+  isLatest,
+  copiedId,
+  onCopy,
+  onTogglePin,
+  t,
+}: {
+  msg: LawyerMessage;
+  isLatest: boolean;
+  copiedId: string | null;
+  onCopy: (text: string, id: string) => void;
+  onTogglePin: (id: string) => void;
+  t: (key: string) => string;
+}) {
+  if (msg.role === "user") {
+    return (
+      <div className="flex justify-end">
+        <div className="max-w-[80%] px-4 py-2.5 rounded-2xl rounded-br-md bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm">
+          {msg.content}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex gap-3 group">
+      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shrink-0 mt-0.5">
+        <Scale className="w-4 h-4 text-white" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+            SIP-AI Legal
+          </span>
+          <ComplexityBadge complexity={msg.complexity} t={t} />
+          {msg.pinned && <Pin className="w-3 h-3 text-blue-500" />}
+        </div>
+
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl rounded-tl-md px-4 py-3">
+          <TypewriterMarkdown
+            content={msg.content}
+            isStreaming={msg.isStreaming}
+            enabled={isLatest}
+            charsPerTick={2}
+            speed={10}
+          />
+
+          {/* Legal basis */}
+          {msg.legalBasis && msg.legalBasis.length > 0 && (
+            <CollapsibleSection
+              title={t("lawyer.legalBasis")}
+              icon={BookOpen}
+              color="blue"
+              onCopy={() =>
+                onCopy(msg.legalBasis!.join("\n"), `basis-${msg.id}`)
+              }
+            >
+              <ul className="space-y-1">
+                {msg.legalBasis.map((basis, i) => (
+                  <li key={i} className="flex items-start gap-1.5">
+                    <span className="text-blue-500 mt-0.5">§</span>
+                    <span>{basis}</span>
+                  </li>
+                ))}
+              </ul>
+            </CollapsibleSection>
+          )}
+
+          {/* Next steps */}
+          {msg.nextSteps && msg.nextSteps.length > 0 && (
+            <CollapsibleSection
+              title={t("lawyer.nextSteps")}
+              icon={ChevronRight}
+              color="emerald"
+              onCopy={() =>
+                onCopy(
+                  msg.nextSteps!.map((s, i) => `${i + 1}. ${s}`).join("\n"),
+                  `steps-${msg.id}`,
+                )
+              }
+            >
+              <ol className="space-y-1">
+                {msg.nextSteps.map((step, i) => (
+                  <li key={i} className="flex items-start gap-1.5">
+                    <span className="font-bold text-emerald-600 dark:text-emerald-400 mt-0">
+                      {i + 1}.
+                    </span>
+                    <span>{step}</span>
+                  </li>
+                ))}
+              </ol>
+            </CollapsibleSection>
+          )}
+
+          {/* Deadlines */}
+          {msg.deadlines && msg.deadlines.length > 0 && (
+            <CollapsibleSection
+              title={t("lawyer.deadlines")}
+              icon={Clock}
+              color="amber"
+            >
+              <ul className="space-y-1">
+                {msg.deadlines.map((d, i) => (
+                  <li key={i} className="flex items-start gap-1.5">
+                    <Clock className="w-3 h-3 text-amber-500 mt-0.5 shrink-0" />
+                    <span>{d}</span>
+                  </li>
+                ))}
+              </ul>
+            </CollapsibleSection>
+          )}
+
+          {/* Costs */}
+          {msg.costs && msg.costs.length > 0 && (
+            <CollapsibleSection
+              title={t("lawyer.costs")}
+              icon={DollarSign}
+              color="violet"
+            >
+              <ul className="space-y-1">
+                {msg.costs.map((c, i) => (
+                  <li key={i} className="flex items-start gap-1.5">
+                    <DollarSign className="w-3 h-3 text-violet-500 mt-0.5 shrink-0" />
+                    <span>{c}</span>
+                  </li>
+                ))}
+              </ul>
+            </CollapsibleSection>
+          )}
+
+          {/* Sources */}
+          {msg.sources && msg.sources.length > 0 && (
+            <CollapsibleSection
+              title={t("lawyer.sources")}
+              icon={FileText}
+              color="slate"
+              defaultOpen={false}
+            >
+              <ul className="space-y-1">
+                {msg.sources.map((s, i) => (
+                  <li key={i} className="text-[10px]">
+                    <span className="font-medium">{s.file}</span>
+                    {s.article && (
+                      <span className="text-gray-400"> · {s.article}</span>
+                    )}
+                    <span className="text-gray-400">
+                      {" "}
+                      · {(s.score * 100).toFixed(0)}%
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </CollapsibleSection>
+          )}
+        </div>
+
+        {/* Action buttons */}
+        {!msg.isStreaming && msg.id !== "welcome" && (
+          <div className="flex items-center gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            <button
+              onClick={() => onCopy(msg.content, msg.id)}
+              className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded"
+              aria-label={t("lawyer.copy")}
+            >
+              {copiedId === msg.id ? (
+                <Check className="w-3.5 h-3.5 text-green-500" />
+              ) : (
+                <Copy className="w-3.5 h-3.5" />
+              )}
+            </button>
+            <button
+              onClick={() => onTogglePin(msg.id)}
+              className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded"
+              aria-label={
+                msg.pinned ? t("lawyer.unpinMessage") : t("lawyer.pinMessage")
+              }
+            >
+              {msg.pinned ? (
+                <PinOff className="w-3.5 h-3.5 text-blue-500" />
+              ) : (
+                <Pin className="w-3.5 h-3.5" />
+              )}
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }

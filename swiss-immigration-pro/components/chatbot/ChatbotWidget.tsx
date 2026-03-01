@@ -259,7 +259,7 @@ export default function ChatbotWidget() {
                     <Bot className={isMobile ? 'w-5 h-5' : 'w-4 h-4'} />
                   </div>
                   <div>
-                    <h3 className={cn('font-semibold', isMobile ? 'text-base' : 'text-sm')}>SwissImmi Assistant</h3>
+                    <h3 className={cn('font-semibold', isMobile ? 'text-base' : 'text-sm')}>SIP-AI</h3>
                     {!isMinimized && (
                       <div className="flex items-center gap-1.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
