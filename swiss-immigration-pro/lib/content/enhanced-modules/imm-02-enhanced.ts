@@ -3,7 +3,7 @@
 
 export const imm02Enhanced = {
   id: 'imm-02-enhanced',
-  title: 'Swiss Cover Letter Mastery: Professional Application Letters 2025',
+  title: 'Swiss Cover Letter Mastery',
   description: 'Master the art of writing compelling Swiss cover letters (Bewerbungsschreiben) that get results. Learn Swiss professional communication standards, cultural nuances, legal compliance requirements, and proven frameworks that increase application success rates by 3x in the competitive Swiss job market.',
   estimatedReadTime: '90-120 minutes',
   lastUpdated: 'January 2025',

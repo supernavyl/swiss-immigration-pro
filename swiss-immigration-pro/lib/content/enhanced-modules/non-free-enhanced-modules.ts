@@ -41,7 +41,7 @@ export interface EnhancedModule {
 
 export const imm01Enhanced: EnhancedModule = {
   id: 'imm-01-enhanced',
-  title: 'Understanding Swiss Visa Types: Complete 2025 Guide',
+  title: 'Understanding Swiss Visa Types',
   description: 'Master all Swiss permit types (L, B, G, C) with official SEM data, real timelines, and proven strategies',
   estimatedReadTime: '45-60 minutes',
   lastUpdated: 'January 2025',
@@ -49,13 +49,13 @@ export const imm01Enhanced: EnhancedModule = {
     {
       id: 'overview',
       title: 'Swiss Permit System Overview',
-      content: `# Understanding Swiss Visa Types: Complete 2025 Guide
+      content: `# Understanding Swiss Visa Types
 
 ## The Swiss Permit System
 
-Switzerland operates a sophisticated permit system designed to balance economic needs with immigration control. As of 2025, the country has seen significant changes in immigration patterns, with net immigration declining by 15.6% compared to previous years.
+Switzerland operates a sophisticated permit system designed to balance economic needs with immigration control. The country has seen significant changes in immigration patterns, with net immigration declining by 15.6% compared to previous years.
 
-### Key Statistics (2025)
+### Key Statistics
 
 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 2rem 0;">
   <div style="background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%); border: 2px solid #3b82f6; padding: 1.5rem; border-radius: 0.5rem; text-align: center;">
@@ -259,7 +259,7 @@ The B Permit is a **residence permit** for long-term stays in Switzerland. It's 
 
 **Legal Basis:** AuG Art. 32-35, VZAE Art. 24-25
 
-### B Permit Statistics (2025)
+### B Permit Statistics
 
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0;">
   <div style="background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%); border: 2px solid #3b82f6; padding: 1.5rem; border-radius: 0.5rem; text-align: center;">

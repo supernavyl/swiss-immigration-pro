@@ -3,7 +3,7 @@
 
 export const imm01Enhanced = {
   id: 'imm-01-enhanced',
-  title: 'Swiss CV Template & Formatting: Complete Professional Guide 2025',
+  title: 'Swiss CV Template and Formatting',
   description: 'Master the Swiss CV format with comprehensive templates, formatting guidelines, cultural insights, and proven strategies. Learn exactly how Swiss employers evaluate CVs, what information to include, what to exclude, and how to optimize your CV for maximum impact in the Swiss job market.',
   estimatedReadTime: '85-110 minutes',
   lastUpdated: 'January 2025',

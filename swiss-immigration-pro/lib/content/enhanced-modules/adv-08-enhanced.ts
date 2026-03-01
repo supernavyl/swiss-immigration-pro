@@ -3,7 +3,7 @@
 
 export const adv08Enhanced = {
   id: 'adv-08-enhanced',
-  title: 'Swiss Housing & Cost of Living: Complete Practical Guide 2025',
+  title: 'Swiss Housing and Cost of Living',
   description: 'Master Swiss rental markets, housing requirements, cost of living, and practical living expenses. Comprehensive guide to finding housing, rental contracts, deposits, utilities, living costs by canton, and budgeting strategies. Includes detailed analysis of rental law, housing documentation requirements, cost breakdowns, and optimization strategies.',
   estimatedReadTime: '95-120 minutes',
   lastUpdated: 'January 2025',

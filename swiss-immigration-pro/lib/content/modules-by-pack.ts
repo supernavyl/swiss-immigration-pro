@@ -61,24 +61,26 @@ export const MODULES_BY_PACK = {
   immigration: {
     packId: 'immigration',
     packName: 'Immigration Pack',
-    moduleIds: ['imm-01', 'imm-02', 'imm-03', 'imm-04', 'imm-05'],
-    moduleCount: 5
+    moduleIds: ['imm-01', 'imm-02', 'imm-03', 'imm-04', 'imm-05', 'imm-06', 'imm-07', 'imm-08'],
+    moduleCount: 8
   },
   advanced: {
     packId: 'advanced',
     packName: 'Advanced Pack',
     moduleIds: [
-      'adv-01', 'adv-02', 'adv-03', 'adv-04', 'adv-05'
+      'adv-01', 'adv-02', 'adv-03', 'adv-04', 'adv-05',
+      'adv-06', 'adv-07', 'adv-08', 'adv-09', 'adv-10'
     ],
-    moduleCount: 5
+    moduleCount: 10
   },
   citizenship: {
     packId: 'citizenship',
     packName: 'Citizenship Pro Pack',
     moduleIds: [
-      'cit-01', 'cit-02', 'cit-03', 'cit-04', 'cit-05'
+      'cit-01', 'cit-02', 'cit-03', 'cit-04', 'cit-05',
+      'cit-06', 'cit-07', 'cit-08', 'cit-09', 'cit-10'
     ],
-    moduleCount: 5
+    moduleCount: 10
   }
 } as const
 

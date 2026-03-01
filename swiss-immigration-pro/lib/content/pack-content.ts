@@ -19,16 +19,29 @@ import { imm02Enhanced as imm02EnhancedNew } from './enhanced-modules/imm-02-enh
 import { imm03Enhanced } from './enhanced-modules/imm-03-enhanced'
 import { imm04Enhanced } from './enhanced-modules/imm-04-enhanced'
 import { imm05Enhanced } from './enhanced-modules/imm-05-enhanced'
+import { imm06Enhanced } from './enhanced-modules/imm-06-enhanced'
+import { imm07Enhanced } from './enhanced-modules/imm-07-enhanced'
+import { imm08Enhanced } from './enhanced-modules/imm-08-enhanced'
 import { adv01Enhanced } from './enhanced-modules/adv-01-enhanced'
 import { adv02Enhanced } from './enhanced-modules/adv-02-enhanced'
 import { adv03Enhanced } from './enhanced-modules/adv-03-enhanced'
 import { adv04Enhanced } from './enhanced-modules/adv-04-enhanced'
 import { adv05Enhanced } from './enhanced-modules/adv-05-enhanced'
+import { adv06Enhanced } from './enhanced-modules/adv-06-enhanced'
+import { adv07Enhanced } from './enhanced-modules/adv-07-enhanced'
+import { adv08Enhanced } from './enhanced-modules/adv-08-enhanced'
+import { adv09Enhanced } from './enhanced-modules/adv-09-enhanced'
+import { adv10Enhanced } from './enhanced-modules/adv-10-enhanced'
 import { cit01Enhanced } from './enhanced-modules/cit-01-enhanced'
 import { cit02Enhanced } from './enhanced-modules/cit-02-enhanced'
 import { cit03Enhanced } from './enhanced-modules/cit-03-enhanced'
 import { cit04Enhanced } from './enhanced-modules/cit-04-enhanced'
 import { cit05Enhanced } from './enhanced-modules/cit-05-enhanced'
+import { cit06Enhanced } from './enhanced-modules/cit-06-enhanced'
+import { cit07Enhanced } from './enhanced-modules/cit-07-enhanced'
+import { cit08Enhanced } from './enhanced-modules/cit-08-enhanced'
+import { cit09Enhanced } from './enhanced-modules/cit-09-enhanced'
+import { cit10Enhanced } from './enhanced-modules/cit-10-enhanced'
 
 export interface PackContent {
   packId: string
@@ -91,175 +104,19 @@ export const PACK_CONTENT: Record<string, PackContent> = {
         duration: freeModule01Enhanced.estimatedReadTime,
         order: 1,
         completed: false,
-        content: '',
         enhancedModule: freeModule01Enhanced,
-        content: `# Swiss Immigration Fast-Track Foundations (2025)
-
-## The Swiss Immigration Reality Check
-
-**Welcome to Swiss Immigration Pro** – the most comprehensive, legally-accurate platform for Swiss work permits. Our free content alone saves applicants an average of **<span class="chf-amount" translate="no">CHF</span> 2,500** in consultant fees by giving you insider knowledge that's usually behind paywalls.
-
-**Real Talk**: Swiss immigration isn't just paperwork – it's a strategic game where 73% of applicants fail on their first attempt. We cut through the complexity with battle-tested frameworks.
-
-## The Three Fastest Legal Pathways (Updated 2025)
-
-### 1. <span class="notranslate" translate="no">EU/EFTA</span> Freedom of Movement (<span class="notranslate" translate="no">FMPA</span>) - "The Golden Ticket"
-- **Legal basis**: Agreement on the Free Movement of Persons (<span class="notranslate" translate="no">FMPA</span>), <span class="notranslate" translate="no">AuG</span> (<span class="notranslate" translate="no">SR 142.20</span>) <span class="notranslate" translate="no">Art.</span> 2, <span class="notranslate" translate="no">VZAE</span> (<span class="notranslate" translate="no">SR 142.201</span>) <span class="notranslate" translate="no">Art.</span> 7-23  
-- **Turnaround**: 2-4 weeks once documents are ready (vs. 8-12 weeks for <span class="swiss-term" translate="no">non-EU</span>)
-- **Success Rate**: 94% approval rate (based on <span class="swiss-legal-term" translate="no">SEM</span> 2024 data)
-- **What you need**: Employment contract, health insurance (<span class="notranslate" translate="no">KVG</span>-compliant), commune registration within 14 days
-- **Hidden Advantage**: No labor market test required - you bypass the quota system entirely
-- **Official source**: [<span class="notranslate" translate="no">SEM</span> – <span class="notranslate" translate="no">EU/EFTA</span> Citizens](https://www.sem.admin.ch/sem/en/home/themen/arbeit/eu_efta-angehoerige.html)
-
-**Pro Tip**: Even as <span class="notranslate" translate="no">EU</span> citizens, 23% get rejected for incomplete health insurance. Our templates ensure <span class="notranslate" translate="no">KVG</span> compliance.
-
-### 2. Highly Skilled Non-<span class="notranslate" translate="no">EU</span> Specialists (Permits <span class="notranslate" translate="no">L</span> & <span class="notranslate" translate="no">B</span>) - "The Competitive Path"
-- **Legal basis**: <span class="notranslate" translate="no">AuG Art.</span> 21-24, <span class="notranslate" translate="no">VZAE Art.</span> 23 (<span class="notranslate" translate="no">L</span> permits), <span class="notranslate" translate="no">Art.</span> 18-25 (<span class="notranslate" translate="no">B</span> permits)  
-- **Quota availability (2025)**: 4,000 <span class="notranslate" translate="no">L</span> + 4,500 <span class="notranslate" translate="no">B</span> permits for third-country nationals
-- **Competition Level**: Extremely competitive - average applicant-to-permit ratio: 8:1
-- **What we optimise**: Salary benchmarks by canton, employer motivation letters, strategic canton selection, perfect timing
-- **Key Success Factor**: Salary above cantonal minimum + demonstrated unique qualifications
-
-**Reality Check**: 67% of <span class="permit-code" translate="no">L</span> permit applications fail due to insufficient salary justification. We show you exactly how to calculate and prove market value.
-
-### 3. Corporate Transfers & Innovation Visas - "The Elite Lane"
-- **Legal basis**: <span class="swiss-legal-term" translate="no">AuG</span> <span class="swiss-legal-term" translate="no">Art.</span> 19, <span class="swiss-legal-term" translate="no">VZAE</span> <span class="swiss-legal-term" translate="no">Art.</span> 28-30 for intra-company transfers; Start-up facilitation per <span class="swiss-legal-term" translate="no">SEM</span> practice notes  
-- **Why it works**: Cantons desperately need innovation - Tech, Pharma, MedTech, FinTech get priority
-- **Processing**: 4-6 weeks vs. 8-12 weeks standard
-- **Requirements**: Company transfer agreement OR innovative business plan with growth potential
-- **Our support**: Employer compliance pack, innovation evidence checklist, cantonal liaison brief
-
-**Insider Info**: <span class="canton-code" translate="no">Zug</span> and <span class="canton-code" translate="no">Basel-Stadt</span> approved 40% more innovation visas in 2024. We know exactly which cantons are innovation-hungry.
-
----
-
-## The 7 Deadly Mistakes That Kill 73% of Applications
-
-Based on <span class="swiss-legal-term" translate="no">SEM</span>'s 2024 rejection analysis, here are the most common fatal errors:
-
-### 1. Missing Legal Citations (28% of rejections)
-**The Problem**: Cantonal case officers expect explicit references to Swiss law. Generic applications get rejected.
-**The Solution**: Every document must cite the correct article (<span class="swiss-legal-term" translate="no">AuG</span> <span class="swiss-legal-term" translate="no">Art.</span> 23, <span class="swiss-legal-term" translate="no">VZAE</span> <span class="swiss-legal-term" translate="no">Art.</span> 15, etc.)
-**Impact**: Missing citations = automatic rejection
-
-### 2. Wrong Canton Selection (19% of rejections)
-**The Problem**: Picking <span class="canton-code" translate="no">Zurich</span> first reduces <span class="swiss-term" translate="no">non-EU</span> success to 15%. Wrong canton = wrong salary expectations.
-**Our Data**: <span class="canton-code" translate="no">Basel-Stadt</span> success rate: 42%, <span class="canton-code" translate="no">Zug</span>: 38%, <span class="canton-code" translate="no">Zurich</span>: 15%, <span class="canton-code" translate="no">Geneva</span>: 28%
-**The Solution**: Strategic canton matching based on industry and salary requirements
-
-### 3. Late Quota Submission (16% of rejections)
-**The Problem**: November filings see <10% approval rates. Quotas fill fast.
-**Reality**: 2024 <span class="permit-code" translate="no">L</span> permits exhausted by September in competitive cantons
-**The Solution**: Submit 3-6 months before quota exhaustion (we track this for you)
-
-### 4. Insufficient Salary Justification (12% of rejections)
-**The Problem**: Employers don't know how to prove "market salary" requirements
-**The Solution**: SECO salary database cross-referencing + industry benchmarking
-
-### 5. Incomplete Health Insurance (9% of rejections)
-**The Problem**: Non-<span class="swiss-legal-term" translate="no">KVG</span> compliant insurance gets rejected immediately
-**The Solution**: Swiss-compliant health insurance verification checklist
-
-### 6. Weak Employer Commitment (8% of rejections)
-**The Problem**: Generic motivation letters that don't prove "why you specifically"
-**The Solution**: Job-specific motivation letters with measurable impact metrics
-
-### 7. Integration Gaps (8% of rejections)
-**The Problem**: Missing language certificates or integration proof
-**The Solution**: B2 German/French proficiency + canton-specific integration requirements
-
----
-
-## Our Battle-Tested Success Framework
-
-### Document Braintrust™
-- **47 SEM circulars** catalogued and searchable
-- **26 cantonal checklists** (Zurich, Geneva, Basel, Zug, Bern, etc.)
-- **18 employment law templates** updated quarterly
-- **Real-time quota tracking** across all cantons
-
-### Permit Probability Engine™
-Our calculators blend:
-- Live <span class="swiss-legal-term" translate="no">SEM</span> quota data (updated weekly)
-- <span class="swiss-legal-term" translate="no">SECO</span> salary contribution databases
-- Historical approval rates by canton/industry
-- Risk assessment algorithms
-
-**Result**: Know your approval probability before applying (saves 3-6 months of waiting)
-
-### Integration Milestones Mapping™
-We map your complete 10-year journey:
-- **Year 1-2**: <span class="permit-code" translate="no">L</span> permit acquisition
-- **Year 3-5**: <span class="permit-code" translate="no">B</span> permit conversion
-- **Year 6-8**: <span class="permit-code" translate="no">C</span> permit eligibility
-- **Year 9-10**: Citizenship application
-
-References: <span class="swiss-legal-term" translate="no">StAG</span> <span class="swiss-legal-term" translate="no">Art.</span> 12, <span class="swiss-legal-term" translate="no">OLN</span> <span class="swiss-legal-term" translate="no">Art.</span> 6, <span class="swiss-legal-term" translate="no">AuG</span> <span class="swiss-legal-term" translate="no">Art.</span> 34
-
----
-
-## Trust Signals You Can Verify Today
-
-### ✓ Official Legal References in Every Module
-No generic advice. Every recommendation cites the exact ordinance:
-- <span class="swiss-legal-term" translate="no">AuG</span> (Foreign Nationals Act)
-- <span class="swiss-legal-term" translate="no">VZAE</span> (Implementation Ordinance)
-- <span class="swiss-legal-term" translate="no">StAG</span> (Citizenship Act)
-- <span class="swiss-legal-term" translate="no">KVG</span> (Health Insurance Act)
-- <span class="swiss-legal-term" translate="no">SEM</span> circulars and practice notes
-
-### ✓ Success Playbooks Audited Quarterly
-We update after each <span class="swiss-legal-term" translate="no">SEM</span> bulletin:
-- 2024 Q4: Integration requirements tightened
-- 2025 Q1: Salary thresholds increased in <span class="canton-code" translate="no">Zurich</span> (+8%)
-- 2025 Q2: New AI/tech sector quotas announced
-
-### ✓ Real Specialists with Swiss Law Degrees
-Every checklist cites enforceable law. Not opinions - court-tested legal frameworks.
-
-### ✓ 87% Success Rate (Verified by Client Outcomes)
-- Immigration Pack: 89% permit success
-- Advanced Pack: 91% success
-- Citizenship Pro: 94% approval rate
-
----
-
-## Your 15-Minute Action Plan
-
-**Immediate Actions (Today):**
-- [ ] Download <span class="swiss-legal-term" translate="no">SEM</span> nationality guide ([link provided])
-- [ ] Calculate your canton salary requirements ([use our free calculator])
-- [ ] Check current quota status for your canton
-- [ ] Verify health insurance <span class="swiss-legal-term" translate="no">KVG</span> compliance
-
-**Week 1 Actions:**
-- [ ] Prepare employment contract template
-- [ ] Research 3 target cantons with quota availability
-- [ ] Begin language preparation (B2 level required)
-- [ ] Connect with potential Swiss employers
-
-**Week 2 Actions:**
-- [ ] Complete document checklist audit
-- [ ] Book strategy consultation (optional)
-- [ ] Subscribe to quota alerts
-
----
-
-## Ready to Stop Guessing and Start Winning?
-
-**Free users get**: Basic checklists, quota alerts, legal frameworks
-
-**Immigration Pack unlocks**:
-- Complete cantonal strategy playbook (26 cantons detailed)
-- Salary negotiation scripts (save <span class="chf-amount" translate="no">CHF</span> 15,000+ annually)
-- Embassy-ready document kits (no rejections for formatting)
-- AI tutor for motivation letters (<span class="swiss-legal-term" translate="no">AuG</span> <span class="swiss-legal-term" translate="no">Art.</span> 23 compliant)
-- Priority support with permit specialists
-
-**Don't let another year pass** with uncertain immigration status. Swiss work permits are your gateway to Europe's strongest economy, best work-life balance, and highest salaries.
-
-**Next**: Choose your permit type and let's get you approved.
-`
+        quiz: {
+          questions: [
+            { question: 'What is the main distinction in Switzerland\'s immigration system?', options: ['Age-based track', 'Dual-track (EU/EFTA vs Third-Country)', 'Income-based track', 'Language-based track'], correct: 1 },
+            { question: 'How many foreign residents does Switzerland host?', options: ['500,000', '1.2 million', '2.4 million', '4 million'], correct: 2 },
+            { question: 'Which agreement governs EU/EFTA citizens\' access to Switzerland?', options: ['Schengen Agreement', 'Dublin Regulation', 'Agreement on Free Movement of Persons (FMPA)', 'Lisbon Treaty'], correct: 2 },
+            { question: 'How many cantons does Switzerland have?', options: ['16', '20', '26', '30'], correct: 2 }
+          ]
+        },
+        exercises: [
+          { title: 'Identify Your Track', description: 'Determine whether you fall under the EU/EFTA or Third-Country track and list the key differences that apply to you' },
+          { title: 'Canton Research', description: 'Research your target canton\'s migration office website and note their specific requirements' }
+        ]
       },
       {
         id: 'free-02',
@@ -269,117 +126,19 @@ Every checklist cites enforceable law. Not opinions - court-tested legal framewo
         duration: freeModule02Enhanced.estimatedReadTime,
         order: 2,
         completed: false,
-        content: '',
         enhancedModule: freeModule02Enhanced,
-        content: `# Permit Approval Readiness Checklist
-
-## The 41% Rejection Reality
-
-**<span class="swiss-legal-term" translate="no">SEM</span>'s 2024 Rejection Report** revealed that 41% of applications fail due to missing or incorrect documents. Most applicants think they have everything ready, but the devil is in the details.
-
-**Our audit checklist** has helped **2,847 applicants** catch fatal errors before submission, increasing their approval odds by 3.2x.
-
----
-
-## 📋 Complete Document Readiness Audit
-
-### Stage 1: Personal Eligibility (15 minutes)
-**These documents must be perfect - no exceptions:**
-
-- [ ] **Passport**: Valid minimum 15 months beyond intended permit period
-- [ ] **Criminal Record**: Clean extract, issued within 3 months (<span class="swiss-legal-term" translate="no">AuG</span> <span class="swiss-legal-term" translate="no">Art.</span> 62)
-- [ ] **Diploma Verification**: Apostilled translations for <span class="swiss-term" translate="no">non-EU/EFTA</span> qualifications
-- [ ] **Health Insurance**: <span class="swiss-legal-term" translate="no">KVG</span>-compliant plan drafted (not just "any" insurance)
-- [ ] **Language Certificates**: B2 level proof if required by canton
-
-**Pro Tip**: <span class="canton-code" translate="no">Basel</span> requires German B2 for all <span class="swiss-term" translate="no">non-EU</span> applicants. <span class="canton-code" translate="no">Zurich</span> accepts English alternatives.
-
-### Stage 2: Employment Documentation (30 minutes)
-**This is where 67% of applications fail:**
-
-- [ ] **Employment Contract**: Swiss labour law compliant (OR Art. 319-362)
-- [ ] **Salary Justification**: SECO benchmark + 10% premium for your role
-- [ ] **Employer Motivation Letter**: Explicitly cites <span class="swiss-legal-term" translate="no">AuG</span> <span class="swiss-legal-term" translate="no">Art.</span> 23 para. 1
-- [ ] **Job Advertising Proof**: Minimum 14 days on job-room.ch (<span class="swiss-legal-term" translate="no">SECO</span> requirement)
-- [ ] **Employer Financials**: 2 years of audited accounts or tax returns
-
-**Reality Check**: Generic contracts get rejected. We have canton-specific templates.
-
-### Stage 3: Cantonal Strategy (20 minutes)
-**Wrong canton = 85% failure rate:**
-
-- [ ] **Quota Timing**: Submit before saturation (<span class="canton-code" translate="no">Zurich</span>: March, <span class="canton-code" translate="no">Basel</span>: June)
-- [ ] **Cantonal Fees**: <span class="chf-amount" translate="no">CHF</span> 100-250 prepared (varies by canton)
-- [ ] **Commune Registration**: Appointment booked for arrival (<span class="swiss-legal-term" translate="no">AuG</span> <span class="swiss-legal-term" translate="no">Art.</span> 27)
-- [ ] **Industry Alignment**: Job matches cantonal priority sectors
-
-**Data Insight**: <span class="canton-code" translate="no">Zug</span> approved 40% more tech roles in 2024 than <span class="canton-code" translate="no">Zurich</span>.
-
-### Stage 4: Integration Readiness (10 minutes)
-**Required for <span class="permit-code" translate="no">B</span> permits and citizenship:**
-
-- [ ] **Language Proficiency**: B2 certificate or equivalent
-- [ ] **Integration Course**: Completion certificate if required
-- [ ] **Accommodation Proof**: Rental agreement or property ownership
-- [ ] **Financial Proof**: Bank statements showing self-sufficiency
-
----
-
-## 🛠️ Your Free Resources (Download Now)
-
-**Permit Readiness Excel Checklist**
-- 47-item audit against AuG/VZAE requirements
-- Automatic scoring (0-100 points)
-- Missing document alerts
-- Canton-specific requirements
-
-**Employer Motivation Letter Template**
-- Pre-filled with legal citations
-- Industry-specific impact metrics
-- Salary justification framework
-- Officer-ready formatting
-
-**Salary Benchmark Database**
-- Live <span class="swiss-legal-term" translate="no">SECO</span> data integration
-- Canton-by-canton breakdowns
-- Industry-specific medians
-- Negotiation leverage points
-
----
-
-## 🎯 What Free Users Miss (And Paid Users Get)
-
-**Free Access**: Basic checklists and legal references
-
-**Immigration Pack ($197)**: Everything above PLUS
-- **26 Canton Strategy Playbooks** (detailed tactics for each canton)
-- **Salary Negotiation Scripts** (save <span class="chf-amount" translate="no">CHF</span> 15,000+ annually)
-- **Embassy-Ready Document Kits** (perfect formatting, no rejections)
-- **AI Motivation Letter Tutor** (generates officer-approved content)
-- **Priority Expert Support** (48-hour response time)
-
-**Advanced Pack ($397)**: Everything above PLUS
-- **Interview Simulation Bot** (practice with real officer questions)
-- **Live Quota Tracking** (real-time availability alerts)
-- **Employer Outreach Templates** (cold email sequences that work)
-- **Integration Timeline Planner** (10-year citizenship roadmap)
-
-**Citizenship Pro ($597)**: Everything above PLUS
-- **<span class="swiss-legal-term" translate="no">StAG</span> Citizenship Application** (complete filing package)
-- **Language Exam Preparation** (B2/C1 level coaching)
-- **Citizenship Interview Training** (with former examiners)
-- **Family Application Bundles** (spouse + children included)
-
----
-
-## 🚀 Ready to Go From 41% Risk to 89% Success?
-
-Most applicants waste 6-12 months on rejected applications. Don't be one of them.
-
-**Start with our free checklist**, then upgrade when you're serious about success. Swiss immigration is a marathon, not a sprint - but with the right tools, you'll finish first.
-
-**Next Action**: Download the Excel checklist and score your current readiness.
-`
+        quiz: {
+          questions: [
+            { question: 'How long must your passport be valid beyond the permit period?', options: ['3 months', '6 months', '12 months', '15 months'], correct: 3 },
+            { question: 'What type of health insurance is required in Switzerland?', options: ['Any international plan', 'KVG-compliant Swiss plan', 'Employer-provided only', 'None required initially'], correct: 1 },
+            { question: 'Within how many days must you register at your commune after arrival?', options: ['7 days', '14 days', '30 days', '90 days'], correct: 1 },
+            { question: 'Who is responsible for submitting a work permit application?', options: ['The applicant directly', 'The employer', 'A registered lawyer', 'The Swiss embassy'], correct: 1 }
+          ]
+        },
+        exercises: [
+          { title: 'Document Audit', description: 'Go through each item in the readiness checklist and mark which documents you already have and which you still need to obtain' },
+          { title: 'Timeline Builder', description: 'Create a personal timeline with deadlines for gathering all required documents before your target application date' }
+        ]
       },
       {
         id: 'free-03',
@@ -389,8 +148,17 @@ Most applicants waste 6-12 months on rejected applications. Don't be one of them
         duration: freeModule03Enhanced.estimatedReadTime,
         order: 3,
         completed: false,
-        content: '',
-        enhancedModule: freeModule03Enhanced
+        enhancedModule: freeModule03Enhanced,
+        quiz: {
+          questions: [
+            { question: 'What is the annual quota for non-EU/EFTA work permits?', options: ['4,000', '6,500', '8,500', '12,000'], correct: 2 },
+            { question: 'Which permit leads to permanent residence?', options: ['L Permit', 'G Permit', 'B Permit converting to C Permit', 'S Permit'], correct: 2 },
+            { question: 'What language level is typically required for integration?', options: ['A1', 'A2', 'B1', 'C1'], correct: 2 }
+          ]
+        },
+        exercises: [
+          { title: 'Pathway Mapping', description: 'Based on your nationality and situation, map out your specific permit progression pathway with estimated timelines' }
+        ]
       }
     ],
     resources: [
@@ -408,724 +176,25 @@ Most applicants waste 6-12 months on rejected applications. Don't be one of them
     modules: [
       {
         id: 'imm-01',
-        title: 'Understanding Swiss Visa Types',
-        description: 'Complete guide to L, B, G permits and which one you need',
-        type: 'guide',
-        duration: '45 min read',
+        title: imm01Enhanced.title,
+        description: imm01Enhanced.description,
+        type: 'interactive',
+        duration: imm01Enhanced.estimatedReadTime,
         order: 1,
         enhancedModule: imm01Enhanced,
-        content: `# Understanding Swiss Visa Types: Complete 2025 Guide
-
-## Overview: The Swiss Permit System
-
-Switzerland operates a sophisticated permit system designed to balance economic needs with immigration control. As of 2025, the country has seen significant changes in immigration patterns, with net immigration declining by 15.6% compared to previous years ([Swissinfo.ch](https://www.swissinfo.ch/eng/workplace-switzerland/the-changing-face-of-swiss-immigrants/89161064)). Understanding the permit system is crucial for anyone planning to work, study, or live in Switzerland.
-
-### Key Statistics (2025)
-- **Total Foreign Population**: 2,368,364 (over 25% of total population)
-- **Net Immigration 2024**: 83,392 people (down from 98,851 in 2023)
-- **EU/EFTA Nationals**: Represent 70.7% of all new arrivals
-- **Largest Immigrant Groups**: Germany (14%), France, Italy, Portugal
-
----
-
-## L Permit - Short-Term Residence Permit
-
-### What is the L Permit?
-
-The L Permit is a **short-term residence permit** valid for up to 12 months. It's designed for temporary workers, project-based employees, and seasonal workers.
-
-### Key Characteristics
-
-- **Maximum Duration**: 12 months (can be renewed in exceptional circumstances)
-- **Employment Type**: Temporary or project-based work
-- **Quota System**: Limited quotas for non-EU/EFTA citizens
-- **Path to Permanent Residence**: Time counts toward C permit eligibility
-
-### Who Qualifies for L Permit?
-
-#### For EU/EFTA Nationals (EU 27 + EFTA):
-- ✓ No quota restrictions - Unlimited permits
-- ✓ Simplified application process - No labor market test required
-- ✓ Priority processing (typically 2-4 weeks)
-- ✓ Automatic right to work if you have a job offer
-- ✓ Family members can join easily - Spouse and children under 21
-- ✓ Faster path to permanent residence - 5 years instead of 10
-
-**EU Countries Include:**
-- 🇮🇹 **Italy**: Strong community, Italian-speaking Ticino canton popular
-- 🇵🇹 **Portugal**: Growing community, many in hospitality and construction
-- 🇵🇱 **Poland**: Large community in Switzerland
-- 🇺🇦 **Ukraine**: S permits available for refugees, regular work permits also accessible
-- 🇫🇷 **France**: Cross-border workers (G permit) very common
-- 🇩🇪 **Germany**: Largest source of immigrants (14% of total)
-- 🇪🇸 **Spain**: Growing numbers in recent years
-- 🇷🇴 **Romania & Bulgaria**: Full EU rights since 2014
-- All other EU 27 member states
-
-**EFTA Countries:**
-- 🇳🇴 Norway
-- 🇮🇸 Iceland
-- 🇱🇮 Liechtenstein
-
-#### For Non-EU/EFTA Nationals:
-- ✓ Must fall within annual quota (4,000 L permits in 2025)
-- ✓ Stricter requirements - Must prove unique qualifications
-- ✓ Longer processing time (8-12 weeks)
-- ✓ Must demonstrate unique qualifications - Why not a Swiss/EU worker?
-
-**Common Non-EU Nationalities:**
-- 🇨🇳 **China**: Quota applies, strong demand in tech and finance
-- 🇯🇵 **Japan**: Quota applies, but strong bilateral relations may help
-- 🇮🇳 **India**: Large applicant pool, competitive
-- 🇺🇸 **United States**: Quota applies
-- 🇬🇧 **United Kingdom**: Post-Brexit, now treated as non-EU (quota applies)
-- 🇧🇷 **Brazil**: Growing numbers
-- All other non-EU countries
-
-### Step-by-Step Application Process
-
-#### Step 1: Secure Employment (Before Application)
-- Receive a **written job offer** from Swiss employer
-- Employment contract must be **at least 12 months**
-- Salary must meet **Swiss minimum wage requirements**
-
-#### Step 2: Employer Initiates Application
-- **Your employer** (not you) must apply to the cantonal migration office
-- Employer submits justification letter explaining why a foreign worker is needed
-- If quota applies, employer must prove quota availability
-
-#### Step 3: Document Preparation
-You must prepare:
-1. **Valid passport** (minimum 6 months validity)
-2. **Passport photos** (2-4 recent, biometric-compliant)
-3. **Employment contract** (signed by both parties)
-4. **Educational certificates** (translated and certified if not in German/French/Italian)
-5. **CV in Swiss format** (with photo)
-6. **Health insurance proof** (Swiss-compliant insurance)
-7. **Criminal record certificate** (from home country, not older than 3 months)
-8. **Proof of accommodation** (rental agreement or hotel booking)
-
-#### Step 4: Submission to Cantonal Authority
-- Documents submitted to **cantonal migration office** where employer is located
-- Processing time: **8-12 weeks** for non-EU/EFTA, **2-4 weeks** for EU/EFTA
-- You may be called for an **interview** (rare for EU/EFTA, more common for non-EU/EFTA)
-
-#### Step 5: Approval and Collection
-- Once approved, you receive **approval notification**
-- You must collect permit from **Swiss embassy/consulate** in your home country
-- Enter Switzerland within **90 days** of permit issuance
-- Register at local municipality within **14 days** of arrival
-
-### Important L Permit Details
-
-**Renewal Conditions:**
-- L permits can be renewed, but it's not guaranteed
-- Must show continued employment
-- Employer must justify ongoing need
-- Maximum total duration typically **24 months** before requiring B permit
-
-**Work Restrictions:**
-- ✓ Can work only for employer specified in permit
-- ✓ Can change employers (requires new application)
-- ✗ Cannot freelance or work for multiple employers without authorization
-- ✗ Cannot start own business
-
----
-
-## B Permit - Residence Permit (Long-Term)
-
-### What is the B Permit?
-
-The B Permit is a **residence permit** for long-term stays in Switzerland. It's renewable annually and is the standard path to permanent residence (C permit).
-
-### Key Characteristics
-
-- **Initial Duration**: 12 months
-- **Renewal**: Annual renewal for up to 5 years
-- **Path to C Permit**: After 5 consecutive years with B permit
-- **EU Priority**: EU/EFTA nationals have priority access
-
-### Who Qualifies for B Permit?
-
-1. **Long-Term Employees**
-   - Indefinite employment contracts
-   - Annual salary typically CHF 60,000+ (varies by canton)
-   - Employer sponsorship required
-
-2. **Family Members**
-   - Spouses of B/L permit holders
-   - Children under 18
-   - Dependent parents (in exceptional cases)
-
-3. **Business Founders**
-   - Entrepreneurs with sufficient capital
-   - Business plan approved by cantonal authorities
-   - Job creation for Swiss residents
-
-4. **Students**
-   - Enrolled in Swiss university or school
-   - Proof of sufficient funds
-   - Health insurance mandatory
-
-### Annual Renewal Process: Step-by-Step
-
-#### When to Renew
-- **Start process**: 2-3 weeks before permit expiry
-- **Deadline**: Permit must be renewed before expiry date
-- **Late renewal**: Can result in fines or permit cancellation
-
-#### Required Documents for Renewal
-1. **Current B permit** (original)
-2. **Valid passport**
-3. **Employment contract** (updated if changed)
-4. **Salary statement** (last 3 months)
-5. **Tax clearance certificate** (from cantonal tax office)
-6. **Health insurance certificate** (current)
-7. **Residence registration** (from municipality)
-8. **Integration proof** (language certificates, community involvement)
-
-#### Integration Requirements
-Switzerland emphasizes integration. For renewal, you should demonstrate:
-- **Language proficiency**: Basic German/French/Italian (A2-B1 level)
-- **Tax compliance**: All taxes paid on time
-- **No criminal record**: Clean criminal background
-- **Community involvement**: Participation in local activities (optional but recommended)
-
-### B Permit Benefits
-
-✓ Full labor market access (after 1 year for EU/EFTA, varies for others)
-✓ Family reunification rights
-✓ Access to social benefits (after qualifying period)
-✓ Path to permanent residence
-✓ Can change employers (with notification)
-✓ Can purchase property (with restrictions)
-
-### B Permit Restrictions
-
-✗ Must maintain employment (unemployment can affect renewal)
-✗ Cannot access unemployment benefits immediately
-✗ Must live in issuing canton (can change with permission)
-✗ Annual renewal required (more administrative work)
-
----
-
-## G Permit - Cross-Border Worker Permit
-
-### What is the G Permit?
-
-The G Permit is for **cross-border workers** (frontaliers) who live in a neighboring country but work in Switzerland. This is popular with residents of France, Germany, Austria, and Italy.
-
-### Key Characteristics
-
-- **Duration**: Unlimited (as long as requirements are met)
-- **Residence**: Must live outside Switzerland
-- **Return Requirement**: Must return to home country at least once weekly
-- **No Integration Requirements**: Unlike B/L permits
-
-### Who Qualifies for G Permit?
-
-#### Basic Requirements:
-1. **Residence in border country**
-   - France: Living within 30km of Swiss border
-   - Germany/Austria/Italy: Similar border proximity
-   
-2. **Employment in Switzerland**
-   - Full-time or part-time
-   - Minimum 8 hours per week
-   
-3. **Weekly Return Home**
-   - Must return to home country at least once per week
-   - Usually return daily or on weekends
-
-#### EU/EFTA Priority:
-- EU/EFTA nationals have automatic right to G permit
-- No quota restrictions
-- Simplified application
-
-### Application Process for G Permit
-
-#### Step 1: Secure Employment
-- Receive job offer from Swiss employer
-- Employment can be temporary or permanent
-
-#### Step 2: Apply to Cantonal Authority
-- Apply to migration office in canton where you'll work
-- Submit: passport, employment contract, proof of residence in border country
-- Processing: **2-4 weeks** for EU/EFTA, **6-8 weeks** for others
-
-#### Step 3: Collect Permit
-- Collect from cantonal office or Swiss consulate
-- No need to register in Switzerland (you live abroad)
-
-### G Permit Benefits
-
-✓ Higher Swiss salaries while living in lower-cost countries
-✓ No Swiss tax on worldwide income (only on Swiss income)
-✓ Maintain home country benefits (healthcare, pensions)
-✓ No integration requirements
-✓ Simpler renewal process
-
-### G Permit Limitations
-
-✗ No path to Swiss citizenship (time doesn't count)
-✗ Must maintain border residence
-✗ Cannot access all Swiss social benefits
-✗ Daily/Weekly commute required
-
----
-
-## C Permit - Permanent Residence Permit
-
-### What is the C Permit?
-
-The C Permit is **permanent residence** in Switzerland. It's the most valuable permit and provides the most rights and freedoms.
-
-### How to Get C Permit
-
-#### For EU/EFTA Nationals:
-- **5 years** of continuous residence with B permit
-- **Integration requirements**: Language proficiency (B1), tax compliance
-- **Automatic eligibility** after 5 years
-
-#### For Non-EU/EFTA Nationals:
-- **10 years** of continuous residence (reduced to 5 in some cases)
-- **Stricter integration requirements**
-- **Discretionary approval** (not automatic)
-
-### C Permit Benefits
-
-✅ **No renewal required** (permanent)
-✅ **Full labor market access**
-✅ **Can change employers freely**
-✅ **Can start own business**
-✅ **Access to all social benefits**
-✅ **Path to citizenship** (after additional years)
-
----
-
-## Comprehensive Comparison Table
-
-| Feature | L Permit | B Permit | G Permit | C Permit |
-|---------|----------|----------|---------|----------|
-| **Duration** | 12 months | 12 months (renewable) | Unlimited | Permanent |
-| **Renewal Required** | Yes (limited) | Yes (annually) | Periodic | No |
-| **EU/EFTA Priority** | Limited | Yes | Yes | Yes |
-| **Quota for Non-EU** | Yes (4,000) | Yes (4,500) | Varies | No |
-| **Path to Citizenship** | Yes (time counts) | Yes | No | Yes |
-| **Family Reunification** | Limited | Yes | Limited | Yes |
-| **Can Change Employer** | With permission | With notification | Yes | Yes |
-| **Integration Required** | Basic | Moderate | No | High |
-| **Processing Time** | 8-12 weeks | 8-12 weeks | 2-4 weeks | 3-6 months |
-
----
-
-## 2025 Quota System for Non-EU/EFTA Citizens
-
-Switzerland maintains annual quotas for non-EU/EFTA citizens to control immigration levels.
-
-### Current Quotas (2025)
-- **Total Annual Quota**: 8,500 permits
-  - **L Permits**: 4,000
-  - **B Permits**: 4,500
-  
-### Quota Monitoring
-- Track remaining quotas on [SEM website](https://www.sem.admin.ch/sem/en/home/themen.html)
-- Quotas reset annually on January 1st
-- High-demand periods (Q1-Q2) fill quickly
-- Best application time: **Late Q3 - Early Q4**
-
-### Quota Exemptions
-Some categories are exempt from quotas:
-- ✅ Highly qualified specialists (scientists, researchers)
-- ✅ Managers and executives
-- ✅ Certain specialized professions
-- ✅ Family reunification cases
-
----
-
-## Cantonal Variations and Requirements
-
-Each Swiss canton has specific requirements and priorities. Understanding these can significantly improve your application success.
-
-### Major Cantons: Detailed Breakdown
-
-#### Zurich (ZH)
-- **Priority Industries**: IT, Finance, Banking, Consulting
-- **Language Requirement**: German B2 (strict)
-- **Processing Time**: 6-10 weeks
-- **Salary Expectations**: Higher (CHF 80,000+ typical)
-- **Integration**: Strong emphasis on German language
-
-#### Geneva (GE)
-- **Priority Industries**: Finance, International Organizations, Diplomacy
-- **Language Requirement**: French B2
-- **Processing Time**: 4-8 weeks
-- **Salary Expectations**: High (CHF 75,000+)
-- **Integration**: French language and international community
-
-#### Basel-Stadt & Basel-Landschaft (BS/BL)
-- **Priority Industries**: Pharmaceuticals, Biotechnology, Chemicals
-- **Language Requirement**: German B1-B2
-- **Processing Time**: 6-10 weeks
-- **Integration**: Moderate, strong expat community
-
-#### Vaud (VD)
-- **Priority Industries**: Tourism, Finance, Technology
-- **Language Requirement**: French B1-B2
-- **Processing Time**: 5-9 weeks
-- **Integration**: Moderate, welcoming to internationals
-
-#### Ticino (TI)
-- **Priority Industries**: Tourism, Finance, Technology
-- **Language Requirement**: Italian B1+
-- **Processing Time**: 6-10 weeks
-- **Integration**: Moderate, Italian culture
-
-### Choosing the Right Canton
-
-**Factors to Consider:**
-1. **Language**: Match your language skills
-2. **Industry**: Align with canton priorities
-3. **Cost of Living**: Zurich/Geneva most expensive
-4. **Integration**: Easier in international cities
-5. **Job Market**: Stronger in economic centers
-
----
-
-## Nationality-Specific Immigration Guide
-
-### 🇪🇺 EU/EFTA Citizens: Your Major Advantages
-
-#### Why EU/EFTA Citizens Have It Easier
-
-**1. Freedom of Movement (Bilateral Agreement)**
-- **No quotas** - You can apply any time of year
-- **No labor market test** - Employers don't need to prove no Swiss candidate available
-- **Fast processing** - 2-4 weeks typical approval
-- **Family rights** - Spouse and children under 21 can join automatically
-- **Equal treatment** - Same employment rights as Swiss citizens
-
-**2. Permit Types Available**
-
-**L Permit (EU/EFTA):**
-- **Duration**: Up to 12 months (renewable)
-- **Processing**: 2-4 weeks
-- **Required**: Job offer + employment contract
-- **No quota**: Unlimited permits
-
-**B Permit (EU/EFTA):**
-- **Duration**: 12 months (renewable annually)
-- **Processing**: 2-4 weeks
-- **Path to C Permit**: 5 years (vs. 10 for non-EU)
-- **Automatic renewal**: If employed and integrated
-
-**G Permit (Cross-Border Workers):**
-- **Perfect for**: Italians, French, Germans, Austrians
-- **Benefits**: Swiss salary, lower cost of living at home
-- **No integration requirements**
-- **Unlimited duration**
-
-**3. Specific EU Nationality Advantages**
-
-**🇮🇹 Italians:**
-- **Best Canton**: Ticino (Italian-speaking)
-- **Community**: 300,000+ Italians in Switzerland
-- **Language**: Native Italian helps in Ticino
-- **G Permit**: Very popular for border commuters
-- **Success Rate**: Very high, similar culture
-
-**🇵🇹 Portuguese:**
-- **Community**: 270,000+ Portuguese in Switzerland
-- **Industries**: Hospitality, construction, healthcare
-- **Language**: French-speaking cantons popular (Geneva, Vaud)
-- **Integration**: Strong community support
-
-**🇺🇦 Ukrainians:**
-- **S Permit**: Available for refugees (separate from work permits)
-- **Regular Work Permits**: Also possible if employer sponsors
-- **Community**: Growing rapidly since 2022
-- **Processing**: May be expedited for humanitarian cases
-
-**🇫🇷 French:**
-- **G Permit**: Very popular, 200,000+ cross-border workers
-- **Language**: Native French helps in French cantons
-- **Best Cantons**: Geneva, Vaud (close to border)
-- **Success Rate**: Very high
-
-**🇩🇪 Germans:**
-- **Largest Group**: 14% of all immigrants
-- **Language**: Native German helps in German cantons
-- **Industries**: Tech, finance, consulting
-- **Integration**: Easiest due to language and culture
-
-**🇪🇸 Spaniards:**
-- **Growing Group**: Increasing numbers
-- **Language**: French cantons popular
-- **Industries**: Hospitality, tech, finance
-
-**🇵🇱 Poles:**
-- **Large Community**: Strong presence
-- **Industries**: Construction, hospitality, IT
-- **Integration**: Good community support
-
-**4. EU/EFTA Application Process**
-
-**Step 1**: Secure job offer from Swiss employer
-**Step 2**: Register online with cantonal migration office
-**Step 3**: Submit documents (passport, contract, proof of residence in EU/EFTA country)
-**Step 4**: Receive approval notification (2-4 weeks)
-**Step 5**: Enter Switzerland and collect permit
-**Step 6**: Register at municipality within 14 days
-
-**Required Documents (EU/EFTA):**
-1. Valid EU/EFTA passport or ID card
-2. Employment contract
-3. Proof of health insurance
-4. Proof of accommodation (rental agreement or hotel)
-5. CV (optional but recommended)
-
-**That's it!** No educational certificates needed unless required by employer.
-
-### 🇯🇵 Japanese Citizens: Special Considerations
-
-**Status**: Non-EU, **quota applies** (8,500 total non-EU permits/year)
-
-**Advantages:**
-- **Strong bilateral relations** between Switzerland and Japan
-- **Respected work culture** - Swiss employers value Japanese professionals
-- **Tech expertise** - High demand in IT, finance, engineering
-- **Cultural exchange programs** - Some special pathways
-
-**Industries Where Japanese Succeed:**
-- **Technology**: Software engineering, robotics, automation
-- **Finance**: Investment banking, asset management
-- **Engineering**: Mechanical, electrical, automotive
-- **Luxury Goods**: Watchmaking, fashion
-
-**Application Strategy:**
-- **Target cantons**: Zurich, Geneva (international companies)
-- **Salary**: Aim for CHF 100k+ to be competitive
-- **Timing**: Apply early (January-March) for best quota access
-- **Language**: English often sufficient for tech roles, but German/French B1+ helps
-
-**Required Documents (Japanese):**
-- Valid passport
-- Employment contract
-- University degree (apostilled)
-- CV in Swiss format (with photo)
-- Health insurance proof
-- Criminal record (from Japan, translated)
-- Educational certificates (translated and apostilled)
-
-**Processing Time**: 8-12 weeks (quota system)
-
-**Success Rate**: Moderate (quota competition), but strong candidates with good salaries have good chances
-
-### 🇨🇳 Chinese Citizens: Comprehensive Guide
-
-**Status**: Non-EU, **quota applies** (8,500 total non-EU permits/year)
-
-**Current Situation (2025):**
-- **High demand**: Many Chinese professionals want to work in Switzerland
-- **Competitive**: Must compete for limited quota spots
-- **Strong candidates**: Chinese applicants often have excellent qualifications
-
-**Industries Where Chinese Succeed:**
-- **Technology**: Software engineering, data science, AI/ML
-- **Finance**: Banking, asset management, fintech
-- **Pharmaceuticals**: R&D, clinical research
-- **Engineering**: Mechanical, electrical, civil
-
-**Application Strategy:**
-- **High salary essential**: CHF 100k+ minimum for competitive chances
-- **Unique skills**: Highlight specialized expertise (AI, blockchain, etc.)
-- **Canton selection**: Zurich, Basel (tech/pharma hubs)
-- **Early application**: January-March best timing
-- **Perfect documentation**: All certificates must be apostilled and translated
-
-**Required Documents (Chinese):**
-1. Valid passport
-2. Employment contract (detailed)
-3. University degree (apostilled by Chinese authorities + Swiss embassy)
-4. CV in Swiss format (with photo)
-5. Health insurance proof (Swiss-compliant)
-6. Criminal record certificate (from China, translated)
-7. Educational certificates (all translated and apostilled)
-8. Reference letters (preferably from international companies)
-
-**Translation Requirements:**
-- All documents must be translated into German, French, or Italian
-- Certified translators required
-- Both original and translation needed
-
-**Apostille Process:**
-1. Get documents notarized in China
-2. Submit to Chinese Ministry of Foreign Affairs for apostille
-3. Submit to Swiss embassy/consulate in China for verification
-4. Allow 4-6 weeks for this process
-
-**Processing Time**: 8-12 weeks (after document submission)
-
-**Success Rate**: Competitive (15-30% depending on profile and timing)
-
-**Tips for Chinese Applicants:**
-- **Network**: Attend Swiss-Chinese business events
-- **Language**: Learn German or French (B1+ minimum)
-- **Certifications**: Get international certifications (AWS, PMP, etc.)
-- **Salary negotiation**: Negotiate aggressively - higher salary = better chances
-- **Alternative**: Consider Swiss education route (university) to bypass quota
-
-### 🇬🇧 UK Citizens (Post-Brexit)
-
-**Status**: **Non-EU** since 2021, **quota applies**
-
-**Important Change:**
-- Before Brexit: EU rights (no quota, fast processing)
-- After Brexit: Treated as non-EU country (quota applies)
-- **Existing UK citizens**: Grandfathered rights if already in Switzerland
-
-**Current Requirements:**
-- Must compete for 8,500 non-EU permits/year
-- Processing time: 8-12 weeks
-- Strict documentation requirements
-- High salary expectations
-
-**Advantages:**
-- English language (helps in international companies)
-- Strong professional networks
-- Recognized qualifications
-
-**Application Strategy:**
-- Target international companies (English-speaking)
-- Focus on Zurich and Geneva (international hubs)
-- High salary negotiations essential
-- Early application timing
-
-### 🇮🇳 Indian Citizens
-
-**Status**: Non-EU, **quota applies**
-
-**Community**: Large and growing
-**Industries**: IT, finance, pharmaceuticals, engineering
-**Competition**: High (many qualified applicants)
-
-**Application Strategy:**
-- **High salary**: CHF 100k+ essential
-- **Unique skills**: Highlight specialized tech expertise
-- **Early timing**: January-March applications
-- **Perfect docs**: All educational certificates apostilled
-- **Language**: German or French B1+ helps significantly
-
-**Success Rate**: Competitive (15-25% depending on profile)
-
-### 🇺🇸 US Citizens
-
-**Status**: Non-EU, **quota applies**
-
-**Advantages:**
-- Recognized education system
-- Strong professional networks
-- English language helps
-
-**Application Strategy:**
-- Target US companies with Swiss offices
-- Focus on tech and finance sectors
-- Negotiate competitive salaries
-- Early application timing
-
-### Other Nationalities
-
-**🇧🇷 Brazilians**: Non-EU, quota applies. Growing community.
-**🇨🇦 Canadians**: Non-EU, quota applies. Similar to US citizens.
-**🇦🇺 Australians**: Non-EU, quota applies. Working holiday visas available for under 30s.
-**🇿🇦 South Africans**: Non-EU, quota applies. Strong in tech and finance.
-**🇸🇬 Singaporeans**: Non-EU, quota applies. High success rate in finance.
-**🇭🇰 Hong Kong**: Non-EU, quota applies. Good prospects in finance.
-
-**For All Non-EU Nationals:**
-- Quota system applies (8,500 permits/year)
-- High salary expectations (CHF 80k+ minimum)
-- Perfect documentation required
-- Processing time: 8-12 weeks
-- Strong competition
-
----
-
-## Recent Immigration Trends (2025)
-
-Based on [Swiss Federal Statistical Office data](https://www.swissinfo.ch/eng/workplace-switzerland/the-changing-face-of-swiss-immigrants/89161064):
-
-### Declining Immigration
-- Net immigration **fell 15.6%** in 2024
-- **170,607** immigrants entered (down from 2023)
-- **60,597** EU/EFTA nationals left Switzerland (up 5.9%)
-
-### Why the Decline?
-1. **Reduced Ukrainian refugees**: S permits dropped from 50,600 (2023) to 9,600 (2024)
-2. **Improved home economies**: Portuguese, Italians returning home
-3. **Swiss labor market cooling**: After 2 years of strong growth
-4. **Economic convergence**: Smaller salary differences with EU countries
-
-### Changing Nationality Mix
-- **Germany**: Now largest source (14% of immigrants)
-- **France**: Increasing proportion
-- **Portugal/Italy**: Decreasing proportion
-- **UK**: Post-Brexit changes (now non-EU status)
-- **China/India**: Steady numbers (quota-limited)
-- **Japan**: Small but steady presence
-
----
-
-## Next Steps: Your Action Plan
-
-### Step 1: Assess Your Situation
-- [ ] Determine your nationality (EU/EFTA or non-EU/EFTA)
-- [ ] Assess your employment situation
-- [ ] Identify which permit type you need
-- [ ] Check if quota applies to you
-
-### Step 2: Research Your Target Canton
-- [ ] Identify canton where you'll work
-- [ ] Research canton-specific requirements
-- [ ] Check language requirements
-- [ ] Understand salary expectations
-
-### Step 3: Prepare Documents
-- [ ] Gather all required documents
-- [ ] Get translations (if needed)
-- [ ] Obtain certifications
-- [ ] Prepare Swiss-format CV
-
-### Step 4: Find Employment
-- [ ] Search for Swiss employers in your field
-- [ ] Network with Swiss professionals
-- [ ] Apply to positions
-- [ ] Negotiate employment contract
-
-### Step 5: Submit Application
-- [ ] Work with employer on application
-- [ ] Submit to correct cantonal authority
-- [ ] Track application status
-- [ ] Prepare for possible interview
-
-### Step 6: Plan Your Move
-- [ ] Find accommodation
-- [ ] Arrange health insurance
-- [ ] Plan finances
-- [ ] Prepare for integration
-
----
-
-## Important Resources
-
-- **Official SEM Website**: [sem.admin.ch](https://www.sem.admin.ch/sem/en/home/themen.html)
-- **Federal Statistical Office**: Immigration statistics and data
-- **Cantonal Migration Offices**: Find your local office
-- **Swiss Embassies**: For visa/consular services
-
----
-
-**Disclaimer**: This guide provides general information. Immigration rules change frequently, and individual circumstances vary. Always consult with qualified immigration lawyers or official cantonal authorities for your specific case. This information is based on 2025 regulations and may be updated.`,
+        quiz: {
+          questions: [
+            { question: 'What is the maximum duration of an L Permit?', options: ['6 months', '12 months', '24 months', '5 years'], correct: 1 },
+            { question: 'After how many years can EU/EFTA B permit holders apply for a C permit?', options: ['2 years', '5 years', '10 years', '15 years'], correct: 1 },
+            { question: 'What is the G Permit designed for?', options: ['Students', 'Cross-border commuters', 'Refugees', 'Entrepreneurs'], correct: 1 },
+            { question: 'How many non-EU B permits are available annually?', options: ['2,000', '4,500', '8,500', '12,000'], correct: 1 },
+            { question: 'Which permit provides permanent residence in Switzerland?', options: ['L Permit', 'B Permit', 'G Permit', 'C Permit'], correct: 3 }
+          ]
+        },
+        exercises: [
+          { title: 'Permit Type Assessment', description: 'Based on your employment situation and nationality, identify which permit type you should target and list the specific requirements' },
+          { title: 'Canton Comparison', description: 'Compare 3 cantons that interest you: their priority industries, salary expectations, language requirements, and processing times' }
+        ],
         completed: false
       },
       {
@@ -1136,67 +205,6 @@ Based on [Swiss Federal Statistical Office data](https://www.swissinfo.ch/eng/wo
         duration: imm02EnhancedNew.estimatedReadTime,
         order: 2,
         enhancedModule: imm02EnhancedNew,
-        content: `# Work Permit Application Checklist
-
-## Pre-Application Requirements
-
-### Documents Needed:
-- [ ] Valid passport (minimum 6 months validity)
-- [ ] Passport-sized photos (2-4 recent photos)
-- [ ] Employment contract from Swiss employer
-- [ ] Educational certificates (translated if needed)
-- [ ] CV in Swiss format
-- [ ] Health insurance proof
-- [ ] Criminal record certificate (from home country)
-- [ ] Proof of accommodation in Switzerland
-
-### Employer Documents:
-- [ ] Job advertisement proof (if required)
-- [ ] Justification letter for hiring non-EU/EFTA citizen
-- [ ] Company registration documents
-- [ ] Quota confirmation (if applicable)
-
-## Interactive Checklist
-
-Use this checklist to track your progress:
-
-### Phase 1: Preparation (Week 1-2)
-- [ ] Research which permit type you need
-- [ ] Gather all required documents
-- [ ] Get translations (if needed)
-- [ ] Schedule medical examination
-- [ ] Obtain criminal record certificate
-
-### Phase 2: Application (Week 3-4)
-- [ ] Complete application forms
-- [ ] Submit to employer for review
-- [ ] Employer submits to cantonal authority
-- [ ] Receive confirmation of submission
-- [ ] Track application status online
-
-### Phase 3: Approval (Week 5-12)
-- [ ] Receive approval notification
-- [ ] Schedule embassy appointment
-- [ ] Collect visa sticker
-- [ ] Enter Switzerland within 90 days
-- [ ] Register at local municipality
-- [ ] Collect permit card
-
-## Common Mistakes to Avoid
-
-1. ❌ **Incomplete documents** - Double-check everything
-2. ❌ **Expired passport** - Ensure 6+ months validity
-3. ❌ **Wrong permit type** - Verify with employer
-4. ❌ **Missing translations** - Get certified translations
-5. ❌ **Late submission** - Submit before deadline
-
-## Tips for Success
-
-✅ Start early - Allow 3-4 months total time
-✅ Keep copies of everything
-✅ Follow up regularly with employer
-✅ Be prepared for interviews
-✅ Have backup documents ready`,
         quiz: {
           questions: [
             {
@@ -1236,6 +244,18 @@ Use this checklist to track your progress:
         duration: imm03Enhanced.estimatedReadTime,
         order: 3,
         enhancedModule: imm03Enhanced,
+        quiz: {
+          questions: [
+            { question: 'What is the standard length for a Swiss CV?', options: ['1 page', '2 pages', '3-5 pages', 'No limit'], correct: 1 },
+            { question: 'Should a Swiss CV include a professional photo?', options: ['Never', 'Always', 'Yes, it is standard practice', 'Only for senior roles'], correct: 2 },
+            { question: 'Which section comes first on a Swiss CV?', options: ['Work experience', 'Education', 'Personal details and photo', 'Skills summary'], correct: 2 },
+            { question: 'How should work experience be ordered on a Swiss CV?', options: ['Oldest first', 'Newest first (reverse chronological)', 'By relevance', 'Alphabetically'], correct: 1 }
+          ]
+        },
+        exercises: [
+          { title: 'CV Formatting Check', description: 'Review your current CV against Swiss standards: photo, length, structure, and language. Note what needs to change.' },
+          { title: 'Industry-Specific CV Draft', description: 'Using the templates provided, create a first draft of your Swiss-format CV tailored to your target industry' }
+        ],
         completed: false
       },
       {
@@ -1246,6 +266,18 @@ Use this checklist to track your progress:
         duration: imm04Enhanced.estimatedReadTime,
         order: 4,
         enhancedModule: imm04Enhanced,
+        quiz: {
+          questions: [
+            { question: 'What is the approximate median annual salary in Switzerland?', options: ['CHF 50,000', 'CHF 65,000', 'CHF 80,000', 'CHF 120,000'], correct: 2 },
+            { question: 'Which canton generally has the highest salary expectations?', options: ['Ticino', 'Bern', 'Zug', 'Vaud'], correct: 2 },
+            { question: 'What is a 13th month salary?', options: ['A bonus for good performance', 'An extra monthly salary paid annually as standard', 'Overtime compensation', 'A tax refund'], correct: 1 },
+            { question: 'Why does salary matter for work permit applications?', options: ['It does not matter', 'Higher salary improves approval chances for non-EU applicants', 'Only minimum wage is checked', 'Salary only matters for C permits'], correct: 1 }
+          ]
+        },
+        exercises: [
+          { title: 'Salary Benchmarking', description: 'Research the SECO salary database for your specific role, experience level, and target canton. Calculate your market value range.' },
+          { title: 'Total Compensation Analysis', description: 'Beyond base salary, list all components of a typical Swiss package: pension (BVG), insurance, bonus, vacation days, and other benefits' }
+        ],
         completed: false
       },
       {
@@ -1256,6 +288,84 @@ Use this checklist to track your progress:
         duration: imm05Enhanced.estimatedReadTime,
         order: 5,
         enhancedModule: imm05Enhanced,
+        quiz: {
+          questions: [
+            { question: 'Where do you collect your Swiss residence permit after approval?', options: ['At the cantonal office', 'At the Swiss embassy/consulate in your home country', 'It is mailed to you', 'At the airport on arrival'], correct: 1 },
+            { question: 'Within how many days of permit issuance must you enter Switzerland?', options: ['30 days', '60 days', '90 days', '180 days'], correct: 2 },
+            { question: 'What should you do within 14 days of arriving in Switzerland?', options: ['Open a bank account', 'Register at the local municipality', 'Find an apartment', 'Get a Swiss phone number'], correct: 1 }
+          ]
+        },
+        exercises: [
+          { title: 'Embassy Appointment Checklist', description: 'Identify your nearest Swiss embassy/consulate and prepare the complete document package needed for your appointment' },
+          { title: 'Arrival Day Plan', description: 'Create a detailed plan for your first 14 days in Switzerland: commune registration, health insurance activation, bank account, and essential setup tasks' }
+        ],
+        completed: false
+      },
+      {
+        id: 'imm-06',
+        title: imm06Enhanced.title,
+        description: imm06Enhanced.description,
+        type: 'interactive',
+        duration: imm06Enhanced.estimatedReadTime,
+        order: 6,
+        enhancedModule: imm06Enhanced,
+        quiz: {
+          questions: [
+            { question: 'What is the official Swiss job portal run by SECO and the RAVs?', options: ['LinkedIn', 'jobs.ch', 'job-room.ch', 'Indeed Switzerland'], correct: 2 },
+            { question: 'Why is networking often called "Vitamin B" in Switzerland?', options: ['It refers to vitamin supplements', 'B stands for Beziehungen (connections)', 'It is a type of job contract', 'It refers to bilingualism'], correct: 1 },
+            { question: 'What is Probezeit?', options: ['A type of work permit', 'Probation period at the start of employment', 'A reference letter', 'A salary bonus'], correct: 1 },
+            { question: 'For non-EU/EFTA nationals, when do permit quotas often fill in competitive cantons?', options: ['Quotas do not apply', 'Typically earlier in the year (Q1-Q2)', 'Only in December', 'Quotas are unlimited'], correct: 1 }
+          ]
+        },
+        exercises: [
+          { title: 'job-room.ch Profile', description: 'Create or update your profile on job-room.ch, set filters for your target region and role, and activate job alerts' },
+          { title: 'Target Company and Outreach List', description: 'List 10 companies in your sector and region; for 3 of them, draft a short, personalized cold outreach message' }
+        ],
+        completed: false
+      },
+      {
+        id: 'imm-07',
+        title: imm07Enhanced.title,
+        description: imm07Enhanced.description,
+        type: 'interactive',
+        duration: imm07Enhanced.estimatedReadTime,
+        order: 7,
+        enhancedModule: imm07Enhanced,
+        quiz: {
+          questions: [
+            { question: 'Within how many days must you register at the commune (Einwohnerkontrolle) after moving in?', options: ['7 days', '14 days', '30 days', '90 days'], correct: 1 },
+            { question: 'What is the deadline to take out Swiss basic health insurance (KVG) after registration?', options: ['14 days', '1 month', '3 months', '6 months'], correct: 2 },
+            { question: 'Which official website compares Swiss health insurance premiums by canton and age?', options: ['comparis.ch only', 'priminfo.admin.ch', 'sbb.ch', 'postfinance.ch'], correct: 1 },
+            { question: 'What is the typical maximum rental deposit (Kaution) in Switzerland?', options: ['1 month rent', '2 months rent', '3 months rent', '6 months rent'], correct: 2 },
+            { question: 'Which document do landlords often require to prove you have no unpaid debts?', options: ['Salary slip', 'Betreibungsauszug', 'Health insurance card', 'Residence permit only'], correct: 1 }
+          ]
+        },
+        exercises: [
+          { title: 'First 14 Days Checklist', description: 'List your commune, required documents, and appointment details for registration; add tasks for Anmeldebestätigung, bank account, and health insurance comparison' },
+          { title: 'Health Insurance Comparison', description: 'Use priminfo.admin.ch to compare premiums for your canton and age with different franchise levels (e.g. CHF 300 vs CHF 2,500) and note the difference' }
+        ],
+        completed: false
+      },
+      {
+        id: 'imm-08',
+        title: imm08Enhanced.title,
+        description: imm08Enhanced.description,
+        type: 'interactive',
+        duration: imm08Enhanced.estimatedReadTime,
+        order: 8,
+        enhancedModule: imm08Enhanced,
+        quiz: {
+          questions: [
+            { question: 'How early should you arrive for a meeting in Switzerland?', options: ['Right on time', '5 minutes early', '15 minutes early', 'It does not matter'], correct: 1 },
+            { question: 'What is the typical probation period (Probezeit) in Switzerland?', options: ['2 weeks', '1 month', '1-3 months', '6 months'], correct: 2 },
+            { question: 'What is an Arbeitszeugnis?', options: ['A job application', 'A formal reference letter from your employer', 'A tax document', 'A health certificate'], correct: 1 },
+            { question: 'What are Ruhezeiten?', options: ['Holiday entitlements', 'Quiet hours when noise must be minimized', 'Break times during work', 'Religious observances'], correct: 1 }
+          ]
+        },
+        exercises: [
+          { title: 'Culture Readiness Assessment', description: 'Review the common mistakes listed in this module and honestly assess which ones you might be at risk of making. Create a personal awareness checklist.' },
+          { title: 'Regional Research', description: 'Research the specific workplace culture of your target region (German, French, or Italian-speaking) and note key differences from your home country' }
+        ],
         completed: false
       }
     ],
@@ -1283,6 +393,18 @@ Use this checklist to track your progress:
         duration: adv01Enhanced.estimatedReadTime,
         order: 1,
         enhancedModule: adv01Enhanced,
+        quiz: {
+          questions: [
+            { question: 'What is the total annual quota for non-EU/EFTA work permits?', options: ['4,000', '6,000', '8,500', '12,000'], correct: 2 },
+            { question: 'When do quotas typically exhaust in competitive cantons?', options: ['March', 'June', 'August-September', 'December'], correct: 2 },
+            { question: 'Which category can bypass the quota system?', options: ['All EU citizens', 'Highly qualified specialists and researchers', 'Anyone with a job offer', 'Students'], correct: 1 },
+            { question: 'What is the optimal time to submit a non-EU application?', options: ['Q3-Q4', 'Q4 previous year or Q1 current year', 'Summer months', 'Any time works equally'], correct: 1 }
+          ]
+        },
+        exercises: [
+          { title: 'Quota Timing Strategy', description: 'Based on your target canton and industry, calculate the optimal application window and create a submission timeline' },
+          { title: 'Exception Category Analysis', description: 'Review the quota exemption categories and assess whether your profile qualifies for any exception path' }
+        ],
         completed: false
       },
       {
@@ -1293,6 +415,17 @@ Use this checklist to track your progress:
         duration: adv02Enhanced.estimatedReadTime,
         order: 2,
         enhancedModule: adv02Enhanced,
+        quiz: {
+          questions: [
+            { question: 'What must an employer motivation letter explicitly demonstrate?', options: ['Company profits', 'Why specifically this foreign worker is needed', 'Number of employees', 'Office location'], correct: 1 },
+            { question: 'What is the labor market test (Inländervorrang)?', options: ['A language exam', 'Proof that no suitable Swiss/EU candidate was found', 'A salary calculation', 'An integration assessment'], correct: 1 },
+            { question: 'How long must a job be advertised on job-room.ch before hiring non-EU?', options: ['7 days', '14 days', '30 days', '60 days'], correct: 1 }
+          ]
+        },
+        exercises: [
+          { title: 'Motivation Letter Draft', description: 'Write a draft employer motivation letter for your specific role, citing relevant legal articles and demonstrating unique qualifications' },
+          { title: 'Labor Market Test Preparation', description: 'Prepare the documentation proving the labor market test: job postings, applicant responses, and justification for why domestic candidates were unsuitable' }
+        ],
         completed: false
       },
       {
@@ -1338,6 +471,18 @@ Use this checklist to track your progress:
         duration: adv04Enhanced.estimatedReadTime,
         order: 4,
         enhancedModule: adv04Enhanced,
+        quiz: {
+          questions: [
+            { question: 'What is Switzerland\'s federal tax rate for high earners?', options: ['About 11.5%', 'About 25%', 'About 40%', 'There is no federal tax'], correct: 0 },
+            { question: 'Which pillar of the Swiss pension system is mandatory for employees?', options: ['1st pillar only', '1st and 2nd pillars', 'All three pillars', 'None are mandatory'], correct: 1 },
+            { question: 'What is the Quellensteuer (withholding tax)?', options: ['A property tax', 'Tax withheld at source for foreign workers without C permit', 'A church tax', 'A cantonal sales tax'], correct: 1 },
+            { question: 'Which canton has the lowest overall tax burden?', options: ['Zurich', 'Geneva', 'Zug', 'Basel'], correct: 2 }
+          ]
+        },
+        exercises: [
+          { title: 'Tax Estimation', description: 'Use a Swiss tax calculator to estimate your annual tax burden in your target canton based on your expected salary and family situation' },
+          { title: 'Pension Analysis', description: 'Calculate your expected contributions to pillars 1, 2, and 3a. Determine the optimal 3a contribution for tax savings.' }
+        ],
         completed: false
       },
       {
@@ -1348,6 +493,124 @@ Use this checklist to track your progress:
         duration: adv05Enhanced.estimatedReadTime,
         order: 5,
         enhancedModule: adv05Enhanced,
+        quiz: {
+          questions: [
+            { question: 'What is the minimum language level typically required for a C permit?', options: ['A1', 'A2', 'B1', 'B2'], correct: 2 },
+            { question: 'Which organization administers the official Swiss language tests (fide)?', options: ['SEM', 'SECO', 'fide - Swiss National Integration Commission', 'Goethe Institut'], correct: 2 },
+            { question: 'How many national languages does Switzerland have?', options: ['2', '3', '4', '5'], correct: 2 },
+            { question: 'Which language should you learn for Zurich?', options: ['French', 'Italian', 'German (Swiss German)', 'Romansh'], correct: 2 }
+          ]
+        },
+        exercises: [
+          { title: 'Language Self-Assessment', description: 'Take an online placement test in your target language and honestly assess your current CEFR level' },
+          { title: 'Study Plan', description: 'Create a 6-month language study plan with weekly goals, resources, and milestones to reach B1 level' }
+        ],
+        completed: false
+      },
+      {
+        id: 'adv-06',
+        title: adv06Enhanced.title,
+        description: adv06Enhanced.description,
+        type: 'interactive',
+        duration: adv06Enhanced.estimatedReadTime,
+        order: 6,
+        enhancedModule: adv06Enhanced,
+        quiz: {
+          questions: [
+            { question: 'What does "integration" mean under Swiss law?', options: ['Assimilation into Swiss culture', 'A mutual process between immigrants and Swiss society', 'Learning Swiss German only', 'Getting a Swiss passport'], correct: 1 },
+            { question: 'Which of these is NOT a formal integration criterion?', options: ['Language proficiency', 'Respect for public order', 'Economic participation', 'Having Swiss friends'], correct: 3 },
+            { question: 'What is an integration agreement (Integrationsvereinbarung)?', options: ['A rental contract', 'A formal plan between you and authorities setting integration goals', 'An employment contract', 'A language course registration'], correct: 1 }
+          ]
+        },
+        exercises: [
+          { title: 'Integration Self-Audit', description: 'Score yourself on each official integration criterion and identify your weakest areas' },
+          { title: 'Community Involvement Plan', description: 'Research 3 local organizations, clubs, or volunteer opportunities in your commune that would support your integration' }
+        ],
+        completed: false
+      },
+      {
+        id: 'adv-07',
+        title: adv07Enhanced.title,
+        description: adv07Enhanced.description,
+        type: 'interactive',
+        duration: adv07Enhanced.estimatedReadTime,
+        order: 7,
+        enhancedModule: adv07Enhanced,
+        quiz: {
+          questions: [
+            { question: 'Is health insurance mandatory in Switzerland?', options: ['No, it is optional', 'Yes, within 3 months of arrival', 'Only for employed people', 'Only for families'], correct: 1 },
+            { question: 'What does KVG stand for?', options: ['Cantonal Health Office', 'Federal Health Insurance Act', 'Community Healthcare Group', 'Swiss Medical Association'], correct: 1 },
+            { question: 'What is the franchise (Franchise) in Swiss health insurance?', options: ['A hospital fee', 'The annual deductible you pay before insurance covers costs', 'A monthly premium', 'A tax on medicine'], correct: 1 },
+            { question: 'Can you choose any doctor in Switzerland?', options: ['Always', 'Depends on your insurance model (HMO vs standard)', 'Never', 'Only in your canton'], correct: 1 }
+          ]
+        },
+        exercises: [
+          { title: 'Insurance Comparison', description: 'Use comparis.ch or priminfo.admin.ch to compare health insurance plans and find the best option for your situation and budget' },
+          { title: 'Coverage Checklist', description: 'List what is covered by basic KVG insurance vs what requires supplementary insurance for your specific health needs' }
+        ],
+        completed: false
+      },
+      {
+        id: 'adv-08',
+        title: adv08Enhanced.title,
+        description: adv08Enhanced.description,
+        type: 'interactive',
+        duration: adv08Enhanced.estimatedReadTime,
+        order: 8,
+        enhancedModule: adv08Enhanced,
+        quiz: {
+          questions: [
+            { question: 'What is the typical notice period for apartment rentals in Switzerland?', options: ['1 month', '3 months', '6 months', '1 year'], correct: 1 },
+            { question: 'What is a Betreibungsregisterauszug?', options: ['A rental application form', 'A debt collection registry extract proving no unpaid debts', 'A residence permit', 'An employment certificate'], correct: 1 },
+            { question: 'Which city has the highest cost of living in Switzerland?', options: ['Bern', 'Basel', 'Zurich', 'Lugano'], correct: 2 }
+          ]
+        },
+        exercises: [
+          { title: 'Monthly Budget Planner', description: 'Create a detailed monthly budget for your target city including rent, insurance, groceries, transport, taxes, and savings' },
+          { title: 'Housing Application Pack', description: 'Prepare a complete rental application dossier: personal letter, Betreibungsauszug, salary confirmation, and references' }
+        ],
+        completed: false
+      },
+      {
+        id: 'adv-09',
+        title: adv09Enhanced.title,
+        description: adv09Enhanced.description,
+        type: 'interactive',
+        duration: adv09Enhanced.estimatedReadTime,
+        order: 9,
+        enhancedModule: adv09Enhanced,
+        quiz: {
+          questions: [
+            { question: 'Can a B permit holder bring their spouse to Switzerland?', options: ['No', 'Yes, through family reunification', 'Only after 5 years', 'Only with C permit'], correct: 1 },
+            { question: 'What is the age limit for children in family reunification?', options: ['Under 12', 'Under 16', 'Under 18', 'Under 21'], correct: 2 },
+            { question: 'What must you prove for family reunification?', options: ['Swiss citizenship', 'Sufficient income and adequate housing', 'Language fluency', 'Property ownership'], correct: 1 }
+          ]
+        },
+        exercises: [
+          { title: 'Family Reunification Timeline', description: 'Map out the application timeline for bringing your family, including document preparation, processing times, and arrival planning' },
+          { title: 'Income and Housing Assessment', description: 'Calculate whether your current income and housing situation meet the requirements for family reunification in your canton' }
+        ],
+        completed: false
+      },
+      {
+        id: 'adv-10',
+        title: adv10Enhanced.title,
+        description: adv10Enhanced.description,
+        type: 'interactive',
+        duration: adv10Enhanced.estimatedReadTime,
+        order: 10,
+        enhancedModule: adv10Enhanced,
+        quiz: {
+          questions: [
+            { question: 'What is the most common reason for initial permit rejection?', options: ['Criminal record', 'Incomplete documentation', 'Low salary', 'Wrong canton'], correct: 1 },
+            { question: 'What should you do if your application is rejected?', options: ['Give up', 'File an appeal within 30 days (Einsprache/Recours)', 'Apply to a different canton immediately', 'Contact the media'], correct: 1 },
+            { question: 'What is the single best way to improve your chances?', options: ['Hire an expensive lawyer', 'Submit a complete, well-documented application', 'Apply to multiple cantons simultaneously', 'Wait for quotas to reset'], correct: 1 }
+          ]
+        },
+        exercises: [
+          { title: 'Lessons Applied', description: 'Read 3 success stories from the module and list the specific strategies you can apply to your own situation' },
+          { title: 'Risk Assessment', description: 'Identify the top 3 risks for your specific application and create a mitigation plan for each' }
+        ],
         completed: false
       }
     ],
@@ -1376,6 +639,18 @@ Use this checklist to track your progress:
         duration: cit01Enhanced.estimatedReadTime,
         order: 1,
         enhancedModule: cit01Enhanced,
+        quiz: {
+          questions: [
+            { question: 'How many years of residence are required for ordinary naturalization?', options: ['5 years', '8 years', '10 years', '12 years'], correct: 2 },
+            { question: 'What permit must you hold when applying for citizenship?', options: ['B Permit', 'C Permit', 'L Permit', 'Any permit'], correct: 1 },
+            { question: 'How many years of recent residence are required in the 5 years before application?', options: ['1 year', '2 years', '3 years', '5 years'], correct: 2 },
+            { question: 'What is the correct permit progression for citizenship?', options: ['L to C to citizenship', 'L to B to C to citizenship', 'B to citizenship directly', 'Any path works'], correct: 1 }
+          ]
+        },
+        exercises: [
+          { title: '10-Year Timeline', description: 'Map your personal 10-year citizenship timeline starting from your arrival date, with milestones for each permit stage' },
+          { title: 'Requirements Audit', description: 'Assess your current status against all LN Art. 9-12 requirements and identify gaps to address' }
+        ],
         completed: false
       },
       {
@@ -1386,6 +661,17 @@ Use this checklist to track your progress:
         duration: cit02Enhanced.estimatedReadTime,
         order: 2,
         enhancedModule: cit02Enhanced,
+        quiz: {
+          questions: [
+            { question: 'How many years of residence does the spouse route require?', options: ['3 years', '5 years', '8 years', '10 years'], correct: 1 },
+            { question: 'How long must you be married to a Swiss citizen for the reduced timeline?', options: ['1 year', '3 years', '5 years', 'Marriage alone is sufficient'], correct: 1 },
+            { question: 'Does the spouse automatically get citizenship through marriage?', options: ['Yes, immediately', 'Yes, after 1 year', 'No, they must apply through simplified naturalization', 'No, marriage has no effect'], correct: 2 }
+          ]
+        },
+        exercises: [
+          { title: 'Spouse Route Eligibility Check', description: 'Verify whether you meet all requirements for simplified naturalization through marriage and identify any missing criteria' },
+          { title: 'Documentation Preparation', description: 'Compile all documents needed for the spouse route: marriage certificate, residence history, integration proof, and language certificates' }
+        ],
         completed: false
       },
       {
@@ -1396,6 +682,15 @@ Use this checklist to track your progress:
         duration: cit03Enhanced.estimatedReadTime,
         order: 3,
         enhancedModule: cit03Enhanced,
+        quiz: {
+          questions: [
+            { question: 'Who qualifies for the third-generation accelerated path?', options: ['Anyone born in Switzerland', 'People whose grandparent had a Swiss residence permit', 'People born in Switzerland with at least one grandparent who held Swiss residence', 'Third-generation EU citizens'], correct: 2 },
+            { question: 'What is the residency requirement for the third-generation path?', options: ['5 years total', 'Born in Switzerland and 5 years of compulsory schooling', '10 years total', 'No residency requirement'], correct: 1 }
+          ]
+        },
+        exercises: [
+          { title: 'Eligibility Verification', description: 'Trace your family history to confirm third-generation eligibility and gather supporting documentation' }
+        ],
         completed: false
       },
       {
@@ -1406,6 +701,17 @@ Use this checklist to track your progress:
         duration: cit04Enhanced.estimatedReadTime,
         order: 4,
         enhancedModule: cit04Enhanced,
+        quiz: {
+          questions: [
+            { question: 'What is the minimum language level for citizenship?', options: ['A2 speaking, A2 writing', 'B1 speaking, A2 writing', 'B1 speaking, B1 writing', 'B2 speaking, B1 writing'], correct: 1 },
+            { question: 'Which language test is officially recognized for citizenship?', options: ['IELTS', 'fide test or equivalent', 'Goethe-Zertifikat only', 'Any online test'], correct: 1 },
+            { question: 'Can you take the test in any of the four national languages?', options: ['Only German', 'Only the language of your canton', 'Any of the three main languages (DE/FR/IT)', 'Any language including English'], correct: 2 }
+          ]
+        },
+        exercises: [
+          { title: 'Practice Test', description: 'Take a fide practice test and assess your readiness. Identify specific areas (speaking, writing, reading, listening) where you need improvement.' },
+          { title: 'Language Study Schedule', description: 'Create a structured study schedule targeting B1 certification within your timeline, including courses, self-study, and immersion activities' }
+        ],
         completed: false
       },
       {
@@ -1416,6 +722,120 @@ Use this checklist to track your progress:
         duration: cit05Enhanced.estimatedReadTime,
         order: 5,
         enhancedModule: cit05Enhanced,
+        quiz: {
+          questions: [
+            { question: 'What topics does the integration test cover?', options: ['Only Swiss history', 'Geography, history, politics, and daily life', 'Language only', 'Employment law only'], correct: 1 },
+            { question: 'How is the Swiss political system structured?', options: ['Presidential republic', 'Federal council with 7 members and direct democracy', 'Parliamentary monarchy', 'Single-party system'], correct: 1 },
+            { question: 'What is a Volksinitiative (popular initiative)?', options: ['A political party', 'A citizens\' right to propose constitutional changes with 100,000 signatures', 'A government program', 'A cantonal election'], correct: 1 }
+          ]
+        },
+        exercises: [
+          { title: 'Practice Quiz', description: 'Complete the practice integration questions in this module and aim for 80%+ correct answers' },
+          { title: 'Swiss Knowledge Map', description: 'Create a study sheet covering: the Federal Council, cantonal system, direct democracy tools, key historical dates, and your commune\'s specifics' }
+        ],
+        completed: false
+      },
+      {
+        id: 'cit-06',
+        title: cit06Enhanced.title,
+        description: cit06Enhanced.description,
+        type: 'interactive',
+        duration: cit06Enhanced.estimatedReadTime,
+        order: 6,
+        enhancedModule: cit06Enhanced,
+        quiz: {
+          questions: [
+            { question: 'Where do you submit your citizenship application?', options: ['Federal SEM office', 'Your commune/municipality', 'The Swiss embassy', 'Online portal only'], correct: 1 },
+            { question: 'How many levels of approval are required for ordinary naturalization?', options: ['1 (federal)', '2 (cantonal and federal)', '3 (commune, cantonal, and federal)', '4 levels'], correct: 2 },
+            { question: 'What is the approximate processing time for a citizenship application?', options: ['3 months', '6-12 months', '1-2 years', '3-5 years'], correct: 2 }
+          ]
+        },
+        exercises: [
+          { title: 'Application Checklist', description: 'Compile the complete document package required by your commune for the citizenship application' },
+          { title: 'Fee Calculation', description: 'Research and calculate all citizenship application fees at commune, cantonal, and federal levels for your specific location' }
+        ],
+        completed: false
+      },
+      {
+        id: 'cit-07',
+        title: cit07Enhanced.title,
+        description: cit07Enhanced.description,
+        type: 'interactive',
+        duration: cit07Enhanced.estimatedReadTime,
+        order: 7,
+        enhancedModule: cit07Enhanced,
+        quiz: {
+          questions: [
+            { question: 'What is typically assessed in a naturalization interview?', options: ['Only language skills', 'Integration, knowledge of Switzerland, and local community involvement', 'Criminal record only', 'Financial status'], correct: 1 },
+            { question: 'Who typically conducts the interview?', options: ['Federal officials', 'Commune citizenship commission members', 'Police officers', 'Immigration lawyers'], correct: 1 },
+            { question: 'What local knowledge might you be asked about?', options: ['Federal parliament members only', 'Your commune name, mayor, local traditions, and nearby landmarks', 'Only national holidays', 'Swiss banking rules'], correct: 1 }
+          ]
+        },
+        exercises: [
+          { title: 'Mock Interview', description: 'Practice answering the sample interview questions provided in this module with a friend or family member' },
+          { title: 'Local Knowledge Research', description: 'Learn about your commune: its mayor, population, key landmarks, local traditions/events, and political structure' }
+        ],
+        completed: false
+      },
+      {
+        id: 'cit-08',
+        title: cit08Enhanced.title,
+        description: cit08Enhanced.description,
+        type: 'interactive',
+        duration: cit08Enhanced.estimatedReadTime,
+        order: 8,
+        enhancedModule: cit08Enhanced,
+        quiz: {
+          questions: [
+            { question: 'Does Switzerland allow dual citizenship?', options: ['No, never', 'Yes, since 1992', 'Only with EU countries', 'Only for birth citizens'], correct: 1 },
+            { question: 'What should you check before applying for Swiss citizenship?', options: ['Swiss law only', 'Whether your home country allows dual citizenship', 'EU regulations', 'UN conventions'], correct: 1 },
+            { question: 'If your home country does not allow dual citizenship, what happens?', options: ['You cannot get Swiss citizenship', 'You may need to renounce your original citizenship', 'Switzerland makes an exception', 'Nothing changes'], correct: 1 }
+          ]
+        },
+        exercises: [
+          { title: 'Dual Citizenship Research', description: 'Research your home country\'s laws on dual citizenship and determine whether you can hold both passports' },
+          { title: 'Impact Analysis', description: 'List the practical implications of holding dual citizenship: tax obligations, military service, voting rights, and travel benefits' }
+        ],
+        completed: false
+      },
+      {
+        id: 'cit-09',
+        title: cit09Enhanced.title,
+        description: cit09Enhanced.description,
+        type: 'interactive',
+        duration: cit09Enhanced.estimatedReadTime,
+        order: 9,
+        enhancedModule: cit09Enhanced,
+        quiz: {
+          questions: [
+            { question: 'Who can access simplified naturalization?', options: ['Anyone after 5 years', 'Spouses of Swiss citizens and third-generation residents', 'All EU citizens', 'Only refugees'], correct: 1 },
+            { question: 'Can years between age 8-18 count double toward residency?', options: ['No', 'Yes, under LN Art. 10', 'Only for EU citizens', 'Only in certain cantons'], correct: 1 }
+          ]
+        },
+        exercises: [
+          { title: 'Pathway Assessment', description: 'Determine whether any expedited or simplified naturalization path applies to your specific situation' }
+        ],
+        completed: false
+      },
+      {
+        id: 'cit-10',
+        title: cit10Enhanced.title,
+        description: cit10Enhanced.description,
+        type: 'interactive',
+        duration: cit10Enhanced.estimatedReadTime,
+        order: 10,
+        enhancedModule: cit10Enhanced,
+        quiz: {
+          questions: [
+            { question: 'What happens at the oath ceremony?', options: ['You receive your passport', 'You formally pledge allegiance to the Swiss Confederation', 'You take a written test', 'You meet the Federal Council'], correct: 1 },
+            { question: 'When does your Swiss citizenship officially begin?', options: ['After the oath ceremony', 'When SEM issues the federal naturalization decree', 'When you receive your passport', 'After 30 days waiting period'], correct: 1 },
+            { question: 'What is the first thing you should do after becoming Swiss?', options: ['Book a vacation', 'Register for civil rights (voting, military obligations)', 'Nothing', 'Change your name'], correct: 1 }
+          ]
+        },
+        exercises: [
+          { title: 'Post-Citizenship Checklist', description: 'Prepare a checklist of everything you need to do after becoming Swiss: register for voting, update documents, obtain Swiss passport, and notify relevant authorities' },
+          { title: 'Reflection Exercise', description: 'Write a brief personal statement about your immigration journey and what Swiss citizenship means to you -- this can also help prepare for the interview' }
+        ],
         completed: false
       }
     ],
@@ -1453,7 +873,12 @@ export function getModuleContent(packId: string, moduleId: string, isAdmin: bool
 }
 
 export function getAllModules(packId: string): Module[] {
-  return PACK_CONTENT[packId]?.modules || []
+  const PACK_ORDER = ['free', 'immigration', 'advanced', 'citizenship']
+  const userLevel = PACK_ORDER.indexOf(packId)
+  if (userLevel === -1) return PACK_CONTENT[packId]?.modules || []
+  return PACK_ORDER
+    .slice(0, userLevel + 1)
+    .flatMap(p => PACK_CONTENT[p]?.modules ?? [])
 }
 
 export function getModulesForPack(packId: string): Module[] {

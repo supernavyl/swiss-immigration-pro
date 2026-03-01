@@ -3,7 +3,7 @@
 
 export const imm05Enhanced = {
   id: 'imm-05-enhanced',
-  title: 'Embassy Submission Guide: Complete Document Preparation and Submission Process 2025',
+  title: 'Embassy Submission Guide',
   description: 'Master the embassy submission process with comprehensive checklists, document preparation guides, appointment scheduling strategies, and step-by-step procedures for successful permit collection at Swiss embassies and consulates worldwide. Includes legal requirements, common issues resolution, and embassy-specific procedures.',
   estimatedReadTime: '75-90 minutes',
   lastUpdated: 'January 2025',

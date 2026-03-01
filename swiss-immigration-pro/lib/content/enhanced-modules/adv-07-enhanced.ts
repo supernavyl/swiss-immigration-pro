@@ -3,7 +3,7 @@
 
 export const adv07Enhanced = {
   id: 'adv-07-enhanced',
-  title: 'Swiss Healthcare & Insurance System: Complete Guide to Mandatory Coverage 2025',
+  title: 'Swiss Healthcare and Insurance System',
   description: 'Master Switzerland\'s mandatory healthcare system, understand KVG requirements, navigate insurance selection, optimize costs, and ensure compliance. Comprehensive guide to Pillar 1 health insurance, insurance models, premium optimization, coverage options, and healthcare system navigation. Includes detailed analysis of KVG Art. 3, mandatory requirements, premium structures, and cost-saving strategies.',
   estimatedReadTime: '100-130 minutes',
   lastUpdated: 'January 2025',

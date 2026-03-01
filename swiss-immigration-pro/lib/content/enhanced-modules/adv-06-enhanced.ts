@@ -3,7 +3,7 @@
 
 export const adv06Enhanced = {
   id: 'adv-06-enhanced',
-  title: 'Swiss Integration Process & Social Adaptation: Complete Success Framework 2025',
+  title: 'Swiss Integration and Social Adaptation',
   description: 'Master the Swiss integration requirements for work permits, residence permits, and citizenship. Comprehensive guide to integration criteria, language proficiency, economic participation, social adaptation, integration agreements, and proven strategies for successful integration. Includes detailed analysis of LEI Art. 58a, OASA Art. 62, LN Art. 11-12, and cantonal integration requirements.',
   estimatedReadTime: '110-140 minutes',
   lastUpdated: 'January 2025',

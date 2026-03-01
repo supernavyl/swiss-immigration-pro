@@ -3,7 +3,7 @@
 
 export const imm04Enhanced = {
   id: 'imm-04-enhanced',
-  title: 'Swiss Salary Benchmarks: Complete Market Analysis and Negotiation Guide 2025',
+  title: 'Swiss Salary Benchmarks and Negotiation',
   description: 'Comprehensive salary analysis across all industries, cantons, and experience levels. Master salary negotiation strategies, understand total compensation packages, and maximize your earning potential in the Swiss job market with data-driven insights and proven negotiation frameworks based on official SECO data.',
   estimatedReadTime: '90-120 minutes',
   lastUpdated: 'January 2025',

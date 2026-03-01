@@ -3,7 +3,7 @@
 
 export const adv10Enhanced = {
   id: 'adv-10-enhanced',
-  title: 'Success Stories & Lessons Learned: Real Immigrant Experiences 2025',
+  title: 'Success Stories and Lessons Learned',
   description: 'Learn from successful Swiss immigrants who navigated the system effectively. Comprehensive collection of real-world success stories, proven strategies, common mistakes to avoid, and actionable lessons learned. Includes detailed case studies across different nationalities, industries, permit types, and immigration pathways.',
   estimatedReadTime: '85-110 minutes',
   lastUpdated: 'January 2025',

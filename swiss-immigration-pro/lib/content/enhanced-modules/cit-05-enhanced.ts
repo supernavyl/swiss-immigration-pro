@@ -3,7 +3,7 @@
 
 export const cit05Enhanced = {
   id: 'cit-05-enhanced',
-  title: 'Integration Test Success: Pass the Integration Exam on First Try 2025',
+  title: 'Integration Test Success',
   description: 'Master cantonal integration tests and naturalization interviews, understand test formats, prepare comprehensively, and pass on first attempt. Comprehensive guide to integration test content, interview preparation, cultural knowledge requirements, Swiss history and politics, and proven success strategies. Includes detailed analysis of test formats, common questions, preparation techniques, and practical tips.',
   estimatedReadTime: '85-110 minutes',
   lastUpdated: 'January 2025',

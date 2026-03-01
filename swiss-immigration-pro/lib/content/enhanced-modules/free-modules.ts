@@ -422,6 +422,149 @@ Applicants must provide official criminal record certificates from their country
         'All documents not in German, French, or Italian require certified translation',
         'Criminal record certificates must be obtained from all countries of extended residence',
         'Swiss KVG/LAMal-compliant health insurance is mandatory; foreign policies are not accepted'
+      ],
+      legalReferences: [
+        'FNIA Art. 18-25 (Admission requirements)',
+        'VZAE Art. 7-23 (Document specifications)',
+        'KVG Art. 3 (Mandatory insurance)'
+      ],
+      officialLinks: [
+        { title: 'SEM - Work Permits', url: 'https://www.sem.admin.ch/sem/en/home/themen/arbeit.html' },
+        { title: 'SEM - Required Documents', url: 'https://www.sem.admin.ch/sem/en/home/themen/einreise.html' }
+      ]
+    },
+    {
+      id: 'processing-timelines',
+      title: 'Processing Timelines and What to Expect',
+      content: `## Realistic Processing Timelines
+
+Understanding realistic processing timelines helps you plan your move and manage expectations. Timelines vary significantly based on your nationality, permit type, and the specific cantonal migration office handling your application.
+
+### EU/EFTA Nationals: Streamlined Processing
+
+EU/EFTA citizens benefit from substantially faster processing due to the Agreement on Free Movement of Persons:
+
+| Stage | Timeline | Notes |
+|-------|----------|-------|
+| Employer submits application | Week 1 | Cantonal migration office |
+| Initial review | 1-2 weeks | Document completeness check |
+| Decision | 2-4 weeks total | Usually approved if documents complete |
+| Permit card issued | 1-2 weeks after approval | Collected from migration office |
+| **Total** | **3-6 weeks** | From submission to permit in hand |
+
+### Third-Country Nationals: Multi-Stage Process
+
+Non-EU/EFTA applications follow a longer, multi-stage process:
+
+| Stage | Timeline | Notes |
+|-------|----------|-------|
+| Employer submits to cantonal office | Week 1 | With labor market test documentation |
+| Cantonal review | 2-4 weeks | Checks quota availability |
+| Forwarded to SEM (federal level) | 2-4 weeks | For approval or additional review |
+| Decision communicated | 1-2 weeks | Back through cantonal office |
+| Visa issuance at embassy | 1-3 weeks | Appointment required |
+| **Total** | **8-16 weeks** | Can extend to 20+ weeks if issues arise |
+
+### What Happens During Processing
+
+**Week 1-2: Initial Screening.** The cantonal migration office reviews your application for completeness. Missing documents result in a formal request (Nachforderung) which pauses processing until you respond.
+
+**Week 3-6: Substantive Review.** Your application is evaluated against legal criteria: salary requirements, labor market test results (for non-EU), employer qualifications, and quota availability.
+
+**Week 7+: Decision Phase.** For non-EU applicants, the file may be forwarded to the federal State Secretariat for Migration (SEM) for final approval. SEM can request additional information, extending the timeline further.
+
+### Tips to Avoid Delays
+
+- **Submit complete applications.** Every missing document adds 2-4 weeks to your timeline
+- **Respond quickly to requests.** You typically have 30 days to provide additional documents, but faster is always better
+- **Use certified translations.** Uncertified translations are rejected outright in most cantons
+- **Time your submission.** For non-EU applicants, submitting early in the year gives the best quota access
+- **Follow up proactively.** Check your application status every 2-3 weeks if you have not heard back`,
+      keyPoints: [
+        'EU/EFTA processing typically takes 3-6 weeks; third-country nationals should expect 8-16 weeks',
+        'Missing documents add 2-4 weeks per request -- complete applications process fastest',
+        'Non-EU applications go through both cantonal and federal (SEM) review stages',
+        'Responding quickly to document requests (Nachforderung) is critical to avoiding long delays',
+        'Proactive follow-up every 2-3 weeks can help identify and resolve issues early'
+      ],
+      legalReferences: [
+        'FNIA Art. 18 (Admission conditions)',
+        'VZAE Art. 83 (Processing timelines)',
+        'Federal Administrative Procedures Act (VwVG)'
+      ],
+      officialLinks: [
+        { title: 'SEM - Application Status', url: 'https://www.sem.admin.ch/sem/en/home.html' },
+        { title: 'Cantonal Migration Offices', url: 'https://www.sem.admin.ch/sem/en/home/ueberuns/kontakt/kantonale_behoerden.html' }
+      ]
+    },
+    {
+      id: 'common-mistakes',
+      title: 'Common Application Mistakes and How to Avoid Them',
+      content: `## The Most Common Reasons Applications Fail
+
+Analysis of rejection data reveals clear patterns in why applications fail. Knowing these patterns lets you avoid them entirely.
+
+### Mistake 1: Incomplete or Incorrect Documentation
+
+**The problem:** The single most common cause of rejection. Documents are expired, poorly translated, missing apostille stamps, or simply not included.
+
+**How to avoid it:**
+- Create a checklist specific to your permit type and canton
+- Verify every document against cantonal requirements (not just federal)
+- Ensure translations are certified by a recognized translator
+- Check expiry dates -- criminal record certificates older than 3 months are rejected
+
+### Mistake 2: Health Insurance Non-Compliance
+
+**The problem:** Applicants present international health insurance or EU health cards, which do not satisfy Swiss KVG requirements.
+
+**How to avoid it:**
+- Obtain a Swiss KVG-compliant insurance plan before applying
+- Providers include CSS, Helsana, Swica, Assura, and others
+- Your employer may help arrange this, but it remains your responsibility
+- Compare plans on priminfo.admin.ch (official federal comparison tool)
+
+### Mistake 3: Insufficient Salary Justification (Non-EU)
+
+**The problem:** For third-country nationals, the employer must demonstrate that the offered salary meets cantonal minimums and reflects market rates. Generic salary offers without supporting evidence are rejected.
+
+**How to avoid it:**
+- Reference SECO salary data for your role and canton
+- Ensure the salary exceeds cantonal minimums (typically CHF 85,000-120,000+ for non-EU)
+- Include a detailed salary justification letter from the employer
+
+### Mistake 4: Poor Timing (Non-EU Quota System)
+
+**The problem:** Applying late in the year when quotas are exhausted. Most competitive cantons exhaust their quota allocation by Q3.
+
+**How to avoid it:**
+- Submit applications in Q1 for best quota availability
+- Consider less competitive cantons where quotas last longer
+- Work with your employer to submit as early as possible
+
+### Mistake 5: Not Understanding Cantonal Differences
+
+**The problem:** Switzerland has 26 cantons, each with discretionary authority over how they implement immigration law. Requirements that work in Zurich may not apply in Geneva.
+
+**How to avoid it:**
+- Research your specific canton's requirements directly
+- Contact the cantonal migration office with questions before submitting
+- Use canton-specific document checklists rather than generic federal lists`,
+      keyPoints: [
+        'Incomplete documentation is the number one cause of rejection -- a thorough checklist prevents this',
+        'Swiss KVG health insurance is mandatory; international or EU coverage is not accepted',
+        'Non-EU salary offers must be supported by market data and exceed cantonal minimums',
+        'Quota timing matters -- Q1 submissions have significantly better success rates than Q3-Q4',
+        'Cantonal requirements vary substantially -- always check your specific canton, not just federal rules'
+      ],
+      legalReferences: [
+        'FNIA Art. 21 (Labor market preference)',
+        'FNIA Art. 22 (Salary and working conditions)',
+        'KVG Art. 3 (Insurance obligation)'
+      ],
+      officialLinks: [
+        { title: 'priminfo.admin.ch - Insurance Comparison', url: 'https://www.priminfo.admin.ch' },
+        { title: 'SECO - Salary Data', url: 'https://www.seco.admin.ch' }
       ]
     }
   ]
@@ -503,6 +646,116 @@ Switzerland provides substantial support for integration, recognizing that succe
       officialLinks: [
         { title: 'SEM - Integration in Switzerland', url: 'https://www.sem.admin.ch/sem/en/home/integration-einbuergerung/integration.html' },
         { title: 'fide Language Standards', url: 'https://www.fide-info.ch' }
+      ]
+    },
+    {
+      id: 'economic-integration',
+      title: 'Economic Integration and Employment',
+      content: `## Building Your Professional Life in Switzerland
+
+Economic integration -- supporting yourself and your family through employment or self-employment -- is a core requirement evaluated by authorities at every stage of your immigration journey. Beyond legal compliance, economic stability directly affects your quality of life, social connections, and long-term prospects.
+
+### How Authorities Evaluate Economic Integration
+
+Swiss migration offices assess economic integration based on several factors:
+
+- **Employment status:** Stable employment with a Swiss employer is the strongest indicator
+- **Social welfare dependency:** Reliance on social assistance (Sozialhilfe) can negatively impact permit renewals and C permit eligibility
+- **Tax compliance:** All taxes must be paid on time. Unpaid taxes signal poor integration
+- **Debt and collections:** Entries in the debt collection registry (Betreibungsregister) raise red flags
+- **Self-sufficiency:** You must demonstrate the ability to support yourself and dependents without state assistance
+
+### The Swiss Labor Market
+
+Switzerland has one of the lowest unemployment rates in Europe (typically 2-3%). However, the job market operates differently from many other countries:
+
+**Qualifications matter greatly.** Swiss employers place enormous value on formal qualifications, professional certifications, and recognized credentials. Foreign qualifications may need to be officially recognized through SERI (State Secretariat for Education, Research and Innovation).
+
+**References are essential.** The Arbeitszeugnis (reference letter) is a central document in Swiss professional life. Previous employers are expected to provide detailed, written references, and Swiss employers always request them.
+
+**Language is key.** Even in international companies, advancement often requires the local language. In German-speaking Switzerland, Swiss German (Schwyzertütsch) is the daily spoken language, while standard German (Hochdeutsch) is used in writing.
+
+### Recognition of Foreign Qualifications
+
+If your profession is regulated in Switzerland (healthcare, education, engineering, law, architecture), you must have your qualifications officially recognized before you can practice:
+
+| Profession Type | Recognition Authority | Timeline |
+|----------------|----------------------|----------|
+| Regulated professions | SERI or relevant professional body | 3-6 months |
+| University degrees | swissuniversities | 4-8 weeks |
+| Vocational qualifications | SERI | 2-4 months |
+| Medical professions | MEBEKO | 3-12 months |
+
+For non-regulated professions, formal recognition is not legally required but can strengthen your position with employers.`,
+      keyPoints: [
+        'Economic self-sufficiency is evaluated at every permit stage -- social welfare dependency can affect renewals',
+        'Tax compliance and a clean Betreibungsregister are critical signals of integration',
+        'Foreign qualifications in regulated professions must be officially recognized through SERI',
+        'The Swiss job market values formal credentials, written references (Arbeitszeugnis), and language skills',
+        'Switzerland has low unemployment (~2-3%) but competition for positions requiring permits is intense'
+      ],
+      legalReferences: [
+        'FNIA Art. 58a (Integration criteria)',
+        'FNIA Art. 62 (Permit revocation conditions)',
+        'BBG (Federal Vocational and Professional Education Act)'
+      ],
+      officialLinks: [
+        { title: 'SERI - Qualification Recognition', url: 'https://www.sbfi.admin.ch/sbfi/en/home/education/recognition-of-foreign-qualifications.html' },
+        { title: 'swissuniversities - Degree Recognition', url: 'https://www.swissuniversities.ch' }
+      ]
+    },
+    {
+      id: 'daily-life-integration',
+      title: 'Social Integration and Daily Life',
+      content: `## Navigating Swiss Society
+
+Social integration goes beyond meeting legal requirements. It means building a life where you feel connected, respected, and capable of participating fully in your community. Switzerland rewards those who make genuine efforts to understand and participate in local life.
+
+### Understanding Swiss Social Norms
+
+**Punctuality is non-negotiable.** In Switzerland, being on time means being 5 minutes early. This applies to work, appointments, social gatherings, and public transport. Chronic lateness damages professional and personal relationships quickly.
+
+**Privacy is deeply valued.** Swiss people tend to be reserved initially. Building friendships takes time and patience. Do not take initial distance as unfriendliness -- it reflects a cultural preference for personal space and gradual trust-building.
+
+**Noise and quiet hours (Ruhezeiten).** Swiss communities enforce quiet hours strictly, typically from 22:00 to 07:00 on weekdays and all day Sunday. Activities like laundry, vacuuming, and loud music are restricted during these times. Violating quiet hours is one of the fastest ways to create problems with neighbors.
+
+**Recycling is mandatory.** Switzerland has one of the most detailed recycling systems in the world. Glass, paper, cardboard, PET, aluminum, batteries, and organic waste all have separate collection points. In many communes, general waste must be disposed of in official, taxed garbage bags (Kehrichtsack / Sac à ordures).
+
+### Building Community Connections
+
+The most effective ways to integrate socially include:
+
+- **Join a local Verein (club/association).** Switzerland has thousands of sports clubs, cultural associations, and hobby groups. Membership in a local Verein is one of the strongest indicators of social integration that authorities recognize.
+- **Attend community events.** Commune assemblies (Gemeindeversammlung), local festivals, and neighborhood events provide natural opportunities to meet people and demonstrate community engagement.
+- **Volunteer.** Volunteering with local organizations shows civic involvement and helps build meaningful connections.
+- **Learn the local language.** Even basic conversation ability transforms your daily interactions and signals respect for local culture.
+
+### The Commune: Your Most Important Local Authority
+
+In Switzerland, the commune (Gemeinde) is where daily life is administered. Your commune handles:
+
+- Resident registration (Einwohnerkontrolle)
+- Waste disposal regulations
+- Local school enrollment
+- Community services and events
+- Naturalization interviews (for citizenship)
+
+Building a positive relationship with your commune through active participation strengthens your standing for future applications, including permanent residence and citizenship.`,
+      keyPoints: [
+        'Social integration is assessed through community involvement, language effort, and respect for local norms',
+        'Joining a local Verein (club) is one of the strongest integration signals recognized by authorities',
+        'Quiet hours (Ruhezeiten), recycling rules, and Sunday rest are taken very seriously in Swiss communities',
+        'The commune (Gemeinde) is your most important local authority -- build a positive relationship',
+        'Integration is a gradual process: Swiss friendships develop slowly but are deeply valued once established'
+      ],
+      legalReferences: [
+        'FNIA Art. 58a let. e (Social participation)',
+        'Municipal ordinances (Gemeindeordnung)',
+        'Cantonal integration programs'
+      ],
+      officialLinks: [
+        { title: 'ch.ch - Living in Switzerland', url: 'https://www.ch.ch/en/living-in-switzerland/' },
+        { title: 'SEM - Integration Programs', url: 'https://www.sem.admin.ch/sem/en/home/integration-einbuergerung/integration.html' }
       ]
     }
   ]

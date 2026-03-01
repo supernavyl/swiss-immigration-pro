@@ -3,7 +3,7 @@
 
 export const adv09Enhanced = {
   id: 'adv-09-enhanced',
-  title: 'Swiss Family Reunification: Complete Application Guide 2025',
+  title: 'Swiss Family Reunification',
   description: 'Master the Swiss family reunification process, understand legal requirements, prepare comprehensive applications, and successfully reunite with family members. Comprehensive guide to eligibility criteria, documentation requirements, application procedures, timelines, and common challenges. Includes detailed analysis of LEI Art. 44-46, OASA Art. 42-47, and cantonal family reunification requirements.',
   estimatedReadTime: '110-140 minutes',
   lastUpdated: 'January 2025',

@@ -3,7 +3,7 @@
 
 export const adv03Enhanced = {
   id: 'adv-03-enhanced',
-  title: 'Cantonal Immigration Variations: Complete Strategic Analysis 2025',
+  title: 'Cantonal Immigration Variations',
   description: 'Master cantonal variations in Swiss immigration processing. Comprehensive analysis of all 26 cantons, their success rates, requirements, processing times, and strategic selection criteria. Learn how choosing the right canton can multiply your approval chances 2-3x. Includes industry alignment, language requirements, salary thresholds, and quota availability by canton.',
   estimatedReadTime: '110-140 minutes',
   lastUpdated: 'January 2025',

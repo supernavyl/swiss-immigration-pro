@@ -3,7 +3,7 @@
 
 export const adv05Enhanced = {
   id: 'adv-05-enhanced',
-  title: 'Swiss Language Requirements & Test Preparation: Complete Mastery Guide 2025',
+  title: 'Swiss Language Requirements and Test Preparation',
   description: 'Master Swiss language requirements for work permits, residence, and citizenship. Comprehensive guide to German, French, and Italian proficiency levels, test preparation strategies, certification options, and proven study frameworks. Includes detailed analysis of B1/B2 requirements, test formats, preparation resources, and optimization strategies for maximum success.',
   estimatedReadTime: '100-130 minutes',
   lastUpdated: 'January 2025',

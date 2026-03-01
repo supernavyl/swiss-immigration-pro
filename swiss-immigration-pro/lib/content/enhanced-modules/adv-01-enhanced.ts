@@ -3,7 +3,7 @@
 
 export const adv01Enhanced = {
   id: 'adv-01-enhanced',
-  title: 'Beat the Non-EU Quota System: Strategic Approaches to Overcome Quota Limitations 2025',
+  title: 'Beat the Non-EU Quota System',
   description: 'Master strategic approaches to navigate Switzerland\'s strict annual quota system for non-EU/EFTA nationals. Learn quota management strategies, timing optimization, exception categories, and proven methods to maximize your chances within the competitive 8,500 annual permit allocation. Includes detailed analysis of quota exhaustion patterns, cantonal distribution, and industry-specific strategies.',
   estimatedReadTime: '100-130 minutes',
   lastUpdated: 'January 2025',
