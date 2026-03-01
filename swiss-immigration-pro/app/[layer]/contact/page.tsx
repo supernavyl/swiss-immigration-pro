@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, use } from 'react'
-import { useParams, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Mail, Phone, MapPin, Send, Clock, CheckCircle, AlertCircle, MessageSquare, ArrowRight, Sparkles } from 'lucide-react'
 import Link from 'next/link'
@@ -40,10 +40,11 @@ const LAYER_CONFIG = {
   }
 }
 
-export default function LayerContactPage() {
-  const params = use(params)
+type PageProps = { params: Promise<{ layer: string }> }
+
+export default function LayerContactPage({ params }: PageProps) {
+  const { layer: layerParam } = use(params)
   const searchParams = useSearchParams()
-  const layerParam = params?.layer as string
   
   const [formData, setFormData] = useState({
     name: '',
@@ -342,10 +343,10 @@ export default function LayerContactPage() {
                   <div>
                     <h4 className="font-semibold text-slate-900 mb-1">Phone</h4>
                     <a
-                      href="tel:+41XXXXXXXXX"
+                      href="mailto:contact@swissimmigrationpro.com"
                       className="text-slate-700 hover:text-blue-600 font-medium transition-colors"
                     >
-                      +41 XX XXX XX XX
+                      Use the contact form below
                     </a>
                   </div>
                 </motion.div>

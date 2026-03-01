@@ -1,6 +1,5 @@
 'use client'
 
-import { useParams } from 'next/navigation'
 import { useState, use } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Clock, Tag, BookOpen, CheckCircle, AlertCircle, FileText, ExternalLink, ChevronDown, ChevronUp, Info, Award, TrendingUp, Users, Calendar, Scale, Briefcase, DollarSign, MapPin, Route, Globe, Star, AlertTriangle } from 'lucide-react'
@@ -27,10 +26,10 @@ import { useLayerContent } from '@/lib/i18n/useTranslation'
 import type { LayerType } from '@/lib/layerLogic'
 import LayerHeader from '@/components/layout/LayerHeader'
 
-export default function ResourceDetailPage() {
-  const params = use(params)
-  const layerParam = params?.layer as string
-  const slug = params?.slug as string
+type PageProps = { params: Promise<{ layer: string; slug: string }> }
+
+export default function ResourceDetailPage({ params }: PageProps) {
+  const { layer: layerParam, slug } = use(params)
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set())
   
   const layer = (['europeans', 'americans', 'others'].includes(layerParam)

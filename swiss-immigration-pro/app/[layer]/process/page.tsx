@@ -1,7 +1,7 @@
 'use client'
 
-import { useParams } from 'next/navigation'
-import { motion, use } from 'react'
+import { use } from 'react'
+import { motion } from 'framer-motion'
 import { ArrowLeft, CheckCircle, Clock, TrendingUp, Briefcase, FileText, Building2, MapPin, Award, Users, Globe, Search, CheckSquare, Plane, Home, Shield, Zap, Star, AlertTriangle } from 'lucide-react'
 import Link from 'next/link'
 import { LAYER_CONTENT } from '@/lib/layerContent'
@@ -24,9 +24,10 @@ const getStepIcon = (stepTitle: string, stepIndex: number) => {
   return defaultIcons[stepIndex % defaultIcons.length]
 }
 
-export default function ProcessPage() {
-  const params = use(params)
-  const layerParam = params?.layer as string
+type PageProps = { params: Promise<{ layer: string }> }
+
+export default function ProcessPage({ params }: PageProps) {
+  const { layer: layerParam } = use(params)
   // Map new route names to old layer names
   const layerMap: Record<string, LayerType> = {
     'eu': 'europeans',

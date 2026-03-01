@@ -1,6 +1,5 @@
 'use client'
 
-import { useParams } from 'next/navigation'
 import { useState, useMemo, use } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, BookOpen, Clock, Tag, ArrowRight, FileText, Scale, Users, TrendingUp, Briefcase, DollarSign, MapPin, Route, Globe, Star, AlertTriangle, Search, X, Sparkles, Filter } from 'lucide-react'
@@ -27,9 +26,10 @@ const getCategoryIcon = (category: string) => {
   return BookOpen // Default icon
 }
 
-export default function ResourcesPage() {
-  const params = use(params)
-  const layerParam = params?.layer as string
+type PageProps = { params: Promise<{ layer: string }> }
+
+export default function ResourcesPage({ params }: PageProps) {
+  const { layer: layerParam } = use(params)
   const layer = (['europeans', 'americans', 'others'].includes(layerParam)
     ? layerParam
     : 'others') as LayerType

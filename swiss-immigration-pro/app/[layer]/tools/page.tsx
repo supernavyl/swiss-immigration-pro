@@ -1,13 +1,14 @@
 'use client'
 
+import { use } from 'react'
 import ToolsContent from '@/components/tools/ToolsContent'
 import LayerHeader from '@/components/layout/LayerHeader'
-import { useParams } from 'next/navigation'
-import { Globe, Star, AlertTriangle } from 'lucide-react'
+import { Globe, Star, AlertTriangle, Target } from 'lucide-react'
 
-export default function LayerToolsPage() {
-  const params = useParams()
-  const layerParam = params?.layer as string
+type PageProps = { params: Promise<{ layer: string }> }
+
+export default function LayerToolsPage({ params }: PageProps) {
+  const { layer: layerParam } = use(params)
   const layer = (layerParam === 'eu' || layerParam === 'us' || layerParam === 'other') 
     ? layerParam as 'eu' | 'us' | 'other'
     : 'eu' // fallback to eu if invalid

@@ -9,10 +9,11 @@ import { LAYER_CONTENT } from '@/lib/layerContent'
 import type { LayerType } from '@/lib/layerLogic'
 import LayerHeader from '@/components/layout/LayerHeader'
 
-export default function LayerQuizPage() {
-  const params = use(params)
+type PageProps = { params: Promise<{ layer: string }> }
+
+export default function LayerQuizPage({ params }: PageProps) {
+  const { layer: layerParam } = use(params)
   const router = useRouter()
-  const layerParam = params?.layer as string
   const layer = (['europeans', 'americans', 'others'].includes(layerParam)
     ? layerParam
     : 'others') as LayerType

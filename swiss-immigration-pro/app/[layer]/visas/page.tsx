@@ -1,16 +1,17 @@
 'use client'
 
-import { useParams } from 'next/navigation'
-import { motion, use } from 'react'
+import { use } from 'react'
+import { motion } from 'framer-motion'
 import { CheckCircle, ArrowLeft, ArrowRight, Shield, Award, Home, Briefcase, Plane, CreditCard, Star, AlertTriangle, Globe } from 'lucide-react'
 import Link from 'next/link'
 import { LAYER_CONTENT } from '@/lib/layerContent'
 import type { LayerType } from '@/lib/layerLogic'
 import LayerHeader from '@/components/layout/LayerHeader'
 
-export default function VisasPage() {
-  const params = use(params)
-  const layerParam = params?.layer as string
+type PageProps = { params: Promise<{ layer: string }> }
+
+export default function VisasPage({ params }: PageProps) {
+  const { layer: layerParam } = use(params)
   const layer = (['europeans', 'americans', 'others'].includes(layerParam) 
     ? layerParam 
     : 'others') as LayerType

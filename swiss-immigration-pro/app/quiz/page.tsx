@@ -5,6 +5,8 @@ import { motion } from 'framer-motion'
 import { ArrowRight, MapPin, Users, Globe } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import type { LayerType } from '@/lib/layerLogic'
+import LawyerSuggestion from '@/components/marketplace/LawyerSuggestion'
+import MainHeader from '@/components/layout/MainHeader'
 
 interface QuizQuestion {
   id: string
@@ -113,9 +115,12 @@ export default function QuizPage() {
 
   const layer = determineLayer(answers)
   const layerInfo = getLayerInfo(layer)
+  const showResult = Object.keys(answers).length === questions.length
+  const result = layer === 'europeans' ? 'eu' : layer === 'americans' ? 'us' : 'other'
 
   return (
     <div className="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 min-h-screen">
+      <MainHeader />
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
@@ -211,6 +216,15 @@ export default function QuizPage() {
                 {layerInfo.description}
               </p>
             </motion.div>
+          )}
+
+          {/* Marketplace lawyer suggestion after quiz completion */}
+          {showResult && (
+            <LawyerSuggestion
+              source="quiz"
+              specialization={result === 'eu' ? 'eu_citizens' : result === 'us' ? 'work_permits' : 'immigration'}
+              message={`Quiz result: ${result}. User may need help with ${layerInfo?.title || 'immigration'}.`}
+            />
           )}
         </motion.div>
       </div>

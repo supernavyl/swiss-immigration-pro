@@ -1,17 +1,17 @@
 'use client'
 
-import { useParams } from 'next/navigation'
 import { useState, use } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowLeft, CheckCircle, Circle, Download, FileText, TrendingUp, Star, AlertTriangle, Globe } from 'lucide-react'
+import { ArrowLeft, CheckCircle, Circle, Download, FileText, TrendingUp, Star, AlertTriangle, Globe, Target } from 'lucide-react'
 import Link from 'next/link'
 import { LAYER_CONTENT } from '@/lib/layerContent'
 import type { LayerType } from '@/lib/layerLogic'
 import LayerHeader from '@/components/layout/LayerHeader'
 
-export default function RequirementsPage() {
-  const params = use(params)
-  const layerParam = params?.layer as string
+type PageProps = { params: Promise<{ layer: string }> }
+
+export default function RequirementsPage({ params }: PageProps) {
+  const { layer: layerParam } = use(params)
   // Map new route names to old layer names
   const layerMap: Record<string, LayerType> = {
     'eu': 'europeans',
