@@ -1,9 +1,22 @@
 import type { NextConfig } from "next";
 
+
 const nextConfig: NextConfig = {
-  // Temporarily ignore TypeScript errors for deployment
+  transpilePackages: [
+    'react-markdown',
+    'remark-gfm',
+    'remark-parse',
+    'remark-rehype',
+    'rehype-raw',
+    'rehype-sanitize',
+    'unified',
+    'unist-util-visit',
+    'mdast-util-to-hast',
+    'mdast-util-from-markdown',
+    'micromark',
+  ],
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   // Performance optimizations
   compress: true,
@@ -20,11 +33,23 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**',
+        hostname: 'swissimmigrationpro.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.swissimmigrationpro.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'files.stripe.com',
       },
     ],
-    // Optimize for mobile
-    unoptimized: false,
+    // Cloudflare Pages cannot run Next.js image optimization server
+    unoptimized: !!process.env.CLOUDFLARE_PAGES,
   },
 
   // Compiler optimizations
@@ -37,9 +62,19 @@ const nextConfig: NextConfig = {
   // Experimental features for better performance
   experimental: {
     optimizeCss: true,
-    optimizePackageImports: ['lucide-react', '@radix-ui/react-dialog'],
-    // Mobile optimizations
-    mobileFirst: true,
+    optimizePackageImports: [
+      'lucide-react',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-accordion',
+      '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-scroll-area',
+      '@radix-ui/react-select',
+      '@radix-ui/react-tabs',
+      '@radix-ui/react-toast',
+      'date-fns',
+      'recharts',
+      'framer-motion',
+    ],
     // Optimize server components
     serverActions: {
       bodySizeLimit: '2mb',
@@ -87,7 +122,16 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, s-maxage=60, stale-while-revalidate=300',
+            value: 'no-store, no-cache, must-revalidate',
+          },
+        ],
+      },
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()',
           },
         ],
       },
@@ -103,20 +147,31 @@ const nextConfig: NextConfig = {
     ]
   },
 
+  // Proxy API requests to Python backend
+  async rewrites() {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+    return [
+      {
+        source: '/api/:path*',
+        destination: `${apiUrl}/api/:path*`,
+      },
+    ]
+  },
+
   // React strict mode for better development
   reactStrictMode: true,
+
+  // Use 'standalone' for Docker/VPS, remove for Cloudflare Pages
+  // Cloudflare Pages uses @cloudflare/next-on-pages build pipeline
+  output: process.env.CLOUDFLARE_PAGES ? undefined : 'standalone',
 
   // Power optimization
   poweredByHeader: false,
 
-  // Allow development origins for cross-origin requests
-  allowedDevOrigins: ['localhost:5050', '127.0.0.1:5050', '192.168.1.21:5050', '192.168.1.21'],
+  // Allow development origins for cross-origin requests (including tunnels)
+  allowedDevOrigins: ['localhost:5050', '127.0.0.1:5050', '*.trycloudflare.com', '*.loca.lt'],
 };
 
 export default nextConfig;
-
-
-
-
 
 
