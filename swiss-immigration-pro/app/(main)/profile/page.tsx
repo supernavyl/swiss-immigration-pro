@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useSession, signOut } from 'next-auth/react'
+import { useSession, signOut } from '@/lib/auth-client'
 import { motion } from 'framer-motion'
 import { User, Lock, Globe, Mail, Save, Eye, EyeOff, LogOut, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
-import LanguageSwitcher from '@/components/LanguageSwitcher'
+import LanguageSwitcher from '@/components/layout/LanguageSwitcher'
 
 // Declare Google Translate types
 declare global {

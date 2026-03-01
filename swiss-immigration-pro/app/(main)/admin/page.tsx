@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useSession } from 'next-auth/react'
+import { useSession } from '@/lib/auth-client'
 import { motion } from 'framer-motion'
 import { 
   Users, DollarSign, TrendingUp, Settings, Crown, Shield, Activity, 
@@ -14,10 +14,11 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { getModulesForPack } from '@/lib/content/pack-content'
-import { PRICING_PACKS } from '@/lib/stripe'
+import { PRICING_PACKS } from '@/lib/pricing'
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import UserUpgradeModal from '@/components/admin/UserUpgradeModal'
 import AdminHeader from '@/components/layout/AdminHeader'
+import { useToast } from '@/components/providers/ToastProvider'
 
 interface User {
   id: string
@@ -41,6 +42,7 @@ interface PackStats {
 
 export default function AdminDashboard() {
   const router = useRouter()
+  const { showToast } = useToast()
   const { data: session, status } = useSession()
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
@@ -232,7 +234,7 @@ export default function AdminDashboard() {
 
   const handleBulkPackChange = async (newPackId: string) => {
     if (selectedUsers.size === 0) {
-      alert('Please select at least one user')
+      showToast('Please select at least one user', 'warning')
       return
     }
 
@@ -254,10 +256,10 @@ export default function AdminDashboard() {
       setSelectedUsers(new Set())
       await loadUsers()
       await loadStats()
-      alert(`Successfully updated ${selectedUsers.size} users`)
+      showToast(`Successfully updated ${selectedUsers.size} users`, 'success')
     } catch (error) {
       console.error('Error updating users:', error)
-      alert('Failed to update users. Please try again.')
+      showToast('Failed to update users. Please try again.', 'error')
     }
   }
 
@@ -281,12 +283,12 @@ export default function AdminDashboard() {
 
   const sendEmailToUsers = async () => {
     if (!emailSubject || !emailBody) {
-      alert('Please fill in both subject and body')
+      showToast('Please fill in both subject and body', 'warning')
       return
     }
 
     if (emailRecipients.length === 0) {
-      alert('Please select at least one recipient')
+      showToast('Please select at least one recipient', 'warning')
       return
     }
 
@@ -303,7 +305,7 @@ export default function AdminDashboard() {
       })
 
       if (res.ok) {
-        alert(`Email sent to ${emailRecipients.length} users`)
+        showToast(`Email sent to ${emailRecipients.length} users`, 'success')
         setEmailModal(false)
         setEmailSubject('')
         setEmailBody('')
@@ -313,7 +315,7 @@ export default function AdminDashboard() {
       }
     } catch (error) {
       console.error('Error sending email:', error)
-      alert('Failed to send email. Please try again.')
+      showToast('Failed to send email. Please try again.', 'error')
     }
   }
 
@@ -339,10 +341,11 @@ export default function AdminDashboard() {
       setUpgradeUser(null)
     } catch (error) {
       console.error('Error updating user pack:', error)
-      alert(
+      showToast(
         error instanceof Error
           ? error.message
-          : 'Failed to update user pack. Please try again.'
+          : 'Failed to update user pack. Please try again.',
+        'error'
       )
     }
   }
@@ -384,25 +387,25 @@ export default function AdminDashboard() {
     }))
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       <AdminHeader />
       <div className="py-6 sm:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-black mb-2">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-black dark:text-white mb-2">
               <Shield className="inline-block w-8 h-8 sm:w-10 sm:h-10 mr-2 sm:mr-3 text-blue-600" />
               Admin Dashboard
             </h1>
-            <p className="text-sm sm:text-base text-gray-700">
+            <p className="text-sm sm:text-base text-gray-700 dark:text-gray-200">
               Full control panel - Manage users, content, and statistics
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
             <Link
               href="/"
-              className="flex items-center justify-center space-x-2 px-3 sm:px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors shadow-sm text-sm sm:text-base"
+              className="flex items-center justify-center space-x-2 px-3 sm:px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg transition-colors shadow-sm text-sm sm:text-base"
             >
               <ArrowLeft className="w-4 h-4" />
               <span className="hidden sm:inline">Exit Admin</span>
@@ -425,7 +428,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Tabs */}
-        <div className="mb-6 sm:mb-8 border-b border-gray-200 overflow-x-auto">
+        <div className="mb-6 sm:mb-8 border-b border-gray-200 dark:border-gray-700 overflow-x-auto">
           <div className="flex space-x-4 sm:space-x-8 min-w-max sm:min-w-0">
             {[
               { id: 'overview', label: 'Overview', icon: BarChart3 },
@@ -444,7 +447,7 @@ export default function AdminDashboard() {
                   className={`flex items-center space-x-2 pb-4 px-1 border-b-2 transition-colors ${
                     activeTab === tab.id
                       ? 'border-blue-600 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                      : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
                   }`}
                 >
                   <Icon className="w-5 h-5" />
@@ -498,14 +501,14 @@ export default function AdminDashboard() {
                   key={stat.title}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow"
+                  className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow"
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <div className={`w-12 h-12 rounded-lg ${stat.bg} flex items-center justify-center`}>
+                    <div className={`w-12 h-12 rounded-lg ${stat.bg} dark:bg-blue-900/30 flex items-center justify-center`}>
                       <stat.icon className={`w-6 h-6 ${stat.color}`} />
                     </div>
                   </div>
-                  <div className="text-3xl font-bold text-black mb-1">
+                  <div className="text-3xl font-bold text-black dark:text-white mb-1">
                     {stat.value}
                   </div>
                   <div className="text-sm text-gray-700 mb-1">
@@ -521,18 +524,18 @@ export default function AdminDashboard() {
             {/* Users by Pack */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
               {stats.usersByPack.map((pack) => (
-                <div key={pack.packId} className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                <div key={pack.packId} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
                   <div className="flex items-center justify-between mb-4">
                     <Crown className="w-8 h-8 text-blue-600" />
                     <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded">
                       {pack.packId.toUpperCase()}
                     </span>
                   </div>
-                  <div className="text-3xl font-bold text-black mb-1">
+                  <div className="text-3xl font-bold text-black dark:text-white mb-1">
                     {pack.count}
                   </div>
-                  <div className="text-sm text-gray-700">
-                    Users
+<div className="text-sm text-gray-700 dark:text-gray-200">
+                  Users
                   </div>
                 </div>
               ))}
@@ -544,7 +547,7 @@ export default function AdminDashboard() {
         {activeTab === 'users' && (
           <div className="space-y-6">
             {/* Search & Filters */}
-            <div className="bg-white border border-gray-200 rounded-xl p-3 sm:p-4 shadow-sm">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 sm:p-4 shadow-sm">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -588,9 +591,9 @@ export default function AdminDashboard() {
             </div>
 
             {/* Users Table */}
-            <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 shadow-sm">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 sm:p-6 shadow-sm">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4 sm:mb-6">
-                <h2 className="text-xl sm:text-2xl font-bold text-black">
+                <h2 className="text-xl sm:text-2xl font-bold text-black dark:text-white">
                   All Clients ({filteredUsers.length})
                 </h2>
                 {selectedUsers.size > 0 && (
@@ -598,7 +601,7 @@ export default function AdminDashboard() {
                     <span className="text-sm text-gray-700">{selectedUsers.size} selected</span>
                     <select
                       onChange={(e) => handleBulkPackChange(e.target.value)}
-                      className="px-3 py-1.5 border border-gray-300 rounded-lg bg-white text-black text-sm"
+                      className="px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white text-sm"
                       defaultValue=""
                     >
                       <option value="" disabled>Bulk Change Pack</option>
@@ -609,7 +612,7 @@ export default function AdminDashboard() {
                     </select>
                     <button
                       onClick={() => setSelectedUsers(new Set())}
-                      className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm"
+                      className="px-3 py-1.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg text-sm"
                     >
                       Clear
                     </button>
@@ -618,9 +621,9 @@ export default function AdminDashboard() {
               </div>
               <div className="overflow-x-auto -mx-4 sm:mx-0">
                 <table className="w-full text-xs sm:text-sm min-w-[800px]">
-                  <thead className="bg-gray-50">
+                  <thead className="bg-gray-50 dark:bg-gray-900">
                     <tr>
-                      <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-gray-700 font-semibold">
+                      <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-gray-700 dark:text-gray-200 font-semibold">
                         <button
                           onClick={toggleSelectAll}
                           className="flex items-center"
@@ -632,18 +635,18 @@ export default function AdminDashboard() {
                           )}
                         </button>
                       </th>
-                      <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-gray-700 font-semibold">Email</th>
+                      <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-gray-700 dark:text-gray-200 font-semibold">Email</th>
                       <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-gray-700 font-semibold hidden sm:table-cell">Name</th>
-                      <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-gray-700 font-semibold">Pack</th>
+                      <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-gray-700 dark:text-gray-200 font-semibold">Pack</th>
                       <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-gray-700 font-semibold hidden md:table-cell">Purchases</th>
                       <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-gray-700 font-semibold hidden lg:table-cell">Spent</th>
                       <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-gray-700 font-semibold hidden xl:table-cell">Joined</th>
-                      <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-gray-700 font-semibold">Actions</th>
+                      <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-gray-700 dark:text-gray-200 font-semibold">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-200">
+                  <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                     {filteredUsers.map((user) => (
-                      <tr key={user.id} className="hover:bg-gray-50">
+                      <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                         <td className="px-2 sm:px-4 py-2 sm:py-3">
                           <button
                             onClick={() => toggleUserSelection(user.id)}
@@ -656,12 +659,12 @@ export default function AdminDashboard() {
                             )}
                           </button>
                         </td>
-                        <td className="px-2 sm:px-4 py-2 sm:py-3 text-black">
+                        <td className="px-2 sm:px-4 py-2 sm:py-3 text-black dark:text-white">
                           <div className="flex items-center space-x-2">
                             {user.is_admin && <Shield className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600 flex-shrink-0" />}
                             <span className="truncate max-w-[150px] sm:max-w-none">{user.email}</span>
                           </div>
-                          <div className="sm:hidden text-xs text-gray-500 mt-1">{user.full_name || '—'}</div>
+                          <div className="sm:hidden text-xs text-gray-500 dark:text-gray-400 mt-1">{user.full_name || '—'}</div>
                         </td>
                         <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-700 hidden sm:table-cell">
                           {user.full_name || '—'}
@@ -670,7 +673,7 @@ export default function AdminDashboard() {
                           <select
                             value={user.pack_id}
                             onChange={(e) => handleUpdateUserPack(user.id, e.target.value)}
-                            className="text-xs px-1.5 sm:px-2 py-1 border border-gray-300 rounded bg-white text-black w-full sm:w-auto"
+                            className="text-xs px-1.5 sm:px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-black dark:text-white w-full sm:w-auto"
                           >
                             <option value="free">Free</option>
                             <option value="immigration">Immigration</option>
@@ -678,13 +681,13 @@ export default function AdminDashboard() {
                             <option value="citizenship">Citizenship Pro</option>
                           </select>
                         </td>
-                        <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-700 hidden md:table-cell">
+                        <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-700 dark:text-gray-200 hidden md:table-cell">
                           {user.payment_count || 0}
                         </td>
-                        <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-700 hidden lg:table-cell">
+                        <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-700 dark:text-gray-200 hidden lg:table-cell">
                           CHF {(user.total_spent / 100).toFixed(2)}
                         </td>
-                        <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-700 hidden xl:table-cell">
+                        <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-700 dark:text-gray-200 hidden xl:table-cell">
                           {new Date(user.created_at).toLocaleDateString()}
                         </td>
                         <td className="px-2 sm:px-4 py-2 sm:py-3">
@@ -723,25 +726,25 @@ export default function AdminDashboard() {
                   key={pack.pack_id}
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow"
+                  className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:shadow-lg transition-shadow"
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-bold text-black">
+                    <h3 className="text-lg font-bold text-black dark:text-white">
                       {pack.pack_id.toUpperCase()} Pack
                     </h3>
                     <Package className="w-6 h-6 text-blue-600" />
                   </div>
                   <div className="space-y-2">
                     <div className="flex justify-between">
-                      <span className="text-gray-700">Total Users:</span>
-                      <span className="font-bold text-black">{pack.user_count}</span>
+                      <span className="text-gray-700 dark:text-gray-200">Total Users:</span>
+                      <span className="font-bold text-black dark:text-white">{pack.user_count}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-700">Active:</span>
+                      <span className="text-gray-700 dark:text-gray-200">Active:</span>
                       <span className="font-semibold text-green-600">{pack.active_count}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-700">Expired:</span>
+                      <span className="text-gray-700 dark:text-gray-200">Expired:</span>
                       <span className="font-semibold text-red-600">{pack.expired_count}</span>
                     </div>
                   </div>
@@ -753,36 +756,36 @@ export default function AdminDashboard() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm"
+              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm"
             >
               <h3 className="text-xl font-bold text-black mb-4 flex items-center space-x-2">
                 <BarChart3 className="w-6 h-6 text-blue-600" />
                 <span>Purchase Statistics</span>
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
+                <div className="p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-100 dark:border-gray-700">
                   <div className="text-2xl font-bold text-blue-600">
                     {stats.totalPurchases}
                   </div>
-                  <div className="text-sm text-gray-700">Total Purchases</div>
+                  <div className="text-sm text-gray-700 dark:text-gray-200">Total Purchases</div>
                 </div>
-                <div className="p-4 bg-green-50 rounded-lg border border-green-100">
+                <div className="p-4 bg-green-50 dark:bg-green-900/30 rounded-lg border border-green-100 dark:border-gray-700">
                   <div className="text-2xl font-bold text-green-600">
                     CHF {stats.totalRevenue.toFixed(2)}
                   </div>
-                  <div className="text-sm text-gray-700">Total Revenue</div>
+                  <div className="text-sm text-gray-700 dark:text-gray-200">Total Revenue</div>
                 </div>
-                <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
+                <div className="p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-100 dark:border-gray-700">
                   <div className="text-2xl font-bold text-blue-600">
                     CHF {stats.monthlyRevenue.toFixed(2)}
                   </div>
-                  <div className="text-sm text-gray-700">This Month</div>
+                  <div className="text-sm text-gray-700 dark:text-gray-200">This Month</div>
                 </div>
-                <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
+                <div className="p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-100 dark:border-gray-700">
                   <div className="text-2xl font-bold text-blue-600">
                     {stats.activeSubscriptions}
                   </div>
-                  <div className="text-sm text-gray-700">Active Subs</div>
+                  <div className="text-sm text-gray-700 dark:text-gray-200">Active Subs</div>
                 </div>
               </div>
             </motion.div>
@@ -795,10 +798,10 @@ export default function AdminDashboard() {
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm"
+                    className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm"
                   >
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-bold text-black flex items-center space-x-2">
+                      <h3 className="text-lg font-bold text-black dark:text-white flex items-center space-x-2">
                         <TrendingUp className="w-5 h-5 text-green-600" />
                         <span>Revenue Trend (12 Months)</span>
                       </h3>
@@ -838,10 +841,10 @@ export default function AdminDashboard() {
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm"
+                    className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm"
                   >
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-bold text-black flex items-center space-x-2">
+                      <h3 className="text-lg font-bold text-black dark:text-white flex items-center space-x-2">
                         <Users className="w-5 h-5 text-blue-600" />
                         <span>User Growth (12 Months)</span>
                       </h3>
@@ -873,7 +876,7 @@ export default function AdminDashboard() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm"
+                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm"
               >
                 <h3 className="text-lg font-bold text-black mb-4 flex items-center space-x-2">
                   <Package className="w-5 h-5 text-blue-600" />
@@ -907,7 +910,7 @@ export default function AdminDashboard() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm"
+                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm"
               >
                 <h3 className="text-lg font-bold text-black mb-4 flex items-center space-x-2">
                   <Activity className="w-5 h-5 text-blue-600" />
@@ -945,7 +948,7 @@ export default function AdminDashboard() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm"
+                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm"
               >
                 <h3 className="text-lg font-bold text-black mb-4 flex items-center space-x-2">
                   <Target className="w-5 h-5 text-blue-600" />
@@ -955,17 +958,17 @@ export default function AdminDashboard() {
                   {analytics.topUsers.slice(0, 10).map((user: any, idx: number) => (
                     <div
                       key={user.id}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200"
+                      className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
                     >
                       <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center font-bold text-blue-600">
+                        <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center font-bold text-blue-600">
                           {idx + 1}
                         </div>
                         <div>
-                          <div className="font-semibold text-black">
+                          <div className="font-semibold text-black dark:text-white">
                             {user.fullName || user.email}
                           </div>
-                          <div className="text-sm text-gray-700">
+                          <div className="text-sm text-gray-700 dark:text-gray-200">
                             {user.messageCount} messages • CHF {user.totalSpent.toFixed(2)} spent
                           </div>
                         </div>
@@ -990,7 +993,7 @@ export default function AdminDashboard() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm"
+                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm"
               >
                 <h3 className="text-lg font-bold text-black mb-4 flex items-center space-x-2">
                   <FileText className="w-5 h-5 text-blue-600" />
@@ -998,26 +1001,26 @@ export default function AdminDashboard() {
                 </h3>
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
-                    <thead className="bg-gray-50">
+                    <thead className="bg-gray-50 dark:bg-gray-900">
                       <tr>
-                        <th className="px-4 py-3 text-left text-gray-700 font-semibold">Module</th>
+                        <th className="px-4 py-3 text-left text-gray-700 dark:text-gray-200 font-semibold">Module</th>
                         <th className="px-4 py-3 text-left text-gray-700 font-semibold">Total Users</th>
                         <th className="px-4 py-3 text-left text-gray-700 font-semibold">Completed</th>
                         <th className="px-4 py-3 text-left text-gray-700 font-semibold">Avg Progress</th>
                         <th className="px-4 py-3 text-left text-gray-700 font-semibold">Completion Rate</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200">
+                    <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                       {analytics.moduleStats.map((module: any) => {
                         const completionRate = module.totalUsers > 0 
                           ? Math.round((module.completedUsers / module.totalUsers) * 100) 
                           : 0
                         return (
-                          <tr key={module.moduleId} className="hover:bg-gray-50">
-                            <td className="px-4 py-3 text-black font-medium">
+                          <tr key={module.moduleId} className="hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <td className="px-4 py-3 text-black dark:text-white font-medium">
                               {module.moduleId}
                             </td>
-                            <td className="px-4 py-3 text-gray-700">
+                            <td className="px-4 py-3 text-gray-700 dark:text-gray-200">
                               {module.totalUsers}
                             </td>
                             <td className="px-4 py-3">
@@ -1025,18 +1028,18 @@ export default function AdminDashboard() {
                                 {module.completedUsers}
                               </span>
                             </td>
-                            <td className="px-4 py-3 text-gray-700">
+                            <td className="px-4 py-3 text-gray-700 dark:text-gray-200">
                               {module.avgProgress.toFixed(1)}%
                             </td>
                             <td className="px-4 py-3">
                               <div className="flex items-center space-x-2">
-                                <div className="flex-1 bg-gray-200 rounded-full h-2">
+                                <div className="flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                                   <div
                                     className="bg-green-600 h-2 rounded-full transition-all"
                                     style={{ width: `${completionRate}%` }}
                                   ></div>
                                 </div>
-                                <span className="text-sm font-semibold text-black w-12 text-right">
+                                <span className="text-sm font-semibold text-black dark:text-white w-12 text-right">
                                   {completionRate}%
                                 </span>
                               </div>
@@ -1056,14 +1059,14 @@ export default function AdminDashboard() {
         {activeTab === 'payments' && (
           <div className="space-y-6">
             {/* Filters */}
-            <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 shadow-sm">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="relative">
                   <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <select
                     value={paymentFilter}
                     onChange={(e) => setPaymentFilter(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg bg-white text-black focus:ring-2 focus:ring-blue-500"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="all">All Payments</option>
                     <option value="succeeded">Succeeded</option>
@@ -1078,7 +1081,7 @@ export default function AdminDashboard() {
                     type="date"
                     value={dateRange.start}
                     onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg bg-white text-black focus:ring-2 focus:ring-blue-500"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white focus:ring-2 focus:ring-blue-500"
                     placeholder="Start Date"
                   />
                 </div>
@@ -1088,7 +1091,7 @@ export default function AdminDashboard() {
                     type="date"
                     value={dateRange.end}
                     onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg bg-white text-black focus:ring-2 focus:ring-blue-500"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white focus:ring-2 focus:ring-blue-500"
                     placeholder="End Date"
                   />
                 </div>
@@ -1096,12 +1099,12 @@ export default function AdminDashboard() {
             </div>
 
             {/* Payments Table */}
-            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-              <h2 className="text-2xl font-bold text-black mb-4">Payment History</h2>
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm">
+              <h2 className="text-2xl font-bold text-black dark:text-white mb-4">Payment History</h2>
               <div className="overflow-x-auto">
                 {payments.length > 0 ? (
                   <table className="w-full text-sm">
-                    <thead className="bg-gray-50">
+                    <thead className="bg-gray-50 dark:bg-gray-900">
                       <tr>
                         <th className="px-4 py-3 text-left text-gray-700 font-semibold">Date</th>
                         <th className="px-4 py-3 text-left text-gray-700 font-semibold">User</th>
@@ -1111,7 +1114,7 @@ export default function AdminDashboard() {
                         <th className="px-4 py-3 text-left text-gray-700 font-semibold">Payment ID</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200">
+                    <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                       {payments
                         .filter(p => paymentFilter === 'all' || p.status === paymentFilter)
                         .filter(p => {
@@ -1122,17 +1125,17 @@ export default function AdminDashboard() {
                           return true
                         })
                         .map((payment) => (
-                          <tr key={payment.id} className="hover:bg-gray-50">
-                            <td className="px-4 py-3 text-gray-700">
+                          <tr key={payment.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <td className="px-4 py-3 text-gray-700 dark:text-gray-200">
                               {new Date(payment.created_at).toLocaleDateString()}
                             </td>
-                            <td className="px-4 py-3 text-black">
+                            <td className="px-4 py-3 text-black dark:text-white">
                               {payment.user_email || 'N/A'}
                             </td>
-                            <td className="px-4 py-3 text-gray-700">
+                            <td className="px-4 py-3 text-gray-700 dark:text-gray-200">
                               {payment.pack_id || 'N/A'}
                             </td>
-                            <td className="px-4 py-3 font-semibold text-black">
+                            <td className="px-4 py-3 font-semibold text-black dark:text-white">
                               CHF {(payment.amount / 100).toFixed(2)}
                             </td>
                             <td className="px-4 py-3">
@@ -1140,12 +1143,12 @@ export default function AdminDashboard() {
                                 payment.status === 'succeeded' ? 'bg-green-100 text-green-700' :
                                 payment.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
                                 payment.status === 'failed' ? 'bg-red-100 text-red-700' :
-                                'bg-gray-100 text-gray-700'
+                                'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200'
                               }`}>
                                 {payment.status}
                               </span>
                             </td>
-                            <td className="px-4 py-3 text-gray-600 font-mono text-xs">
+                            <td className="px-4 py-3 text-gray-600 dark:text-gray-400 font-mono text-xs">
                               {payment.stripe_payment_id || payment.id}
                             </td>
                           </tr>
@@ -1153,7 +1156,7 @@ export default function AdminDashboard() {
                     </tbody>
                   </table>
                 ) : (
-                  <div className="text-center py-12 text-gray-500">
+                  <div className="text-center py-12 text-gray-500 dark:text-gray-400">
                     <CreditCard className="w-12 h-12 mx-auto mb-4 text-gray-400" />
                     <p>No payments found</p>
                   </div>
@@ -1166,7 +1169,7 @@ export default function AdminDashboard() {
         {/* Activity Tab */}
         {activeTab === 'activity' && (
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm">
               <h2 className="text-2xl font-bold text-black mb-4 flex items-center space-x-2">
                 <History className="w-6 h-6 text-blue-600" />
                 <span>Activity Logs</span>
@@ -1176,7 +1179,7 @@ export default function AdminDashboard() {
                   activityLogs.map((log, idx) => (
                     <div
                       key={idx}
-                      className="p-4 bg-gray-50 rounded-lg border border-gray-200 flex items-start space-x-3"
+                      className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 flex items-start space-x-3"
                     >
                       <div className={`w-2 h-2 rounded-full mt-2 ${
                         log.type === 'user_action' ? 'bg-blue-500' :
@@ -1186,16 +1189,16 @@ export default function AdminDashboard() {
                       }`} />
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-1">
-                          <span className="font-semibold text-black">{log.action}</span>
-                          <span className="text-xs text-gray-500">
+                          <span className="font-semibold text-black dark:text-white">{log.action}</span>
+                          <span className="text-xs text-gray-500 dark:text-gray-400">
                             {new Date(log.created_at).toLocaleString()}
                           </span>
                         </div>
-                        <div className="text-sm text-gray-700">
+                        <div className="text-sm text-gray-700 dark:text-gray-200">
                           {log.description || 'No description'}
                         </div>
                         {log.user_email && (
-                          <div className="text-xs text-gray-500 mt-1">
+                          <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                             User: {log.user_email}
                           </div>
                         )}
@@ -1216,7 +1219,7 @@ export default function AdminDashboard() {
         {activeTab === 'tools' && (
           <div className="space-y-6">
             {/* Export Section */}
-            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm">
               <h2 className="text-xl font-bold text-black mb-4 flex items-center space-x-2">
                 <FileSpreadsheet className="w-6 h-6 text-blue-600" />
                 <span>Export Data</span>
@@ -1236,7 +1239,7 @@ export default function AdminDashboard() {
             </div>
 
             {/* Email Management */}
-            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm">
               <h2 className="text-xl font-bold text-black mb-4 flex items-center space-x-2">
                 <Mail className="w-6 h-6 text-blue-600" />
                 <span>Email Management</span>
@@ -1270,7 +1273,7 @@ export default function AdminDashboard() {
             </div>
 
             {/* Bulk Actions */}
-            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm">
               <h2 className="text-xl font-bold text-black mb-4 flex items-center space-x-2">
                 <CheckSquare className="w-6 h-6 text-blue-600" />
                 <span>Bulk Actions</span>
@@ -1298,7 +1301,7 @@ export default function AdminDashboard() {
                       <option value="citizenship">Citizenship Pro</option>
                     </select>
                   </div>
-                  <p className="text-sm text-gray-600 mt-2">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
                     Select users in the Clients tab, then choose a pack to apply to all selected users.
                   </p>
                 </div>
@@ -1306,26 +1309,26 @@ export default function AdminDashboard() {
             </div>
 
             {/* System Info */}
-            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm">
               <h2 className="text-xl font-bold text-black mb-4 flex items-center space-x-2">
                 <Settings className="w-6 h-6 text-blue-600" />
                 <span>System Information</span>
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <div className="text-sm text-gray-600">Total Users</div>
-                  <div className="text-2xl font-bold text-black">{stats.totalUsers}</div>
+                <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className="text-sm text-gray-600 dark:text-gray-400">Total Users</div>
+                  <div className="text-2xl font-bold text-black dark:text-white">{stats.totalUsers}</div>
                 </div>
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <div className="text-sm text-gray-600">Total Revenue</div>
+                <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className="text-sm text-gray-600 dark:text-gray-400">Total Revenue</div>
                   <div className="text-2xl font-bold text-green-600">CHF {stats.totalRevenue.toFixed(2)}</div>
                 </div>
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <div className="text-sm text-gray-600">Active Subscriptions</div>
+                <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className="text-sm text-gray-600 dark:text-gray-400">Active Subscriptions</div>
                   <div className="text-2xl font-bold text-blue-600">{stats.activeSubscriptions}</div>
                 </div>
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <div className="text-sm text-gray-600">Total Messages</div>
+                <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className="text-sm text-gray-600 dark:text-gray-400">Total Messages</div>
                   <div className="text-2xl font-bold text-purple-600">{stats.messageCount}</div>
                 </div>
               </div>
@@ -1336,9 +1339,9 @@ export default function AdminDashboard() {
             {/* Content Tab - Full Access to All Packs */}
         {activeTab === 'content' && (
           <div className="space-y-4 sm:space-y-6">
-            <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 shadow-sm">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 sm:p-6 shadow-sm">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4 sm:mb-6">
-                <h2 className="text-xl sm:text-2xl font-bold text-black">
+                <h2 className="text-xl sm:text-2xl font-bold text-black dark:text-white">
                   All Pack Content
                 </h2>
                 <span className="text-xs sm:text-sm text-blue-600 font-semibold">
@@ -1348,12 +1351,12 @@ export default function AdminDashboard() {
 
       <div className="space-y-6 sm:space-y-8">
         {allPackContent.map((pack) => (
-          <div key={pack.packId} className="border border-gray-200 rounded-xl p-4 sm:p-6 bg-white">
+          <div key={pack.packId} className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 sm:p-6 bg-white dark:bg-gray-800">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4 mb-4">
-              <h3 className="text-lg sm:text-xl font-bold text-black">
+              <h3 className="text-lg sm:text-xl font-bold text-black dark:text-white">
                 {pack.packName}
               </h3>
-              <span className="text-xs sm:text-sm text-gray-700">
+              <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-200">
                 {pack.modules.length} modules
               </span>
             </div>
@@ -1366,7 +1369,7 @@ export default function AdminDashboard() {
                   onClick={() => {
                     router.push(`/admin/module/${module.id}`)
                   }}
-                  className="w-full text-left border border-gray-200 rounded-lg p-3 sm:p-4 hover:bg-blue-50 hover:border-blue-300 transition-all cursor-pointer group relative focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 bg-white"
+                  className="w-full text-left border border-gray-200 dark:border-gray-700 rounded-lg p-3 sm:p-4 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:border-blue-300 transition-all cursor-pointer group relative focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 bg-white dark:bg-gray-800"
                 >
                   <div className="flex items-start justify-between mb-2 gap-2">
                     <h4 className="font-semibold text-sm sm:text-base text-black group-hover:text-blue-600 transition-colors flex-1">
@@ -1388,7 +1391,7 @@ export default function AdminDashboard() {
                       </span>
                     )}
                   </div>
-                  <div className="mt-3 pt-3 border-t border-gray-200">
+                  <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                     <div className="text-xs text-blue-600 font-medium flex items-center justify-between group-hover:text-blue-700 transition-colors">
                       <span>Open admin view</span>
                       <span>→</span>
@@ -1419,15 +1422,15 @@ export default function AdminDashboard() {
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-white rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6 shadow-xl"
+              className="bg-white dark:bg-gray-800 rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6 shadow-xl"
             >
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-2xl font-bold text-black">
+                <h2 className="text-2xl font-bold text-black dark:text-white">
                   User Details
                 </h2>
                 <button
                   onClick={() => setSelectedUser(null)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                 >
                   ✕
                 </button>
@@ -1436,20 +1439,20 @@ export default function AdminDashboard() {
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Email</label>
-                    <div className="text-black mt-1">{selectedUser.email}</div>
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-200">Email</label>
+                    <div className="text-black dark:text-white mt-1">{selectedUser.email}</div>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Name</label>
-                    <div className="text-black mt-1">{selectedUser.full_name || '—'}</div>
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-200">Name</label>
+                    <div className="text-black dark:text-white mt-1">{selectedUser.full_name || '—'}</div>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Current Pack</label>
-                    <div className="text-black mt-1">{selectedUser.pack_id.toUpperCase()}</div>
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-200">Current Pack</label>
+                    <div className="text-black dark:text-white mt-1">{selectedUser.pack_id.toUpperCase()}</div>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Pack Expires</label>
-                    <div className="text-black mt-1">
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-200">Pack Expires</label>
+                    <div className="text-black dark:text-white mt-1">
                       {selectedUser.pack_expires_at 
                         ? new Date(selectedUser.pack_expires_at).toLocaleDateString()
                         : 'Never'
@@ -1457,12 +1460,12 @@ export default function AdminDashboard() {
                     </div>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Total Spent</label>
-                    <div className="text-black mt-1">CHF {(selectedUser.total_spent / 100).toFixed(2)}</div>
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-200">Total Spent</label>
+                    <div className="text-black dark:text-white mt-1">CHF {(selectedUser.total_spent / 100).toFixed(2)}</div>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Purchases</label>
-                    <div className="text-black mt-1">{selectedUser.payment_count}</div>
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-200">Purchases</label>
+                    <div className="text-black dark:text-white mt-1">{selectedUser.payment_count}</div>
                   </div>
                   <div>
                     <label className="text-sm font-medium text-gray-700">Subscriptions</label>
@@ -1483,7 +1486,7 @@ export default function AdminDashboard() {
                           Admin
                         </span>
                       ) : (
-                        <span className="text-gray-500">Regular User</span>
+                        <span className="text-gray-500 dark:text-gray-400">Regular User</span>
                       )}
                     </div>
                   </div>
@@ -1510,7 +1513,7 @@ export default function AdminDashboard() {
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 shadow-xl"
+              className="bg-white dark:bg-gray-800 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 shadow-xl"
             >
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-2xl font-bold text-black flex items-center space-x-2">
@@ -1527,44 +1530,44 @@ export default function AdminDashboard() {
               
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                     Recipients ({emailRecipients.length} users)
                   </label>
-                  <div className="p-3 bg-gray-50 rounded-lg max-h-32 overflow-y-auto">
-                    <div className="text-sm text-gray-600">
+                  <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg max-h-32 overflow-y-auto">
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
                       {emailRecipients.slice(0, 5).join(', ')}
                       {emailRecipients.length > 5 && ` and ${emailRecipients.length - 5} more...`}
                     </div>
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                     Subject
                   </label>
                   <input
                     type="text"
                     value={emailSubject}
                     onChange={(e) => setEmailSubject(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-black focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white focus:ring-2 focus:ring-blue-500"
                     placeholder="Email subject"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                     Message
                   </label>
                   <textarea
                     value={emailBody}
                     onChange={(e) => setEmailBody(e.target.value)}
                     rows={8}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-black focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white focus:ring-2 focus:ring-blue-500"
                     placeholder="Email message body"
                   />
                 </div>
                 <div className="flex items-center justify-end space-x-3 pt-4">
                   <button
                     onClick={() => setEmailModal(false)}
-                    className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
+                    className="px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg transition-colors"
                   >
                     Cancel
                   </button>

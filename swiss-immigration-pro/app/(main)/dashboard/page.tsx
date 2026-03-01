@@ -1,23 +1,67 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { useSession } from 'next-auth/react'
+import { useState, useEffect, useRef } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useSession } from '@/lib/auth-client'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { UserCircle, Download, BookOpen, MessageCircle, TrendingUp, Crown, ChevronRight, Check, Lock, Play, Home, ArrowLeft } from 'lucide-react'
-import { PRICING_PACKS } from '@/lib/stripe'
+import { UserCircle, Download, BookOpen, MessageCircle, TrendingUp, Crown, ChevronRight, Check, Lock, Play, Home, ArrowLeft, Clock, HelpCircle, CheckSquare } from 'lucide-react'
+import dynamic from 'next/dynamic'
+import { analytics } from '@/lib/analytics'
+import ReferralCard from '@/components/marketing/ReferralCard'
+import { PRICING_PACKS } from '@/lib/pricing'
 import { getPackContent, getModulesForPack, getProgressPercentage, getAllModulesForAdmin, getModulePack } from '@/lib/content/pack-content'
+
+interface DashboardUser {
+  id: string
+  email: string
+  name?: string
+  packId: string
+  isAdmin: boolean
+}
+
+interface DashboardModule {
+  id: string
+  title: string
+  description?: string
+  completed?: boolean
+  progress?: number
+  icon?: string
+  lessons?: unknown[]
+  quiz?: { questions?: unknown[] }
+  exercises?: unknown[]
+  enhancedModule?: { sections?: unknown[] }
+  duration?: string
+}
+
+interface TabProps {
+  user: DashboardUser
+  modules: DashboardModule[]
+  progress?: number
+  isFree?: boolean
+  previewModules?: Array<{ module: DashboardModule; packId: string }>
+}
+
+const OnboardingWizard = dynamic(() => import('@/components/onboarding/OnboardingWizard'), { ssr: false })
 
 export default function Dashboard() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { data: session, status } = useSession()
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<DashboardUser | null>(null)
   const [loading, setLoading] = useState(true)
-  const [modules, setModules] = useState<any[]>([])
-  const [previewModules, setPreviewModules] = useState<Array<{ module: any; packId: string }>>([])
+  const [modules, setModules] = useState<DashboardModule[]>([])
+  const [previewModules, setPreviewModules] = useState<Array<{ module: DashboardModule; packId: string }>>([])
   const [progress, setProgress] = useState(0)
   const [activeTab, setActiveTab] = useState<'overview' | 'content' | 'resources' | 'progress'>('overview')
+  const paymentTracked = useRef(false)
+
+  useEffect(() => {
+    if (searchParams.get('payment') === 'success' && !paymentTracked.current) {
+      paymentTracked.current = true
+      analytics.paymentSuccess(searchParams.get('pack') || undefined)
+    }
+  }, [searchParams])
 
   useEffect(() => {
     if (status === 'loading') return
@@ -34,30 +78,30 @@ export default function Dashboard() {
     }
 
     // Map session to user object
-    const userData = {
+    const userData: DashboardUser = {
       id: session.user.id,
       email: session.user.email,
-      full_name: session.user.name,
-      pack_id: session.user.packId || 'free',
-      is_admin: session.user.isAdmin || false,
+      name: session.user.name || undefined,
+      packId: session.user.packId || 'free',
+      isAdmin: session.user.isAdmin || false,
     }
 
     setUser(userData)
-    
+
     // Load pack content
-    const packContent = getPackContent(userData.pack_id)
+    const packContent = getPackContent(userData.packId)
     if (packContent) {
-      const packModules = getModulesForPack(userData.pack_id)
-      setModules(packModules)
+      const packModules = getModulesForPack(userData.packId)
+      setModules(packModules as unknown as DashboardModule[])
       setProgress(getProgressPercentage(packModules))
 
-      const previewsForOtherPacks: Array<{ module: any; packId: string }> = []
+      const previewsForOtherPacks: Array<{ module: DashboardModule; packId: string }> = []
       const counts: Record<string, number> = {}
       const allModules = getAllModulesForAdmin()
 
       for (const mod of allModules) {
         const packId = getModulePack(mod.id)
-        if (!packId || packId === userData.pack_id) {
+        if (!packId || packId === userData.packId) {
           continue
         }
         counts[packId] = counts[packId] || 0
@@ -65,7 +109,7 @@ export default function Dashboard() {
           continue
         }
         counts[packId] += 1
-        previewsForOtherPacks.push({ module: mod, packId })
+        previewsForOtherPacks.push({ module: mod as unknown as DashboardModule, packId })
       }
 
       setPreviewModules(previewsForOtherPacks)
@@ -82,10 +126,13 @@ export default function Dashboard() {
     )
   }
 
-  const isFree = user?.pack_id === 'free'
+  if (!user) return null
+
+  const isFree = user.packId === 'free'
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
+      <OnboardingWizard userName={session?.user?.name} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -96,7 +143,7 @@ export default function Dashboard() {
           <div className="flex items-start justify-between">
             <div>
               <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-                Welcome back, {user?.full_name || 'User'}!
+                Welcome back, {user?.name || 'User'}!
               </h1>
             </div>
             <div className="flex items-center gap-2">
@@ -119,7 +166,7 @@ export default function Dashboard() {
           <div className="flex items-center space-x-2 flex-wrap gap-2 mt-4">
             <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
               <Crown className="w-4 h-4 mr-1" />
-              {user?.pack_id?.toUpperCase() || 'FREE'} PACK
+              {user?.packId?.toUpperCase() || 'FREE'} PACK
             </span>
             {isFree && (
               <a
@@ -180,7 +227,30 @@ export default function Dashboard() {
   )
 }
 
-function OverviewTab({ user, modules, progress }: any) {
+function OverviewTab({ user, modules, progress = 0 }: TabProps) {
+  const [usageStats, setUsageStats] = useState({ messagesToday: 0, messagesLimit: 10, cvsCreated: 0 })
+  
+  useEffect(() => {
+    // Fetch usage statistics
+    const fetchUsage = async () => {
+      try {
+        const res = await fetch('/api/user/limits')
+        if (res.ok) {
+          const data = await res.json()
+          const limit = data.packId === 'free' ? 10 : Infinity
+          setUsageStats({
+            messagesToday: data.messagesToday || 0,
+            messagesLimit: limit,
+            cvsCreated: 0, // TODO: Add CV count API
+          })
+        }
+      } catch (error) {
+        console.error('Error fetching usage:', error)
+      }
+    }
+    fetchUsage()
+  }, [])
+
   return (
     <div className="space-y-8">
       {/* Stats Grid */}
@@ -193,6 +263,15 @@ function OverviewTab({ user, modules, progress }: any) {
           </div>
           <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{progress}%</div>
           <div className="text-sm text-gray-600 dark:text-gray-400">Guide Progress</div>
+          {/* Progress Bar */}
+          <div className="mt-4 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="bg-green-600 h-2 rounded-full"
+            />
+          </div>
         </div>
         <div className="card p-6">
           <div className="flex items-center justify-between mb-4">
@@ -200,8 +279,48 @@ function OverviewTab({ user, modules, progress }: any) {
               <MessageCircle className="w-6 h-6 text-blue-600 dark:text-blue-400" />
             </div>
           </div>
-          <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">0</div>
-          <div className="text-sm text-gray-600 dark:text-gray-400">AI Messages Used</div>
+          <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">
+            {usageStats.messagesToday}
+            {usageStats.messagesLimit !== Infinity && `/${usageStats.messagesLimit}`}
+          </div>
+          <div className="text-sm text-gray-600 dark:text-gray-400">
+            {usageStats.messagesLimit === Infinity ? 'AI Messages (Unlimited)' : 'AI Messages Used Today'}
+          </div>
+          {usageStats.messagesLimit !== Infinity && (
+            <>
+              <div className="mt-4 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${Math.min((usageStats.messagesToday / usageStats.messagesLimit) * 100, 100)}%` }}
+                  transition={{ duration: 1, ease: "easeOut" }}
+                  className={`h-2 rounded-full ${
+                    usageStats.messagesToday >= usageStats.messagesLimit
+                      ? 'bg-red-500'
+                      : usageStats.messagesToday >= usageStats.messagesLimit * 0.8
+                      ? 'bg-yellow-500'
+                      : 'bg-blue-600'
+                  }`}
+                />
+              </div>
+              {usageStats.messagesToday >= usageStats.messagesLimit * 0.8 && (
+                <a
+                  href="/pricing"
+                  className={`mt-3 flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${
+                    usageStats.messagesToday >= usageStats.messagesLimit
+                      ? 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800'
+                      : 'bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-800'
+                  }`}
+                >
+                  <span>
+                    {usageStats.messagesToday >= usageStats.messagesLimit
+                      ? '⛔ Limit reached — upgrade for unlimited access'
+                      : `⚡ ${usageStats.messagesLimit - usageStats.messagesToday} messages left today — upgrade for unlimited`}
+                  </span>
+                  <ChevronRight className="w-3.5 h-3.5 shrink-0" />
+                </a>
+              )}
+            </>
+          )}
         </div>
         <div className="card p-6">
           <div className="flex items-center justify-between mb-4">
@@ -209,7 +328,7 @@ function OverviewTab({ user, modules, progress }: any) {
               <Download className="w-6 h-6 text-purple-600 dark:text-purple-400" />
             </div>
           </div>
-          <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">0</div>
+          <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{usageStats.cvsCreated}</div>
           <div className="text-sm text-gray-600 dark:text-gray-400">CVs Created</div>
         </div>
       </div>
@@ -218,10 +337,18 @@ function OverviewTab({ user, modules, progress }: any) {
       <div className="card p-8 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900 dark:to-purple-900">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Quick Access</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <a href="#ai-chat" className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-lg hover:shadow-lg transition-all">
+          <button
+            onClick={() => {
+              // Trigger the global chatbot open helper registered by ChatbotWidget
+              if (typeof window !== 'undefined' && (window as any).__openChatbot) {
+                (window as any).__openChatbot()
+              }
+            }}
+            className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-lg hover:shadow-lg transition-all text-left w-full"
+          >
             <span className="font-medium text-gray-900 dark:text-white">AI Chat</span>
             <ChevronRight className="w-5 h-5 text-gray-400" />
-          </a>
+          </button>
           <a href="/pricing" className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-lg hover:shadow-lg transition-all">
             <span className="font-medium text-gray-900 dark:text-white">Browse Packs</span>
             <ChevronRight className="w-5 h-5 text-gray-400" />
@@ -232,11 +359,14 @@ function OverviewTab({ user, modules, progress }: any) {
           </a>
         </div>
       </div>
+
+      {/* Referral Program */}
+      <ReferralCard />
     </div>
   )
 }
 
-function ContentTab({ user, modules, isFree, previewModules }: any) {
+function ContentTab({ user, modules, isFree, previewModules }: TabProps) {
   const premiumHighlights = [
     {
       title: 'Cantonal Success Playbook',
@@ -294,52 +424,84 @@ function ContentTab({ user, modules, isFree, previewModules }: any) {
           </div>
         ) : (
           <div className="space-y-4">
-            {modules.map((module: any, idx: number) => (
-              <Link
-                href={`/modules/${module.id}`}
-                key={module.id}
-              >
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.05 }}
-                  className="card p-6 hover:shadow-xl transition-all cursor-pointer group"
+            {modules.map((module: DashboardModule, idx: number) => {
+              const hasQuiz = module.quiz && module.quiz.questions && module.quiz.questions.length > 0
+              const hasExercises = module.exercises && module.exercises.length > 0
+              const sectionCount = module.enhancedModule?.sections?.length || 0
+
+              return (
+                <Link
+                  href={`/modules/${module.id}`}
+                  key={module.id}
                 >
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start space-x-4 flex-1">
-                      <div className={`w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                        module.completed ? 'bg-green-100 dark:bg-green-900' : 'bg-blue-100 dark:bg-blue-900'
-                      }`}>
-                        {module.completed ? (
-                          <Check className="w-6 h-6 text-green-600 dark:text-green-400" />
-                        ) : (
-                          <Play className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                        )}
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-2 mb-1">
-                          <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                            {module.title}
-                          </h3>
-                          {isFree && (
-                            <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
-                              FREE PREVIEW
-                            </span>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                    className="card p-6 hover:shadow-xl transition-all cursor-pointer group"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-start space-x-4 flex-1">
+                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 relative ${
+                          module.completed ? 'bg-green-100 dark:bg-green-900' : 'bg-blue-100 dark:bg-blue-900'
+                        }`}>
+                          {module.completed ? (
+                            <Check className="w-6 h-6 text-green-600 dark:text-green-400" />
+                          ) : (
+                            <span className="text-lg font-bold text-blue-600 dark:text-blue-400">{idx + 1}</span>
                           )}
                         </div>
-                        <p className="text-gray-600 dark:text-gray-400 mb-2">{module.description}</p>
-                        <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
-                          {module.duration && <span>{module.duration}</span>}
-                          {module.duration && <span>•</span>}
-                          <span className="capitalize">{module.type}</span>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center flex-wrap gap-2 mb-1">
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                              {module.title}
+                            </h3>
+                            {isFree && (
+                              <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
+                                FREE PREVIEW
+                              </span>
+                            )}
+                            {module.completed && (
+                              <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
+                                COMPLETED
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">{module.description}</p>
+                          <div className="flex items-center flex-wrap gap-3 text-xs text-gray-500 dark:text-gray-400">
+                            {module.duration && (
+                              <span className="flex items-center gap-1">
+                                <Clock className="w-3.5 h-3.5" />
+                                {module.duration}
+                              </span>
+                            )}
+                            {sectionCount > 0 && (
+                              <span className="flex items-center gap-1">
+                                <BookOpen className="w-3.5 h-3.5" />
+                                {sectionCount} sections
+                              </span>
+                            )}
+                            {hasQuiz && (
+                              <span className="flex items-center gap-1 text-purple-600 dark:text-purple-400">
+                                <HelpCircle className="w-3.5 h-3.5" />
+                                Quiz
+                              </span>
+                            )}
+                            {hasExercises && (
+                              <span className="flex items-center gap-1 text-green-600 dark:text-green-400">
+                                <CheckSquare className="w-3.5 h-3.5" />
+                                Exercises
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
+                      <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-blue-600 transition-colors flex-shrink-0 mt-1" />
                     </div>
-                    <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-blue-600 transition-colors flex-shrink-0" />
-                  </div>
-                </motion.div>
-              </Link>
-            ))}
+                  </motion.div>
+                </Link>
+              )
+            })}
           </div>
         )}
       </div>
@@ -350,7 +512,7 @@ function ContentTab({ user, modules, isFree, previewModules }: any) {
         </div>
       )}
 
-      {!isFree && previewModules.length > 0 && (
+      {!isFree && (previewModules?.length ?? 0) > 0 && (
         <div className="card p-6 border border-dashed border-purple-300 dark:border-purple-700 bg-white/60 dark:bg-gray-900/60">
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
             <div className="max-w-xl">
@@ -369,7 +531,7 @@ function ContentTab({ user, modules, isFree, previewModules }: any) {
             </a>
           </div>
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {previewModules.map(({ module, packId }: any) => {
+            {previewModules?.map(({ module, packId }: { module: DashboardModule; packId: string }) => {
               const packName = PRICING_PACKS[packId as keyof typeof PRICING_PACKS]?.name || packId
               return (
                 <div
@@ -444,7 +606,7 @@ function ContentTab({ user, modules, isFree, previewModules }: any) {
   )
 }
 
-function ResourcesTab({ user, isFree }: any) {
+function ResourcesTab({ user, isFree }: Pick<TabProps, 'user' | 'isFree'>) {
   const resources = {
     immigration: [
       { name: 'Work Permit Application Form', type: 'PDF', category: 'Forms' },
@@ -477,13 +639,13 @@ function ResourcesTab({ user, isFree }: any) {
     )
   }
 
-  const packResources = resources[user?.pack_id as keyof typeof resources] || []
+  const packResources = resources[user?.packId as keyof typeof resources] || [] as Array<{ name: string; type: string; category: string }>
 
   return (
     <div>
       <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Available Downloads</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {packResources.map((resource: any, idx: number) => (
+        {packResources.map((resource: { name: string; type: string; category: string }, idx: number) => (
           <motion.div
             key={idx}
             initial={{ opacity: 0, scale: 0.95 }}
@@ -511,7 +673,7 @@ function ResourcesTab({ user, isFree }: any) {
   )
 }
 
-function ProgressTab({ user, modules, progress }: any) {
+function ProgressTab({ user, modules, progress = 0 }: TabProps) {
   return (
     <div className="space-y-8">
       {/* Overall Progress */}
@@ -539,7 +701,7 @@ function ProgressTab({ user, modules, progress }: any) {
             </div>
             <div>
               <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                {modules.filter((m: any) => m.completed).length}
+                {modules.filter((m: DashboardModule) => m.completed).length}
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Completed</div>
             </div>

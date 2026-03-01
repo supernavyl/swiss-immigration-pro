@@ -1,13 +1,18 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import LayerHeader from '@/components/layout/LayerHeader'
+import { useSession } from '@/lib/auth-client'
+import { analytics } from '@/lib/analytics'
 import { UserPlus, Mail, Lock, User, ArrowRight, Eye, EyeOff } from 'lucide-react'
 
 export default function RegisterPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const { update } = useSession()
+  const referralCode = searchParams.get('ref') || ''
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -52,17 +57,29 @@ export default function RegisterPage() {
           email,
           password,
           fullName,
+          ...(referralCode ? { referralCode } : {}),
         }),
       })
 
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Registration failed')
+        throw new Error(data.error || data.detail || 'Registration failed')
       }
 
-      // Registration successful, redirect to login
-      router.push('/auth/login?message=Registration successful! Please sign in.')
+      analytics.signup()
+
+      if (data.token) {
+        localStorage.setItem('sip_token', data.token)
+        if (data.refreshToken) {
+          localStorage.setItem('sip_refresh', data.refreshToken)
+        }
+        window.dispatchEvent(new Event('storage'))
+        await update()
+        router.push('/dashboard')
+      } else {
+        router.push('/auth/login?message=Registration successful! Please sign in.')
+      }
     } catch (err: any) {
       setError(err.message || 'Registration failed')
     } finally {
@@ -71,36 +88,36 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       <LayerHeader layer={layer} homeHref={homeHref} />
       
-      <div className="flex items-center justify-center min-h-[calc(100vh-120px)] py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white via-blue-50/30 to-white">
+      <div className="flex items-center justify-center min-h-[calc(100vh-120px)] py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white via-blue-50/30 to-white dark:from-gray-950 dark:via-blue-900/20 dark:to-gray-950">
         <div className="max-w-md w-full">
           {/* Header Section */}
           <div className="text-center mb-10">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 mb-6 shadow-xl ring-4 ring-blue-100">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 mb-6 shadow-xl ring-4 ring-blue-100 dark:ring-blue-900/50">
               <UserPlus className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-3 tracking-tight">
+            <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-3 tracking-tight">
               Create Your Account
             </h1>
-            <p className="text-gray-600 text-lg">
+            <p className="text-gray-600 dark:text-gray-400 text-lg">
               Start your journey to Switzerland today
             </p>
           </div>
 
           {/* Registration Form Card */}
-          <div className="bg-white rounded-3xl shadow-2xl border border-gray-100/80 p-8 sm:p-10 backdrop-blur-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-gray-100/80 dark:border-gray-700 p-8 sm:p-10 backdrop-blur-sm">
             <form className="space-y-6" onSubmit={handleRegister}>
               {error && (
-                <div className="bg-red-50 border-l-4 border-red-500 rounded-xl p-4 shadow-sm">
-                  <p className="text-sm font-semibold text-red-800">{error}</p>
+                <div className="bg-red-50 dark:bg-red-900/30 border-l-4 border-red-500 rounded-xl p-4 shadow-sm">
+                  <p className="text-sm font-semibold text-red-800 dark:text-red-200">{error}</p>
                 </div>
               )}
 
               {/* Full Name Field */}
               <div>
-                <label htmlFor="fullName" className="block text-sm font-bold text-gray-800 mb-2.5">
+                <label htmlFor="fullName" className="block text-sm font-bold text-gray-800 dark:text-gray-100 mb-2.5">
                   Full Name
                 </label>
                 <div className="relative">
@@ -114,7 +131,7 @@ export default function RegisterPage() {
                     required
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="block w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 text-base touch-manipulation"
+                    className="block w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 dark:hover:border-gray-500 text-base touch-manipulation"
                     placeholder="Enter your full name"
                     style={{ fontSize: '16px' }}
                   />
@@ -123,7 +140,7 @@ export default function RegisterPage() {
 
               {/* Email Field */}
               <div>
-                <label htmlFor="email" className="block text-sm font-bold text-gray-800 mb-2.5">
+                <label htmlFor="email" className="block text-sm font-bold text-gray-800 dark:text-gray-100 mb-2.5">
                   Email Address
                 </label>
                 <div className="relative">
@@ -138,7 +155,7 @@ export default function RegisterPage() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="block w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 text-base touch-manipulation"
+                    className="block w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 dark:hover:border-gray-500 text-base touch-manipulation"
                     placeholder="you@example.com"
                     style={{ fontSize: '16px' }}
                   />
@@ -147,7 +164,7 @@ export default function RegisterPage() {
 
               {/* Password Field */}
               <div>
-                <label htmlFor="password" className="block text-sm font-bold text-gray-800 mb-2.5">
+                <label htmlFor="password" className="block text-sm font-bold text-gray-800 dark:text-gray-100 mb-2.5">
                   Password
                 </label>
                 <div className="relative">
@@ -162,7 +179,7 @@ export default function RegisterPage() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="block w-full pl-12 pr-12 py-3.5 border-2 border-gray-200 rounded-xl bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 text-base touch-manipulation"
+                    className="block w-full pl-12 pr-12 py-3.5 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 dark:hover:border-gray-500 text-base touch-manipulation"
                     placeholder="Create a password (min 6 characters)"
                     minLength={6}
                     style={{ fontSize: '16px' }}
@@ -170,7 +187,7 @@ export default function RegisterPage() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 active:text-gray-700 transition-colors touch-manipulation"
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 active:text-gray-700 transition-colors touch-manipulation"
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                     style={{ WebkitTapHighlightColor: 'transparent', minWidth: '44px', minHeight: '44px' }}
                   >
@@ -184,7 +201,7 @@ export default function RegisterPage() {
               </div>
 
               {/* Terms and Privacy */}
-              <div className="text-sm text-gray-600 pt-2">
+              <div className="text-sm text-gray-600 dark:text-gray-400 pt-2">
                 By registering, you agree to our{' '}
                 <Link href="/terms" className="font-semibold text-blue-600 hover:text-blue-700 transition-colors">
                   Terms of Service
@@ -221,8 +238,8 @@ export default function RegisterPage() {
             </form>
 
             {/* Sign In Link */}
-            <div className="mt-8 pt-6 border-t border-gray-200 text-center">
-              <p className="text-sm text-gray-600">
+            <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 text-center">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 Already have an account?{' '}
                 <Link href="/auth/login" className="font-bold text-blue-600 hover:text-blue-700 transition-colors inline-flex items-center gap-1">
                   Sign in

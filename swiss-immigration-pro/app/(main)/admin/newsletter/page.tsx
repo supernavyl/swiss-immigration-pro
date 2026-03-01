@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useSession } from 'next-auth/react'
+import { useSession } from '@/lib/auth-client'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import {
@@ -165,10 +165,10 @@ export default function AdminNewsletter() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading...</p>
         </div>
       </div>
     )
@@ -178,7 +178,7 @@ export default function AdminNewsletter() {
   const unsubscribedCount = subscribers.filter(s => !s.subscribed).length
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <AdminHeader />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -188,18 +188,18 @@ export default function AdminNewsletter() {
             <div>
               <Link
                 href="/admin"
-                className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-2"
+                className="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-2"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Admin
               </Link>
-              <h1 className="text-3xl font-bold text-gray-900">Newsletter Management</h1>
-              <p className="text-gray-600 mt-1">Manage subscribers and send newsletters</p>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Newsletter Management</h1>
+              <p className="text-gray-600 dark:text-gray-400 mt-1">Manage subscribers and send newsletters</p>
             </div>
             <div className="flex gap-3">
               <button
                 onClick={loadSubscribers}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg transition-colors"
               >
                 <RefreshCw className="w-4 h-4" />
                 Refresh
@@ -216,28 +216,28 @@ export default function AdminNewsletter() {
 
           {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Total Subscribers</p>
-                  <p className="text-2xl font-bold text-gray-900 mt-1">{subscribers.length}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Total Subscribers</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{subscribers.length}</p>
                 </div>
                 <Users className="w-8 h-8 text-blue-600" />
               </div>
             </div>
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Active</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Active</p>
                   <p className="text-2xl font-bold text-green-600 mt-1">{subscribedCount}</p>
                 </div>
                 <CheckCircle className="w-8 h-8 text-green-600" />
               </div>
             </div>
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Unsubscribed</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Unsubscribed</p>
                   <p className="text-2xl font-bold text-red-600 mt-1">{unsubscribedCount}</p>
                 </div>
                 <AlertCircle className="w-8 h-8 text-red-600" />
@@ -251,12 +251,12 @@ export default function AdminNewsletter() {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-lg shadow-lg p-6 mb-8"
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8"
           >
-            <h2 className="text-xl font-bold mb-4">Send Newsletter</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Send Newsletter</h2>
             <form onSubmit={handleSendNewsletter} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                   Subject
                 </label>
                 <input
@@ -265,11 +265,11 @@ export default function AdminNewsletter() {
                   onChange={(e) => setSendSubject(e.target.value)}
                   placeholder="Newsletter subject line"
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                   Content (HTML)
                 </label>
                 <textarea
@@ -280,7 +280,7 @@ export default function AdminNewsletter() {
                   rows={10}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-mono text-sm"
                 />
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                   Use HTML for formatting. Links will be automatically added.
                 </p>
               </div>
@@ -325,7 +325,7 @@ export default function AdminNewsletter() {
                       {sendResults.message || sendResults.error}
                     </p>
                     {sendResults.results && (
-                      <p className="text-sm text-gray-600 mt-1">
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                         Success: {sendResults.results.success} | Failed: {sendResults.results.failed}
                       </p>
                     )}
@@ -337,7 +337,7 @@ export default function AdminNewsletter() {
         )}
 
         {/* Filters */}
-        <div className="bg-white rounded-lg shadow p-4 mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
               <div className="relative">
@@ -355,7 +355,7 @@ export default function AdminNewsletter() {
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value as any)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="all">All Status</option>
                 <option value="subscribed">Subscribed</option>
@@ -363,7 +363,7 @@ export default function AdminNewsletter() {
               </select>
               <button
                 onClick={exportSubscribers}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg transition-colors"
               >
                 <Download className="w-4 h-4" />
                 Export CSV
@@ -373,46 +373,46 @@ export default function AdminNewsletter() {
         </div>
 
         {/* Subscribers List */}
-        <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead className="bg-gray-50 dark:bg-gray-900">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Email
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Source
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Subscribed Date
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {filteredSubscribers.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                    <td colSpan={5} className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
                       No subscribers found
                     </td>
                   </tr>
                 ) : (
                   filteredSubscribers.map((subscriber) => (
-                    <tr key={subscriber.id} className="hover:bg-gray-50">
+                    <tr key={subscriber.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">{subscriber.email}</div>
+                        <div className="text-sm font-medium text-gray-900 dark:text-white">{subscriber.email}</div>
                         {subscriber.lead_magnet && (
-                          <div className="text-xs text-gray-500">{subscriber.lead_magnet}</div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">{subscriber.lead_magnet}</div>
                         )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-sm text-gray-600">{subscriber.source || 'Unknown'}</span>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">{subscriber.source || 'Unknown'}</span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         {subscriber.subscribed ? (
@@ -427,7 +427,7 @@ export default function AdminNewsletter() {
                           </span>
                         )}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                         {new Date(subscriber.created_at).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

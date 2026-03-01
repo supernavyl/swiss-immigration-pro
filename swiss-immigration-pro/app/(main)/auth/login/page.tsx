@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { signIn, useSession } from 'next-auth/react'
+import { signIn, useSession } from '@/lib/auth-client'
 import Link from 'next/link'
 import LayerHeader from '@/components/layout/LayerHeader'
+import { analytics } from '@/lib/analytics'
 import { Lock, Mail, Eye, EyeOff, ArrowRight } from 'lucide-react'
 
 export default function LoginPage() {
@@ -43,25 +44,19 @@ export default function LoginPage() {
     setError('')
 
     try {
-      console.log('Attempting login with:', { email, password: '***' })
-
       const result = await signIn('credentials', {
         email,
         password,
         redirect: false,
       })
 
-      console.log('Login result:', result)
-
       if (result?.error) {
         throw new Error(result.error)
       }
 
       if (result?.ok) {
-        console.log('Login successful, updating session...')
-        // Update the session to ensure JWT token has isAdmin property
+        analytics.login()
         await update()
-        console.log('Session updated, redirecting to dashboard')
         router.push('/dashboard')
       } else {
         throw new Error('Login failed without specific error')
@@ -74,26 +69,26 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       <LayerHeader layer={layer} homeHref={homeHref} />
       
-      <div className="flex items-center justify-center min-h-[calc(100vh-120px)] py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white via-blue-50/30 to-white">
+      <div className="flex items-center justify-center min-h-[calc(100vh-120px)] py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white via-blue-50/30 to-white dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
         <div className="max-w-md w-full">
           {/* Header Section */}
           <div className="text-center mb-10">
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 mb-6 shadow-xl ring-4 ring-blue-100">
               <Lock className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-3 tracking-tight">
+            <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-3 tracking-tight">
               Welcome Back
             </h1>
-            <p className="text-gray-600 text-lg">
+            <p className="text-gray-600 dark:text-gray-400 text-lg">
               Sign in to access your account and continue your journey
             </p>
           </div>
 
           {/* Login Form Card */}
-          <div className="bg-white rounded-3xl shadow-2xl border border-gray-100/80 p-8 sm:p-10 backdrop-blur-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-gray-100/80 dark:border-gray-700 p-8 sm:p-10 backdrop-blur-sm">
             <form className="space-y-6" onSubmit={handleLogin}>
               {error && (
                 <div className="bg-red-50 border-l-4 border-red-500 rounded-xl p-4 shadow-sm">
@@ -103,7 +98,7 @@ export default function LoginPage() {
 
               {/* Email Field */}
               <div>
-                <label htmlFor="email" className="block text-sm font-bold text-gray-800 mb-2.5">
+                <label htmlFor="email" className="block text-sm font-bold text-gray-800 dark:text-gray-100 mb-2.5">
                   Email Address
                 </label>
                 <div className="relative">
@@ -118,7 +113,7 @@ export default function LoginPage() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="block w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 text-base touch-manipulation"
+                    className="block w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 dark:hover:border-gray-500 text-base touch-manipulation"
                     placeholder="you@example.com"
                     style={{ fontSize: '16px' }}
                   />
@@ -127,7 +122,7 @@ export default function LoginPage() {
 
               {/* Password Field */}
               <div>
-                <label htmlFor="password" className="block text-sm font-bold text-gray-800 mb-2.5">
+                <label htmlFor="password" className="block text-sm font-bold text-gray-800 dark:text-gray-100 mb-2.5">
                   Password
                 </label>
                 <div className="relative">
@@ -142,7 +137,7 @@ export default function LoginPage() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="block w-full pl-12 pr-12 py-3.5 border-2 border-gray-200 rounded-xl bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 text-base touch-manipulation"
+                    className="block w-full pl-12 pr-12 py-3.5 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-300 dark:hover:border-gray-500 text-base touch-manipulation"
                     placeholder="Enter your password"
                     style={{ fontSize: '16px' }}
                   />
@@ -171,7 +166,7 @@ export default function LoginPage() {
                     type="checkbox"
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer"
                   />
-                  <label htmlFor="remember-me" className="ml-2.5 block text-sm font-medium text-gray-700 cursor-pointer">
+                  <label htmlFor="remember-me" className="ml-2.5 block text-sm font-medium text-gray-700 dark:text-gray-200 cursor-pointer">
                     Remember me
                   </label>
                 </div>
@@ -209,8 +204,8 @@ export default function LoginPage() {
             </form>
 
             {/* Sign Up Link */}
-            <div className="mt-8 pt-6 border-t border-gray-200 text-center">
-              <p className="text-sm text-gray-600">
+            <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 text-center">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 Don't have an account?{' '}
                 <Link href="/auth/register" className="font-bold text-blue-600 hover:text-blue-700 transition-colors inline-flex items-center gap-1">
                   Create one now

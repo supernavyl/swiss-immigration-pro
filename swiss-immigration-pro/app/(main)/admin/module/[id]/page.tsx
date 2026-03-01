@@ -2,17 +2,19 @@
 
 import { useState, useEffect, useCallback, useRef, useMemo, use } from 'react'
 import { useRouter } from 'next/navigation'
-import { useSession } from 'next-auth/react'
+import { useSession } from '@/lib/auth-client'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowLeft, BookOpen, CheckCircle, Clock, Play, FileText, Download, Award, HelpCircle, BarChart3, Menu, X, Maximize2, Minimize2, Bookmark } from 'lucide-react'
 import { getAllModulesForAdmin, getModulePack } from '@/lib/content/pack-content'
-import { PRICING_PACKS } from '@/lib/stripe'
+import { PRICING_PACKS } from '@/lib/pricing'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
+import rehypeSanitize from 'rehype-sanitize'
 import EnhancedModuleDisplay from '@/components/modules/EnhancedModuleDisplay'
 import AdminHeader from '@/components/layout/AdminHeader'
+import { useToast } from '@/components/providers/ToastProvider'
 
 export default function AdminModuleView({ 
   params 
@@ -25,6 +27,7 @@ export default function AdminModuleView({
     ? use(params) 
     : params
   const moduleId = resolvedParams?.id as string
+  const { showToast } = useToast()
   const { data: session, status } = useSession()
   const [loading, setLoading] = useState(true)
   const [module, setModule] = useState<any>(null)
@@ -255,9 +258,9 @@ export default function AdminModuleView({
 
   if (!module) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-gray-950 flex items-center justify-center">
         <div className="text-center space-y-4">
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             Module Not Found
           </h1>
           <Link href="/admin" className="text-purple-600 hover:text-purple-700">
@@ -271,7 +274,7 @@ export default function AdminModuleView({
   // Check if this is an enhanced module with interactive components
   if (module.enhancedModule && typeof module.enhancedModule === 'object' && module.enhancedModule.title) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white dark:bg-gray-950">
         <AdminHeader />
         <div className="py-4 sm:py-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -287,7 +290,7 @@ export default function AdminModuleView({
             </div>
             
             {/* Enhanced Module Display */}
-            <EnhancedModuleDisplay module={module.enhancedModule} />
+            <EnhancedModuleDisplay module={module.enhancedModule} moduleId={moduleId} />
           </div>
         </div>
       </div>
@@ -313,7 +316,7 @@ export default function AdminModuleView({
   }
 
   return (
-        <div className="min-h-screen bg-white flex">
+        <div className="min-h-screen bg-white dark:bg-gray-950 flex">
             {/* Left Sidebar - Table of Contents - Sticky */}
             {showTableOfContents && (
               <motion.div
@@ -321,13 +324,13 @@ export default function AdminModuleView({
                 animate={{ x: 0 }}
                 exit={{ x: -320 }}
                 transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                className="w-80 bg-white border-r border-gray-200 flex flex-col h-screen fixed left-0 top-0 flex-shrink-0 z-[9999]"
+                className="w-80 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col h-screen fixed left-0 top-0 flex-shrink-0 z-[9999]"
                 style={{ 
                   maxHeight: '100vh'
                 }}
               >
           {/* Sidebar Header - Fixed */}
-          <div className="p-6 border-b border-gray-200 flex-shrink-0">
+          <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
             <div className="flex items-center justify-between mb-4">
               <Link
                 href="/admin"
@@ -338,7 +341,7 @@ export default function AdminModuleView({
               </Link>
               <button
                 onClick={() => setShowTableOfContents(false)}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                 title="Collapse sidebar"
               >
                 <X className="w-5 h-5" />
@@ -352,11 +355,11 @@ export default function AdminModuleView({
                 {module.type}
               </span>
             </div>
-            <h2 className="text-xl font-bold text-gray-900">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
               {module.title}
             </h2>
             {module.duration && (
-              <div className="flex items-center space-x-1 text-sm text-gray-600 mt-2">
+              <div className="flex items-center space-x-1 text-sm text-gray-600 dark:text-gray-400 mt-2">
                 <Clock className="w-4 h-4" />
                 <span>{module.duration}</span>
               </div>
@@ -374,7 +377,7 @@ export default function AdminModuleView({
               scrollBehavior: 'smooth'
             }}
           >
-            <h3 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">
+            <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3 uppercase tracking-wide">
               Table of Contents
             </h3>
             <nav className="space-y-4">
@@ -382,8 +385,8 @@ export default function AdminModuleView({
                 <div key={catIdx} className="space-y-2">
                   {/* Category Header */}
                   <div className="flex items-center space-x-2 mb-2">
-                    <div className="flex-1 h-px bg-gray-200"></div>
-                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider px-2">
+                    <div className="flex-1 h-px bg-gray-200 dark:bg-gray-600"></div>
+                    <h4 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider px-2">
                       {category.title}
                     </h4>
                     <div className="flex-1 h-px bg-gray-200"></div>
@@ -454,7 +457,7 @@ export default function AdminModuleView({
                 <span className="text-sm font-medium text-gray-700">Progress</span>
                 <span className="text-sm font-bold text-purple-600">{progress}%</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                 <div
                   className="bg-purple-600 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${progress}%` }}
@@ -477,13 +480,13 @@ export default function AdminModuleView({
       {/* Main Content Area */}
       <div className={`flex-1 min-h-screen ${showTableOfContents ? 'ml-80' : ''}`}>
         {/* Top Bar */}
-        <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-40">
+        <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between sticky top-0 z-40">
           <div className="flex items-center space-x-4">
             <div>
-              <h1 className="text-lg font-bold text-gray-900">
+              <h1 className="text-lg font-bold text-gray-900 dark:text-white">
                 {module.title}
               </h1>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 {module.description}
               </p>
             </div>
@@ -508,7 +511,7 @@ export default function AdminModuleView({
                 >
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
-                    rehypePlugins={[rehypeRaw]}
+                    rehypePlugins={[rehypeRaw, rehypeSanitize]}
                     components={{
                       h1: ({ node, ...props }) => (
                         <h1 id={props.children?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-')} className="scroll-mt-20 text-gray-900 font-bold" style={{ color: '#111827', fontSize: showTableOfContents ? '2rem' : '1.75rem' }} {...props} />
@@ -594,14 +597,14 @@ export default function AdminModuleView({
                 >
                   <div className="flex items-center space-x-3 mb-6">
                     <HelpCircle className="w-6 h-6 text-purple-600" />
-                    <h2 className="text-2xl font-bold text-gray-900">
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                       Interactive Quiz
                     </h2>
                   </div>
                   <div className="space-y-6">
                     {module.quiz.questions?.map((q: any, idx: number) => (
-                      <div key={idx} className="border border-gray-200 rounded-lg p-6">
-                        <h3 className="font-semibold text-gray-900 mb-4 flex items-center">
+                      <div key={idx} className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+                        <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                           <span className="w-8 h-8 bg-purple-100 text-purple-700 rounded-full flex items-center justify-center text-sm font-bold mr-3">
                             {idx + 1}
                           </span>
@@ -614,7 +617,7 @@ export default function AdminModuleView({
                               className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-all ${
                                 quizAnswers[idx] === opt
                                   ? 'border-purple-500 bg-purple-50'
-                                  : 'border-gray-200 hover:bg-gray-50'
+                                  : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
                               }`}
                             >
                               <input
@@ -625,7 +628,7 @@ export default function AdminModuleView({
                                 onChange={(e) => setQuizAnswers({ ...quizAnswers, [idx]: e.target.value })}
                                 className="w-4 h-4 text-purple-600"
                               />
-                              <span className="text-gray-700">{opt}</span>
+                              <span className="text-gray-700 dark:text-gray-200">{opt}</span>
                             </label>
                           ))}
                         </div>
@@ -639,12 +642,12 @@ export default function AdminModuleView({
                       Submit Quiz
                     </button>
                     {quizScore !== null && (
-                      <div className="text-center p-6 bg-gradient-to-r from-green-50 to-purple-50 rounded-lg border border-green-200">
+                      <div className="text-center p-6 bg-gradient-to-r from-green-50 to-purple-50 dark:from-green-900/30 dark:to-purple-900/30 rounded-lg border border-green-200 dark:border-gray-700">
                         <Award className="w-12 h-12 text-yellow-500 mx-auto mb-2" />
-                        <p className="text-3xl font-bold text-gray-900 mb-2">
+                        <p className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
                           {quizScore}%
                         </p>
-                        <p className="text-gray-600">
+                        <p className="text-gray-600 dark:text-gray-400">
                           {quizScore >= 80
                             ? 'Excellent work! 🎉 You mastered this module!'
                             : quizScore >= 60
@@ -662,11 +665,11 @@ export default function AdminModuleView({
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-white rounded-xl p-8 mb-8 border border-gray-200 shadow-sm"
+                  className="bg-white dark:bg-gray-800 rounded-xl p-8 mb-8 border border-gray-200 dark:border-gray-700 shadow-sm"
                 >
                   <div className="flex items-center space-x-3 mb-6">
                     <BarChart3 className="w-6 h-6 text-green-600" />
-                    <h2 className="text-2xl font-bold text-gray-900">
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                       Practice Exercises
                     </h2>
                   </div>
@@ -674,20 +677,20 @@ export default function AdminModuleView({
                     {module.exercises.map((exercise: any, idx: number) => (
                       <div
                         key={idx}
-                        className="border border-gray-200 rounded-lg p-6 hover:border-purple-300 transition-colors"
+                        className="border border-gray-200 dark:border-gray-700 rounded-lg p-6 hover:border-purple-300 transition-colors"
                       >
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex items-center space-x-2">
                             <div className="w-8 h-8 bg-green-100 text-green-700 rounded-lg flex items-center justify-center text-sm font-bold">
                               {idx + 1}
                             </div>
-                            <h3 className="font-semibold text-gray-900">
+                            <h3 className="font-semibold text-gray-900 dark:text-white">
                               {exercise.title}
                             </h3>
                           </div>
                           <CheckCircle className="w-5 h-5 text-gray-400" />
                         </div>
-                        <p className="text-sm text-gray-600 mb-4">
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                           {exercise.description}
                         </p>
                         <button className="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors">
@@ -704,11 +707,11 @@ export default function AdminModuleView({
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-white rounded-xl p-8 border border-gray-200 shadow-sm"
+                  className="bg-white dark:bg-gray-800 rounded-xl p-8 border border-gray-200 dark:border-gray-700 shadow-sm"
                 >
                   <div className="flex items-center space-x-3 mb-6">
                     <Download className="w-6 h-6 text-purple-600" />
-                    <h2 className="text-2xl font-bold text-gray-900">
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                       Downloads
                     </h2>
                   </div>
@@ -719,11 +722,11 @@ export default function AdminModuleView({
                         href={attachment}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors group"
+                        className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group"
                       >
                         <div className="flex items-center space-x-3">
                           <FileText className="w-5 h-5 text-gray-400 group-hover:text-purple-600" />
-                          <span className="text-gray-700 font-medium">
+                          <span className="text-gray-700 dark:text-gray-200 font-medium">
                             {attachment.split('/').pop() || `Attachment ${idx + 1}`}
                           </span>
                         </div>
@@ -739,7 +742,7 @@ export default function AdminModuleView({
                 <button
                   onClick={() => {
                     setProgress(100)
-                    alert('Module completed! 🎉')
+                    showToast('Module completed! 🎉', 'success')
                   }}
                   className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold text-lg shadow-lg hover:shadow-xl transition-all flex items-center space-x-2"
                 >
