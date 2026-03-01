@@ -25,7 +25,7 @@ export default function Tooltip({
 }: TooltipProps) {
   const [isVisible, setIsVisible] = useState(false)
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 })
-  const triggerRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLSpanElement>(null)
   const tooltipRef = useRef<HTMLDivElement>(null)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -104,21 +104,21 @@ export default function Tooltip({
 
   return (
     <>
-      <div
+      <span
         ref={triggerRef}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         className={`inline-block ${className}`}
       >
         {showIcon ? (
-          <div className="flex items-center gap-1">
+          <span className="inline-flex items-center gap-1">
             {children}
             <Info className="w-4 h-4 text-blue-500 cursor-help" />
-          </div>
+          </span>
         ) : (
           children
         )}
-      </div>
+      </span>
 
       <AnimatePresence>
         {isVisible && (

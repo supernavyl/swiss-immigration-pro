@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { X, Crown, Calendar, AlertCircle, CheckCircle } from 'lucide-react'
-import { PRICING_PACKS } from '@/lib/stripe'
+import { PRICING_PACKS } from '@/lib/pricing'
 
 interface UserUpgradeModalProps {
   user: {

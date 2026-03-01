@@ -10,9 +10,14 @@ import {
   LogOut,
   Shield,
   Settings,
-  Search,
   ArrowRight,
   Sparkles,
+  ChevronDown,
+  BookOpen,
+  Wrench,
+  HelpCircle,
+  FileText,
+  Mail,
 } from 'lucide-react'
 import { useSession, signOut } from '@/lib/auth-client'
 import { useT } from '@/lib/i18n/useTranslation'
@@ -25,6 +30,14 @@ import { useSwipe } from '@/lib/hooks/useSwipeGesture'
 import { useHaptic } from '@/lib/hooks/useHaptic'
 import { useIsMobile } from '@/lib/hooks/useMediaQuery'
 import { cn } from '@/lib/utils/cn'
+
+const resourcesLinks = [
+  { href: '/tools', label: 'Tools', icon: Wrench, desc: 'Permit calculator, CV builder, timeline' },
+  { href: '/blog', label: 'Blog', icon: BookOpen, desc: 'Guides, updates, success stories' },
+  { href: '/faq', label: 'FAQ', icon: HelpCircle, desc: 'Common immigration questions' },
+  { href: '/visas', label: 'Visa Guides', icon: FileText, desc: 'Complete permit documentation' },
+  { href: '/contact', label: 'Contact', icon: Mail, desc: 'Reach our immigration team' },
+]
 
 interface AppUser {
   id?: string
@@ -39,6 +52,8 @@ export default function MainHeader() {
   const [logoError, setLogoError] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [resourcesOpen, setResourcesOpen] = useState(false)
+  const resourcesRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
   const { t } = useT()
   const { haptic } = useHaptic()
@@ -97,15 +112,23 @@ export default function MainHeader() {
 
   const navigationItems = useMemo(
     () => [
-      { href: '/', label: t('nav.home') },
-      { href: '/visas', label: t('nav.visas') },
-      { href: '/modules', label: t('nav.modules') || 'Modules' },
-      { href: '/tools', label: t('nav.tools') },
-      { href: '/pricing', label: t('nav.pricing') },
-      { href: '/blog', label: t('nav.blog') || 'Blog' },
+      { href: '/visas', label: t('nav.visas') || 'Visas & Permits' },
+      { href: '/pricing', label: t('nav.pricing') || 'Pricing' },
+      { href: '/b2b', label: t('nav.b2b') || 'For Companies' },
     ],
     [t],
   )
+
+  // Close resources dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (resourcesRef.current && !resourcesRef.current.contains(e.target as Node)) {
+        setResourcesOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
 
   const [announcementVisible, setAnnouncementVisible] = useState(true)
 
@@ -181,138 +204,155 @@ export default function MainHeader() {
 
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 shrink-0 group">
+        <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
           {logoError && mounted ? (
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-600 text-white text-sm font-bold shadow-sm">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-600 text-white text-sm font-bold shadow-sm">
               CH
             </div>
           ) : (
-            <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-lg bg-gray-50 dark:bg-gray-900 ring-1 ring-gray-200/80 dark:ring-gray-800 transition-transform duration-200 group-hover:scale-105">
+            <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg bg-gray-50 dark:bg-gray-900 ring-1 ring-gray-200/80 dark:ring-gray-800 transition-transform duration-200 group-hover:scale-105 shrink-0">
               <img
                 src="/images/logo-removebg.png"
                 alt="Swiss Immigration Pro"
-                width={36}
-                height={36}
+                width={32}
+                height={32}
                 className="w-full h-full object-contain"
                 onError={() => setLogoError(true)}
                 onLoad={() => setLogoError(false)}
               />
             </div>
           )}
-          <div className="hidden sm:flex items-baseline gap-0 leading-none">
-            <span className="text-[15px] font-semibold tracking-tight text-gray-900 dark:text-white">
-              Swiss
+          <div className="hidden sm:block">
+            <span className="text-[15px] font-bold tracking-tight text-gray-900 dark:text-white">
+              Swiss<span className="text-red-600">Immigration</span>
             </span>
-            <span className="text-[15px] font-semibold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500">
-              Immigration
-            </span>
-            <span className="text-[11px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 ml-0.5 self-end mb-0.5">
+            <span className="ml-1 text-[10px] font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">
               Pro
             </span>
           </div>
-          <span className="text-[15px] font-semibold tracking-tight text-gray-900 dark:text-white sm:hidden">
-            SIP
-          </span>
         </Link>
 
-        {/* Desktop Navigation */}
-        <div className="hidden lg:flex items-center gap-6">
+        {/* Desktop Navigation — center */}
+        <div className="hidden lg:flex items-center gap-1">
           {navigationItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                'relative py-5 text-sm font-medium transition-colors duration-150',
+                'relative px-3.5 py-2 text-sm font-medium rounded-md transition-colors duration-150',
                 isActive(item.href)
-                  ? 'text-gray-900 dark:text-white after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-red-600 after:rounded-full'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white',
+                  ? 'text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800/60'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-900',
               )}
             >
               {item.label}
+              {isActive(item.href) && (
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-red-600 rounded-full" />
+              )}
             </Link>
           ))}
-          <Link
-            href="/consultation"
-            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 rounded-full transition-all duration-150 shadow-sm shadow-red-600/25"
-          >
-            {t('nav.consultation')}
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
+
+          {/* Resources dropdown */}
+          <div ref={resourcesRef} className="relative">
+            <button
+              onClick={() => setResourcesOpen((v) => !v)}
+              className={cn(
+                'inline-flex items-center gap-1 px-3.5 py-2 text-sm font-medium rounded-md transition-colors duration-150',
+                resourcesOpen
+                  ? 'text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800/60'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-900',
+              )}
+            >
+              Resources
+              <ChevronDown className={cn('h-3.5 w-3.5 transition-transform duration-150', resourcesOpen && 'rotate-180')} />
+            </button>
+            <AnimatePresence>
+              {resourcesOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 6, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 6, scale: 0.97 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 bg-white dark:bg-gray-950 rounded-xl shadow-xl shadow-black/10 border border-gray-200/80 dark:border-gray-800 overflow-hidden z-50"
+                >
+                  <div className="p-1.5">
+                    {resourcesLinks.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        onClick={() => setResourcesOpen(false)}
+                        className="flex items-start gap-3 px-3 py-2.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors group/item"
+                      >
+                        <div className="flex h-7 w-7 items-center justify-center rounded-md bg-gray-100 dark:bg-gray-800 shrink-0 mt-0.5 group-hover/item:bg-red-50 dark:group-hover/item:bg-red-950/30 transition-colors">
+                          <link.icon className="h-3.5 w-3.5 text-gray-500 dark:text-gray-400 group-hover/item:text-red-600 transition-colors" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-gray-900 dark:text-white leading-none mb-0.5">{link.label}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{link.desc}</p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
         {/* Right side controls */}
-        <div className="flex items-center gap-1.5">
-          {/* Cmd+K search pill — triggers AdvancedSearch modal via synthetic keyboard event */}
-          <button
-            onClick={() => {
-              window.dispatchEvent(
-                new KeyboardEvent('keydown', { key: 'k', metaKey: true, ctrlKey: true, bubbles: true }),
-              )
-            }}
-            className="hidden md:flex items-center gap-2 px-3 py-1.5 text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-800 transition-colors"
-          >
-            <Search className="w-3.5 h-3.5" />
-            <span className="text-xs">Search</span>
-            <kbd className="ml-2 hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded text-gray-400">
-              &#8984;K
-            </kbd>
-          </button>
-
-          {/* AdvancedSearch modal — hidden trigger button, modal lives here */}
-          <div className="hidden">
+        <div className="flex items-center gap-1">
+          {/* Search */}
+          <div className="hidden lg:block">
             <AdvancedSearch />
           </div>
+
+          {/* Divider */}
+          <div className="hidden lg:block w-px h-5 bg-gray-200 dark:bg-gray-800 mx-1" />
 
           <div className="hidden sm:block">
             <DarkModeToggle />
           </div>
-
           <div className="hidden sm:block">
             <LanguageSwitcher />
           </div>
 
-          {/* Desktop user controls */}
+          {/* Divider */}
+          <div className="hidden lg:block w-px h-5 bg-gray-200 dark:bg-gray-800 mx-1" />
+
+          {/* Desktop auth */}
           {mounted && (
-            <div className="hidden lg:flex items-center gap-1.5 ml-1">
+            <div className="hidden lg:flex items-center gap-1">
               {appUser ? (
                 <>
-                  {appUser.isAdmin ? (
-                    <Link
-                      href="/admin"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-full hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
-                    >
-                      <Shield className="h-3.5 w-3.5" />
-                      {t('auth.admin')}
-                    </Link>
-                  ) : (
-                    <Link
-                      href="/dashboard"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-full hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
-                    >
-                      <User className="h-3.5 w-3.5" />
-                      {t('nav.dashboard')}
-                    </Link>
-                  )}
+                  <Link
+                    href={appUser.isAdmin ? '/admin' : '/dashboard'}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors"
+                  >
+                    {appUser.isAdmin ? <Shield className="h-3.5 w-3.5" /> : <User className="h-3.5 w-3.5" />}
+                    {appUser.isAdmin ? t('auth.admin') : t('nav.dashboard')}
+                  </Link>
                   <button
                     onClick={handleSignOut}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-500 dark:text-gray-400 rounded-full hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+                    className="p-1.5 text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-colors"
+                    title="Sign out"
                   >
-                    <LogOut className="h-3.5 w-3.5" />
+                    <LogOut className="h-4 w-4" />
                   </button>
                 </>
               ) : (
                 <>
                   <Link
                     href="/auth/login"
-                    className="px-3.5 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-full hover:text-gray-900 dark:hover:text-white transition-colors"
+                    className="px-3.5 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 rounded-lg hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors"
                   >
                     {t('auth.login')}
                   </Link>
                   <Link
-                    href="/auth/register"
-                    className="px-3.5 py-1.5 text-sm font-medium text-white bg-gray-900 dark:bg-white dark:text-gray-900 rounded-full hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
+                    href="/consultation"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors shadow-sm"
                   >
-                    {t('auth.createAccount')}
+                    Book Consultation
+                    <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 </>
               )}
@@ -322,15 +362,11 @@ export default function MainHeader() {
           {/* Mobile menu button */}
           <button
             onClick={toggleMenu}
-            className="ml-1 inline-flex items-center justify-center rounded-md p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors lg:hidden touch-manipulation"
+            className="ml-1 inline-flex items-center justify-center rounded-lg p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors lg:hidden touch-manipulation"
             aria-label="Toggle navigation menu"
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
-            {isMenuOpen ? (
-              <X className="h-5 w-5" />
-            ) : (
-              <Menu className="h-5 w-5" />
-            )}
+            {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </nav>

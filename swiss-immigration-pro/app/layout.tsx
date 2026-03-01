@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import ClientErrorBoundary from "@/components/ClientErrorBoundary";
-import { InitialQuizGate } from "@/components/quiz/InitialQuizGate";
+import ClientErrorBoundary from "@/components/ui/ClientErrorBoundary";
 
 /**
  * SEO Meta Helpers Usage:
@@ -39,8 +38,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Become a Swiss Resident in 2026 | Swiss Immigration Pro - 87% Success Rate",
-  description: "AI-Powered Swiss immigration platform with 87% success rate. Expert guidance for work permits, citizenship, visas. Join 18,500+ successful applicants. 10 free AI questions daily. Fast 6-8 week processing.",
+  title: "Become a Swiss Resident in 2026 | Swiss Immigration Pro - 96% Success Rate",
+  description: "AI-Powered Swiss immigration platform with 96% success rate. Expert guidance for work permits, citizenship, visas. Join 18,500+ successful applicants. 10 free AI questions daily. Fast 6-8 week processing.",
   keywords: "Swiss immigration, Switzerland visa, Swiss citizenship, work permit Switzerland, L permit, B permit, Swiss work visa, Swiss employment, permanent residence Switzerland, naturalization Swiss, 2025 quota, Swiss immigration lawyer, EU work permit, Swiss visa application, citizenship Switzerland, Swiss residency permit",
   authors: [{ name: "Swiss Immigration Pro" }],
   creator: "Swiss Immigration Pro",
@@ -69,6 +68,16 @@ export const metadata: Metadata = {
     capable: true,
     statusBarStyle: 'default',
     title: 'Swiss Immigration Pro',
+    startupImage: '/icon-512.png',
+  },
+  icons: {
+    icon: [
+      { url: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
   },
   manifest: '/manifest.json',
   other: {
@@ -110,7 +119,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'your-google-verification-code',
+    google: process.env.GOOGLE_SITE_VERIFICATION || undefined,
   },
 };
 
@@ -122,29 +131,33 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes, viewport-fit=cover" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Swiss Immigration Pro" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="theme-color" content="#ffffff" />
-        <link rel="manifest" href="/manifest.json" />
+        {process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN && (
+          <script
+            defer
+            data-domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN}
+            src={process.env.NEXT_PUBLIC_PLAUSIBLE_SRC || 'https://plausible.io/js/script.js'}
+          />
+        )}
         <link rel="apple-touch-icon" href="/icon-192x192.png" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
-                  const html = document.documentElement;
-                  // Always ensure light mode - remove dark class
-                  html.classList.remove('dark');
-                  html.style.colorScheme = 'light';
-                  localStorage.removeItem('darkMode');
+                  var html = document.documentElement;
+                  var theme = localStorage.getItem('theme');
+                  if (theme === 'dark' || ((!theme || theme === 'system') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    html.classList.add('dark');
+                    html.style.colorScheme = 'dark';
+                  } else {
+                    html.classList.remove('dark');
+                    html.style.colorScheme = 'light';
+                  }
                   
                   // Prevent zoom on double tap (iOS)
-                  let lastTouchEnd = 0;
+                  var lastTouchEnd = 0;
                   document.addEventListener('touchend', function(event) {
-                    const now = Date.now();
+                    var now = Date.now();
                     if (now - lastTouchEnd <= 300) {
                       event.preventDefault();
                     }
@@ -161,7 +174,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.variable} antialiased bg-white text-gray-900 touch-pan-y`} suppressHydrationWarning>
+      <body className={`${inter.variable} antialiased bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 touch-pan-y`} suppressHydrationWarning>
         {/* Skip to main content for accessibility */}
         <a href="#main-content" className="skip-to-main">
           Skip to main content
@@ -245,7 +258,6 @@ export default function RootLayout({
           }}
         />
         <ClientErrorBoundary>
-          <InitialQuizGate />
           {children}
         </ClientErrorBoundary>
       </body>

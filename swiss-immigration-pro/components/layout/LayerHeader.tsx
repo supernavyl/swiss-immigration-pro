@@ -4,10 +4,11 @@ import Link from 'next/link'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { Menu, X, User, LogOut, Shield, Settings, Globe, Star, AlertTriangle } from 'lucide-react'
-import { useSession, signOut } from 'next-auth/react'
+import { useSession, signOut } from '@/lib/auth-client'
 
-import AdvancedSearch from '@/components/AdvancedSearch'
-import LanguageSwitcher from '@/components/LanguageSwitcher'
+import AdvancedSearch from '@/components/ui/AdvancedSearch'
+import LanguageSwitcher from '@/components/layout/LanguageSwitcher'
+import DarkModeToggle from '@/components/ui/DarkModeToggle'
 
 type AppUser = {
   id?: string
@@ -48,17 +49,6 @@ export default function LayerHeader({ layer, homeHref, customBadge }: LayerHeade
 
   useEffect(() => {
     setMounted(true)
-    // Ensure light mode - remove any dark mode
-    if (typeof window !== 'undefined') {
-      const html = document.documentElement
-      html.classList.remove('dark')
-      html.style.colorScheme = 'light'
-      localStorage.removeItem('darkMode')
-
-      // Ensure body is light
-      document.body.style.removeProperty('background-color')
-      document.body.style.removeProperty('color')
-    }
   }, [])
 
   // Handle session safely - work even if SessionProvider isn't ready
@@ -122,7 +112,7 @@ export default function LayerHeader({ layer, homeHref, customBadge }: LayerHeade
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+      <header className="sticky top-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm">
         <nav className="mx-auto flex max-w-7xl flex-col px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between sm:h-20">
             <Link href="/" className="flex items-center gap-3">
@@ -131,7 +121,7 @@ export default function LayerHeader({ layer, homeHref, customBadge }: LayerHeade
                   🇨🇭
                 </div>
               ) : (
-                <div className="flex h-11 w-11 items-center justify-center transition-transform duration-200 hover:scale-105 overflow-hidden rounded-xl bg-white/50">
+                <div className="flex h-11 w-11 items-center justify-center transition-transform duration-200 hover:scale-105 overflow-hidden rounded-xl bg-white/50 dark:bg-gray-800/50">
                   <img
                     src="/images/logo-removebg.png"
                     alt="Swiss Immigration Pro Logo"
@@ -144,12 +134,12 @@ export default function LayerHeader({ layer, homeHref, customBadge }: LayerHeade
                 </div>
               )}
               <div className="hidden sm:flex flex-col leading-tight">
-                <span className="font-semibold text-gray-900">
-                  Swiss<span className="text-blue-600">Immigration</span>Pro
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  Swiss<span className="text-blue-600 dark:text-blue-400">Immigration</span>Pro
                 </span>
-                <span className="text-xs text-gray-500">Expert Guidance</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">Expert Guidance</span>
               </div>
-              <span className="text-lg font-semibold text-gray-900 sm:hidden">
+              <span className="text-lg font-semibold text-gray-900 dark:text-white sm:hidden">
                 SIP
               </span>
             </Link>
@@ -161,8 +151,8 @@ export default function LayerHeader({ layer, homeHref, customBadge }: LayerHeade
                   href={item.href}
                   className={`rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 ${
                     pathname === item.href
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'text-gray-700 hover:bg-blue-50/60 hover:text-blue-600'
+                      ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300'
+                      : 'text-gray-700 dark:text-gray-200 hover:bg-blue-50/60 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400'
                   }`}
                 >
                   {item.label}
@@ -182,14 +172,14 @@ export default function LayerHeader({ layer, homeHref, customBadge }: LayerHeade
                     <>
                       <Link
                         href="/dashboard"
-                        className="flex items-center gap-2 rounded-lg border border-blue-200/50 px-4 py-2 text-sm font-medium text-blue-600 transition-all duration-200 hover:bg-blue-50/60"
+                        className="flex items-center gap-2 rounded-lg border border-blue-200/50 dark:border-blue-700/50 px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 transition-all duration-200 hover:bg-blue-50/60 dark:hover:bg-blue-900/30"
                       >
                         <User className="h-4 w-4" />
                         Dashboard
                       </Link>
                       <Link
                         href="/profile"
-                        className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition-all duration-200 hover:bg-gray-100"
+                        className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800"
                       >
                         <User className="h-4 w-4" />
                         Profile
@@ -208,7 +198,7 @@ export default function LayerHeader({ layer, homeHref, customBadge }: LayerHeade
                       </Link>
                       <Link
                         href="/admin/settings"
-                        className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition-all duration-200 hover:bg-gray-100"
+                        className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800"
                       >
                         <Settings className="h-4 w-4" />
                         Settings
@@ -218,7 +208,7 @@ export default function LayerHeader({ layer, homeHref, customBadge }: LayerHeade
 
                   <button
                     onClick={handleSignOut}
-                    className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-600 transition-all duration-200 hover:text-red-600"
+                    className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 transition-all duration-200 hover:text-red-600 dark:hover:text-red-400"
                   >
                     <LogOut className="h-4 w-4" />
                     Sign out
@@ -233,20 +223,24 @@ export default function LayerHeader({ layer, homeHref, customBadge }: LayerHeade
                 </Link>
               )}
 
-              <div className="ml-2 hidden sm:block">
+              <div className="hidden sm:block">
+                <DarkModeToggle />
+              </div>
+
+              <div className="ml-1 hidden sm:block">
                 <LanguageSwitcher />
               </div>
 
               <button
                 onClick={toggleMenu}
-                className="ml-1 rounded-lg p-3 transition-colors hover:bg-gray-100 active:bg-gray-200 lg:hidden touch-manipulation"
+                className="ml-1 rounded-lg p-3 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 active:bg-gray-200 dark:active:bg-gray-700 lg:hidden touch-manipulation"
                 aria-label="Toggle navigation menu"
                 style={{ WebkitTapHighlightColor: 'transparent' }}
               >
                 {isMenuOpen ? (
-                  <X className="h-6 w-6 text-gray-700" />
+                  <X className="h-6 w-6 text-gray-700 dark:text-gray-200" />
                 ) : (
-                  <Menu className="h-6 w-6 text-gray-700" />
+                  <Menu className="h-6 w-6 text-gray-700 dark:text-gray-200" />
                 )}
               </button>
             </div>
@@ -254,7 +248,7 @@ export default function LayerHeader({ layer, homeHref, customBadge }: LayerHeade
 
           {isMenuOpen && (
             <div className="lg:hidden">
-              <div className="space-y-2 border-t border-gray-200 bg-white p-4 shadow-lg max-h-[calc(100vh-120px)] overflow-y-auto -webkit-overflow-scrolling-touch">
+              <div className="space-y-2 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 shadow-lg max-h-[calc(100vh-120px)] overflow-y-auto -webkit-overflow-scrolling-touch">
                 <div className="sm:hidden mb-4">
                   <AdvancedSearch />
                 </div>
@@ -264,7 +258,7 @@ export default function LayerHeader({ layer, homeHref, customBadge }: LayerHeade
                     key={item.href}
                     href={item.href}
                     onClick={closeMenu}
-                    className="block rounded-xl px-4 py-4 text-base font-medium text-gray-700 transition-all active:bg-blue-100 active:scale-[0.98] touch-manipulation"
+                    className="block rounded-xl px-4 py-4 text-base font-medium text-gray-700 dark:text-gray-200 transition-all active:bg-blue-100 dark:active:bg-blue-900/40 active:scale-[0.98] touch-manipulation"
                     style={{ WebkitTapHighlightColor: 'transparent', minHeight: '48px' }}
                   >
                     {item.label}
@@ -272,24 +266,25 @@ export default function LayerHeader({ layer, homeHref, customBadge }: LayerHeade
                 ))}
 
 
-                <div className="border-t border-gray-200 pt-3">
-                  <div onClick={closeMenu}>
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-3 flex items-center gap-3">
+                  <DarkModeToggle />
+                  <div onClick={closeMenu} className="flex-1">
                     <LanguageSwitcher />
                   </div>
                 </div>
 
-                <div className="border-t border-gray-200 pt-3">
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-3">
                   {appUser ? (
                     <div className="space-y-2">
-                      <div className="flex items-center gap-3 rounded-xl bg-gray-50 p-4">
+                      <div className="flex items-center gap-3 rounded-xl bg-gray-50 dark:bg-gray-800 p-4">
                         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-white flex-shrink-0">
                           {appUser.name?.charAt(0)?.toUpperCase() ?? <User className="h-6 w-6" />}
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm font-semibold text-gray-900 truncate">
+                          <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
                             {appUser.name ?? 'Member'}
                           </p>
-                          <p className="text-xs text-gray-500 truncate">
+                          <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                             {appUser.email ?? 'No email set'}
                           </p>
                         </div>
@@ -300,7 +295,7 @@ export default function LayerHeader({ layer, homeHref, customBadge }: LayerHeade
                           <Link
                             href="/dashboard"
                             onClick={closeMenu}
-                            className="flex items-center gap-3 rounded-xl px-4 py-4 text-base font-medium text-gray-700 transition-all active:bg-gray-100 active:scale-[0.98] touch-manipulation"
+                            className="flex items-center gap-3 rounded-xl px-4 py-4 text-base font-medium text-gray-700 dark:text-gray-200 transition-all active:bg-gray-100 dark:active:bg-gray-800 active:scale-[0.98] touch-manipulation"
                             style={{ WebkitTapHighlightColor: 'transparent', minHeight: '48px' }}
                           >
                             <User className="h-5 w-5" />
@@ -309,7 +304,7 @@ export default function LayerHeader({ layer, homeHref, customBadge }: LayerHeade
                           <Link
                             href="/profile"
                             onClick={closeMenu}
-                            className="flex items-center gap-3 rounded-xl px-4 py-4 text-base font-medium text-gray-700 transition-all active:bg-gray-100 active:scale-[0.98] touch-manipulation"
+                            className="flex items-center gap-3 rounded-xl px-4 py-4 text-base font-medium text-gray-700 dark:text-gray-200 transition-all active:bg-gray-100 dark:active:bg-gray-800 active:scale-[0.98] touch-manipulation"
                             style={{ WebkitTapHighlightColor: 'transparent', minHeight: '48px' }}
                           >
                             <User className="h-5 w-5" />
@@ -323,7 +318,7 @@ export default function LayerHeader({ layer, homeHref, customBadge }: LayerHeade
                           <Link
                             href="/admin"
                             onClick={closeMenu}
-                            className="flex items-center gap-3 rounded-xl px-4 py-4 text-base font-semibold text-purple-600 transition-all active:bg-purple-50 active:scale-[0.98] touch-manipulation"
+                            className="flex items-center gap-3 rounded-xl px-4 py-4 text-base font-semibold text-purple-600 dark:text-purple-400 transition-all active:bg-purple-50 dark:active:bg-purple-900/30 active:scale-[0.98] touch-manipulation"
                             style={{ WebkitTapHighlightColor: 'transparent', minHeight: '48px' }}
                           >
                             <Shield className="h-5 w-5" />
@@ -332,7 +327,7 @@ export default function LayerHeader({ layer, homeHref, customBadge }: LayerHeade
                           <Link
                             href="/admin/settings"
                             onClick={closeMenu}
-                            className="flex items-center gap-3 rounded-xl px-4 py-4 text-base font-medium text-gray-700 transition-all active:bg-gray-100 active:scale-[0.98] touch-manipulation"
+                            className="flex items-center gap-3 rounded-xl px-4 py-4 text-base font-medium text-gray-700 dark:text-gray-200 transition-all active:bg-gray-100 dark:active:bg-gray-800 active:scale-[0.98] touch-manipulation"
                             style={{ WebkitTapHighlightColor: 'transparent', minHeight: '48px' }}
                           >
                             <Settings className="h-5 w-5" />
@@ -346,7 +341,7 @@ export default function LayerHeader({ layer, homeHref, customBadge }: LayerHeade
                           closeMenu()
                           await handleSignOut()
                         }}
-                        className="flex w-full items-center gap-3 rounded-xl px-4 py-4 text-base font-medium text-gray-600 transition-all active:bg-red-50 active:text-red-600 active:scale-[0.98] touch-manipulation"
+                        className="flex w-full items-center gap-3 rounded-xl px-4 py-4 text-base font-medium text-gray-600 dark:text-gray-300 transition-all active:bg-red-50 dark:active:bg-red-900/20 active:text-red-600 dark:active:text-red-400 active:scale-[0.98] touch-manipulation"
                         style={{ WebkitTapHighlightColor: 'transparent', minHeight: '48px' }}
                       >
                         <LogOut className="h-5 w-5" />
@@ -366,7 +361,7 @@ export default function LayerHeader({ layer, homeHref, customBadge }: LayerHeade
                       <Link
                         href="/auth/register"
                         onClick={closeMenu}
-                        className="block rounded-xl px-4 py-4 text-center text-base font-medium text-gray-700 transition-all active:bg-gray-100 active:scale-[0.98] touch-manipulation"
+                        className="block rounded-xl px-4 py-4 text-center text-base font-medium text-gray-700 dark:text-gray-200 transition-all active:bg-gray-100 dark:active:bg-gray-800 active:scale-[0.98] touch-manipulation"
                         style={{ WebkitTapHighlightColor: 'transparent', minHeight: '48px' }}
                       >
                         Create account
