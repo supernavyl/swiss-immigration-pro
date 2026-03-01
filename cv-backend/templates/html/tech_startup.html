@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>{{ css }}</style>
+<style>
+.cv-page { font-family: 'Inter', sans-serif; padding: 0; }
+.header { background: #0f172a; color: #fff; padding: 16mm 15mm 12mm; }
+.header-name { font-family: 'JetBrains Mono', monospace; font-size: 20pt; font-weight: 700; }
+.header-title { color: #818cf8; font-size: 10pt; font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
+.header .contact-row { margin-top: 8px; color: #94a3b8; font-family: 'JetBrains Mono', monospace; font-size: 8pt; }
+.body { padding: 10mm 15mm; display: flex; gap: 12mm; }
+.col-left { flex: 1.3; }
+.col-right { flex: 0.7; }
+.section-title { font-family: 'JetBrains Mono', monospace; font-size: 9pt; color: #6366f1; border-bottom: 2px solid #6366f1; letter-spacing: 0.1em; }
+.skill-tag { background: #eef2ff; color: #4338ca; font-family: 'JetBrains Mono', monospace; font-size: 8pt; }
+.achievements li::before { color: #6366f1; content: "→"; }
+.tech-tags { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 4px; }
+.tech-tag { font-family: 'JetBrains Mono', monospace; font-size: 7.5pt; padding: 1px 6px; background: #f1f5f9; border-radius: 2px; color: #475569; }
+.skill-bar { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
+.skill-dots { display: flex; gap: 3px; }
+.skill-dot { width: 8px; height: 8px; border-radius: 2px; background: #e2e8f0; }
+.skill-dot.filled { background: #6366f1; }
+</style>
+</head>
+<body>
+<div class="cv-page">
+  <div class="header">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div>
+        <div class="header-name">{{ pi.first_name }} {{ pi.last_name }}</div>
+        {% if pi.title %}<div class="header-title">// {{ pi.title }}</div>{% endif %}
+        <div class="contact-row">
+          {% if pi.email %}<span class="contact-item">{{ pi.email }}</span>{% endif %}
+          {% if pi.phone %}<span class="contact-item">{{ pi.phone }}</span>{% endif %}
+          {% if pi.github_url %}<span class="contact-item">{{ pi.github_url }}</span>{% endif %}
+          {% if pi.linkedin_url %}<span class="contact-item">{{ pi.linkedin_url }}</span>{% endif %}
+        </div>
+      </div>
+      {% if pi.photo_url %}<img src="{{ pi.photo_url }}" class="photo-round" style="width:28mm;height:28mm;border:2px solid #6366f1" alt="">{% endif %}
+    </div>
+  </div>
+  <div class="body">
+    <div class="col-left">
+      {% if cv.summary %}
+      <div class="section-title">README</div>
+      <p style="margin-top:6px;color:#334155">{{ cv.summary }}</p>
+      {% endif %}
+
+      {% if cv.work_experience %}
+      <div class="section-title">EXPERIENCE</div>
+      {% for job in cv.work_experience %}
+      <div class="entry">
+        <div class="entry-header">
+          <div><span class="entry-title">{{ job.job_title }}</span></div>
+          <span class="entry-date">{{ job.start_date }} – {{ job.end_date or 'Present' }}</span>
+        </div>
+        <div class="entry-subtitle">{{ job.company }}</div>
+        {% if job.achievements %}<ul class="achievements">{% for a in job.achievements %}<li>{{ a }}</li>{% endfor %}</ul>{% endif %}
+        {% if job.tags %}<div class="tech-tags">{% for t in job.tags %}<span class="tech-tag">{{ t }}</span>{% endfor %}</div>{% endif %}
+      </div>
+      {% endfor %}
+      {% endif %}
+
+      {% if cv.projects %}
+      <div class="section-title">PROJECTS</div>
+      {% for p in cv.projects %}
+      <div class="entry">
+        <div class="entry-header"><span class="entry-title">{{ p.name }}</span>{% if p.url %}<span class="entry-date">{{ p.url }}</span>{% endif %}</div>
+        <p style="font-size:8.5pt;color:#475569">{{ p.description }}</p>
+        {% if p.technologies %}<div class="tech-tags">{% for t in p.technologies %}<span class="tech-tag">{{ t }}</span>{% endfor %}</div>{% endif %}
+      </div>
+      {% endfor %}
+      {% endif %}
+    </div>
+    <div class="col-right">
+      {% if cv.skills %}
+      <div class="section-title">STACK</div>
+      {% for s in cv.skills %}
+      <div class="skill-bar">
+        <span style="font-size:8.5pt;flex:1">{{ s.name }}</span>
+        <div class="skill-dots">
+          {% for i in range(5) %}<div class="skill-dot {% if i < s.proficiency %}filled{% endif %}"></div>{% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+      {% endif %}
+
+      {% if cv.languages %}
+      <div class="section-title" style="margin-top:14px">LANGUAGES</div>
+      {% for lang in cv.languages %}
+      <div style="font-size:8.5pt;padding:3px 0">{{ lang.name }} <strong style="color:#6366f1">{{ lang.level }}</strong></div>
+      {% endfor %}
+      {% endif %}
+
+      {% if cv.education %}
+      <div class="section-title" style="margin-top:14px">EDUCATION</div>
+      {% for edu in cv.education %}
+      <div style="margin-bottom:6px"><strong style="font-size:8.5pt">{{ edu.degree }}</strong><br><span style="font-size:8pt;color:#64748b">{{ edu.institution }}<br>{{ edu.end_date or edu.start_date }}</span></div>
+      {% endfor %}
+      {% endif %}
+
+      {% if cv.certifications %}
+      <div class="section-title" style="margin-top:14px">CERTS</div>
+      {% for cert in cv.certifications %}
+      <div style="font-size:8.5pt;margin-bottom:4px">{{ cert.name }}</div>
+      {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+</body>
+</html>

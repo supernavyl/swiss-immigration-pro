@@ -1,0 +1,15 @@
+.git
+.gitignore
+.env
+.env.*
+.venv
+venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.md
+Dockerfile
+.dockerignore
+storage/*.pdf
+storage/*.docx

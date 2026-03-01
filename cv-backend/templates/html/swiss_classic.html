@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>{{ css }}</style>
+<style>
+.cv-page { font-family: 'Merriweather', Georgia, serif; padding: 18mm 15mm; }
+.header { display: flex; gap: 16px; margin-bottom: 14px; border-bottom: 2px solid #1a1a2e; padding-bottom: 12px; }
+.header-text { flex: 1; }
+.header-name { font-size: 20pt; font-weight: 700; color: #1a1a2e; letter-spacing: -0.02em; }
+.header-title { font-size: 11pt; color: #475569; margin-top: 3px; }
+.section-title { font-family: 'Inter', sans-serif; font-size: 10pt; color: #1a1a2e; border-bottom: 1px solid #cbd5e1; }
+.swiss-info { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 20px; font-size: 8.5pt; color: #475569; margin: 8px 0; padding: 8px 12px; background: #f8fafc; border-radius: 4px; }
+.swiss-info span { font-weight: 600; color: #1e293b; }
+.summary { font-style: italic; color: #334155; margin-bottom: 14px; line-height: 1.55; }
+.skill-tag { background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0; }
+</style>
+</head>
+<body>
+<div class="cv-page">
+  <div class="header">
+    {% if pi.photo_url %}<img src="{{ pi.photo_url }}" class="photo-frame" alt="Photo">{% endif %}
+    <div class="header-text">
+      <div class="header-name">{{ pi.first_name }} {{ pi.last_name }}</div>
+      {% if pi.title %}<div class="header-title">{{ pi.title }}</div>{% endif %}
+      <div class="contact-row" style="margin-top:8px">
+        {% if pi.email %}<span class="contact-item">✉ {{ pi.email }}</span>{% endif %}
+        {% if pi.phone %}<span class="contact-item">☎ {{ pi.phone }}</span>{% endif %}
+        {% if pi.city %}<span class="contact-item">📍 {{ pi.city }}, {{ pi.country }}</span>{% endif %}
+      </div>
+      <div class="contact-row" style="margin-top:4px">
+        {% if pi.linkedin_url %}<span class="contact-item">LinkedIn: {{ pi.linkedin_url }}</span>{% endif %}
+        {% if pi.website_url %}<span class="contact-item">Web: {{ pi.website_url }}</span>{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="swiss-info">
+    {% if pi.date_of_birth %}<div>Date of Birth: <span>{{ pi.date_of_birth }}</span></div>{% endif %}
+    {% if pi.nationality %}<div>Nationality: <span>{{ pi.nationality }}</span></div>{% endif %}
+    {% if pi.marital_status %}<div>Marital Status: <span>{{ pi.marital_status }}</span></div>{% endif %}
+    {% if pi.permit_type %}<div>Permit: <span>{{ pi.permit_type }}</span></div>{% endif %}
+  </div>
+
+  {% if cv.summary %}
+  <div class="summary">{{ cv.summary }}</div>
+  {% endif %}
+
+  {% if cv.work_experience %}
+  <div class="section-title">Professional Experience</div>
+  {% for job in cv.work_experience %}
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">{{ job.job_title }}</span> — <span class="entry-subtitle">{{ job.company }}</span></div>
+      <span class="entry-date">{{ job.start_date }} – {{ job.end_date or 'Present' }}</span>
+    </div>
+    {% if job.location %}<div class="entry-location">{{ job.location }}</div>{% endif %}
+    {% if job.achievements %}
+    <ul class="achievements">{% for a in job.achievements %}<li>{{ a }}</li>{% endfor %}</ul>
+    {% endif %}
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  {% if cv.education %}
+  <div class="section-title">Education</div>
+  {% for edu in cv.education %}
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">{{ edu.degree }}</span> — <span class="entry-subtitle">{{ edu.institution }}</span></div>
+      <span class="entry-date">{{ edu.start_date }} – {{ edu.end_date or 'Present' }}</span>
+    </div>
+    {% if edu.gpa %}<div style="font-size:8.5pt;color:#64748b">GPA: {{ edu.gpa }}</div>{% endif %}
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  {% if cv.skills %}
+  <div class="section-title">Skills</div>
+  <div class="skills-grid">
+    {% for skill in cv.skills %}<span class="skill-tag">{{ skill.name }}</span>{% endfor %}
+  </div>
+  {% endif %}
+
+  {% if cv.languages %}
+  <div class="section-title" style="margin-top:12px">Languages</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;font-size:8.5pt">
+    {% for lang in cv.languages %}
+    <div><strong>{{ lang.name }}</strong> — {{ lang.level }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if cv.certifications %}
+  <div class="section-title" style="margin-top:12px">Certifications</div>
+  {% for cert in cv.certifications %}
+  <div class="entry" style="margin-bottom:4px">
+    <span class="entry-title" style="font-size:9pt">{{ cert.name }}</span>
+    {% if cert.issuer %} — {{ cert.issuer }}{% endif %}
+    {% if cert.date %}<span class="entry-date" style="margin-left:8px">{{ cert.date }}</span>{% endif %}
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  {% if cv.references %}
+  <div class="section-title" style="margin-top:12px">References</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:8.5pt">
+    {% for ref in cv.references %}
+    <div><strong>{{ ref.name }}</strong><br>{{ ref.title }}, {{ ref.company }}<br>{{ ref.email }}{% if ref.phone %} · {{ ref.phone }}{% endif %}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      target: runner
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - ./backend/app:/app/app
+      - ./docs:/app/docs:ro
+    environment:
+      DEBUG: "true"
+
+  frontend:
+    command: npm run dev
+    volumes:
+      - ./swiss-immigration-pro:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      NODE_ENV: development
+
+  nginx:
+    ports:
+      - "80:80"

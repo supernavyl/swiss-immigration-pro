@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>{{ css }}</style>
+<style>
+.cv-page { font-family: 'Inter', sans-serif; padding: 0; display: flex; }
+.sidebar { width: 68mm; background: #0f172a; color: #fff; padding: 16mm 10mm; min-height: 297mm; }
+.sidebar-name { font-size: 16pt; font-weight: 700; line-height: 1.2; }
+.sidebar-title { font-size: 9pt; color: #93c5fd; margin-top: 4px; }
+.sidebar-section { margin-top: 16px; }
+.sidebar-heading { font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.15em; color: #60a5fa; margin-bottom: 6px; font-weight: 700; }
+.sidebar-item { font-size: 8.5pt; color: #cbd5e1; padding: 2px 0; }
+.main-content { flex: 1; padding: 16mm 14mm; }
+.section-title { font-size: 9.5pt; color: #1d4ed8; border-bottom: 2px solid #3b82f6; }
+.skill-tag { background: #eff6ff; color: #1e40af; }
+.achievements li::before { color: #3b82f6; }
+.metric-row { display: flex; gap: 8px; margin-top: 6px; }
+.metric-box { flex: 1; text-align: center; padding: 6px; background: #f8fafc; border-radius: 4px; border: 1px solid #e2e8f0; }
+.metric-value { font-size: 14pt; font-weight: 800; color: #1d4ed8; }
+.metric-label { font-size: 7pt; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
+</style>
+</head>
+<body>
+<div class="cv-page">
+  <div class="sidebar">
+    {% if pi.photo_url %}<img src="{{ pi.photo_url }}" class="photo-round" style="width:36mm;height:36mm;margin-bottom:12px;border:2px solid rgba(255,255,255,0.2)" alt="">{% endif %}
+    <div class="sidebar-name">{{ pi.first_name }}<br>{{ pi.last_name }}</div>
+    {% if pi.title %}<div class="sidebar-title">{{ pi.title }}</div>{% endif %}
+
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Contact</div>
+      {% if pi.email %}<div class="sidebar-item">{{ pi.email }}</div>{% endif %}
+      {% if pi.phone %}<div class="sidebar-item">{{ pi.phone }}</div>{% endif %}
+      {% if pi.city %}<div class="sidebar-item">{{ pi.city }}, {{ pi.country }}</div>{% endif %}
+      {% if pi.linkedin_url %}<div class="sidebar-item">{{ pi.linkedin_url }}</div>{% endif %}
+    </div>
+
+    {% if cv.skills %}
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Core Skills</div>
+      {% for s in cv.skills %}<div class="sidebar-item">{{ s.name }}</div>{% endfor %}
+    </div>
+    {% endif %}
+
+    {% if cv.languages %}
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Languages</div>
+      {% for lang in cv.languages %}<div class="sidebar-item">{{ lang.name }} — {{ lang.level }}</div>{% endfor %}
+    </div>
+    {% endif %}
+
+    {% if cv.certifications %}
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Certifications</div>
+      {% for cert in cv.certifications %}<div class="sidebar-item">{{ cert.name }}</div>{% endfor %}
+    </div>
+    {% endif %}
+  </div>
+  <div class="main-content">
+    {% if cv.summary %}
+    <div class="section-title">Executive Summary</div>
+    <p style="margin-top:6px;color:#334155;line-height:1.6">{{ cv.summary }}</p>
+    {% endif %}
+
+    {% if cv.work_experience %}
+    <div class="section-title">Engagement History</div>
+    {% for job in cv.work_experience %}
+    <div class="entry">
+      <div class="entry-header"><div><span class="entry-title">{{ job.job_title }}</span></div><span class="entry-date">{{ job.start_date }} – {{ job.end_date or 'Present' }}</span></div>
+      <div class="entry-subtitle">{{ job.company }}{% if job.location %} · {{ job.location }}{% endif %}</div>
+      {% if job.achievements %}<ul class="achievements">{% for a in job.achievements %}<li>{{ a }}</li>{% endfor %}</ul>{% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if cv.education %}
+    <div class="section-title">Education</div>
+    {% for edu in cv.education %}
+    <div class="entry"><div class="entry-header"><span class="entry-title">{{ edu.degree }}</span> — {{ edu.institution }} <span class="entry-date">{{ edu.end_date }}</span></div></div>
+    {% endfor %}
+    {% endif %}
+  </div>
+</div>
+</body>
+</html>

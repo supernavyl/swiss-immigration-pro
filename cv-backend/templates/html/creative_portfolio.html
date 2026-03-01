@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>{{ css }}</style>
+<style>
+.cv-page { font-family: 'Inter', sans-serif; padding: 0; }
+.header { background: linear-gradient(135deg, #7c3aed, #ec4899); color: #fff; padding: 18mm 15mm 14mm; }
+.header-name { font-size: 26pt; font-weight: 800; letter-spacing: -0.04em; }
+.header-title { font-size: 11pt; color: rgba(255,255,255,0.85); font-weight: 500; margin-top: 2px; }
+.body { padding: 12mm 15mm; }
+.section-title { color: #7c3aed; border-bottom: 3px solid #ec4899; font-size: 10pt; font-weight: 800; }
+.skill-tag { background: #fae8ff; color: #7c3aed; border: 1px solid #e879f9; }
+.achievements li::before { color: #ec4899; }
+.project-card { border: 1px solid #f3e8ff; border-radius: 8px; padding: 8px 10px; margin-bottom: 8px; }
+.project-card:hover { background: #faf5ff; }
+</style>
+</head>
+<body>
+<div class="cv-page">
+  <div class="header">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div class="header-name">{{ pi.first_name }}<br>{{ pi.last_name }}</div>
+        {% if pi.title %}<div class="header-title">{{ pi.title }}</div>{% endif %}
+        <div class="contact-row" style="margin-top:10px;color:rgba(255,255,255,0.8)">
+          {% if pi.email %}<span>{{ pi.email }}</span>{% endif %}
+          {% if pi.phone %}<span>{{ pi.phone }}</span>{% endif %}
+          {% if pi.website_url %}<span>{{ pi.website_url }}</span>{% endif %}
+        </div>
+      </div>
+      {% if pi.photo_url %}<img src="{{ pi.photo_url }}" class="photo-round" style="width:34mm;height:34mm;border:4px solid rgba(255,255,255,0.3)" alt="">{% endif %}
+    </div>
+  </div>
+  <div class="body">
+    {% if cv.summary %}
+    <div class="section-title">About Me</div>
+    <p style="margin-top:8px;color:#334155;line-height:1.6">{{ cv.summary }}</p>
+    {% endif %}
+
+    {% if cv.work_experience %}
+    <div class="section-title">Experience</div>
+    {% for job in cv.work_experience %}
+    <div class="entry">
+      <div class="entry-header">
+        <div><span class="entry-title" style="color:#7c3aed">{{ job.job_title }}</span> — {{ job.company }}</div>
+        <span class="entry-date">{{ job.start_date }} – {{ job.end_date or 'Present' }}</span>
+      </div>
+      {% if job.achievements %}<ul class="achievements">{% for a in job.achievements %}<li>{{ a }}</li>{% endfor %}</ul>{% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if cv.projects %}
+    <div class="section-title">Portfolio</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px">
+      {% for p in cv.projects %}
+      <div class="project-card">
+        <strong style="color:#7c3aed">{{ p.name }}</strong>
+        <p style="font-size:8pt;color:#64748b;margin-top:2px">{{ p.description }}</p>
+        {% if p.technologies %}<div class="skills-grid" style="margin-top:4px">{% for t in p.technologies %}<span class="skill-tag" style="font-size:7.5pt">{{ t }}</span>{% endfor %}</div>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div style="display:flex;gap:14mm;margin-top:4px">
+      <div style="flex:1">
+        {% if cv.skills %}
+        <div class="section-title">Skills</div>
+        <div class="skills-grid" style="margin-top:6px">{% for s in cv.skills %}<span class="skill-tag">{{ s.name }}</span>{% endfor %}</div>
+        {% endif %}
+      </div>
+      <div style="flex:0.6">
+        {% if cv.languages %}
+        <div class="section-title">Languages</div>
+        {% for lang in cv.languages %}<div style="font-size:8.5pt;padding:3px 0">{{ lang.name }} · {{ lang.level }}</div>{% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    {% if cv.education %}
+    <div class="section-title">Education</div>
+    {% for edu in cv.education %}
+    <div class="entry"><span class="entry-title">{{ edu.degree }}</span> — {{ edu.institution }} <span class="entry-date">{{ edu.end_date or edu.start_date }}</span></div>
+    {% endfor %}
+    {% endif %}
+  </div>
+</div>
+</body>
+</html>

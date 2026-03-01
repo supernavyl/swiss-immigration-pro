@@ -1,0 +1,76 @@
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    reviewers:
+      - "supernovyl"
+    labels:
+      - "dependencies"
+      - "python"
+    open-pull-requests-limit: 5
+    groups:
+      ai-providers:
+        patterns:
+          - "groq"
+          - "google-generativeai"
+          - "openai"
+          - "huggingface-hub"
+      fastapi-stack:
+        patterns:
+          - "fastapi"
+          - "uvicorn"
+          - "pydantic*"
+          - "sqlalchemy*"
+
+  - package-ecosystem: "pip"
+    directory: "/cv-backend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "python"
+    open-pull-requests-limit: 3
+
+  - package-ecosystem: "npm"
+    directory: "/swiss-immigration-pro"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    reviewers:
+      - "supernovyl"
+    labels:
+      - "dependencies"
+      - "javascript"
+    open-pull-requests-limit: 5
+    groups:
+      radix-ui:
+        patterns:
+          - "@radix-ui/*"
+      next-react:
+        patterns:
+          - "next"
+          - "react"
+          - "react-dom"
+
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "docker"
+    open-pull-requests-limit: 3
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "ci"

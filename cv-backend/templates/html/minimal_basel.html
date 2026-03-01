@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>{{ css }}</style>
+<style>
+.cv-page { font-family: 'Inter', sans-serif; padding: 22mm 20mm; color: #18181b; }
+.header-name { font-size: 28pt; font-weight: 300; letter-spacing: -0.04em; color: #18181b; }
+.header-title { font-size: 10pt; color: #71717a; font-weight: 400; margin-top: 4px; letter-spacing: 0.05em; text-transform: uppercase; }
+.divider { height: 1px; background: #e4e4e7; margin: 12px 0; }
+.section-title { font-size: 8pt; color: #a1a1aa; border: none; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; margin-top: 18px; margin-bottom: 8px; }
+.entry-title { font-weight: 500; }
+.entry-subtitle { color: #71717a; }
+.entry-date { color: #a1a1aa; }
+.skill-tag { background: transparent; color: #3f3f46; border: 1px solid #d4d4d8; font-size: 8pt; }
+.contact-min { font-size: 8.5pt; color: #71717a; margin-top: 8px; }
+.contact-min span { margin-right: 14px; }
+</style>
+</head>
+<body>
+<div class="cv-page">
+  <div class="header-name">{{ pi.first_name }} {{ pi.last_name }}</div>
+  {% if pi.title %}<div class="header-title">{{ pi.title }}</div>{% endif %}
+  <div class="contact-min">
+    {% if pi.email %}<span>{{ pi.email }}</span>{% endif %}
+    {% if pi.phone %}<span>{{ pi.phone }}</span>{% endif %}
+    {% if pi.city %}<span>{{ pi.city }}</span>{% endif %}
+    {% if pi.linkedin_url %}<span>{{ pi.linkedin_url }}</span>{% endif %}
+  </div>
+  <div class="divider"></div>
+
+  {% if cv.summary %}
+  <p style="color:#3f3f46;line-height:1.65;margin-bottom:6px">{{ cv.summary }}</p>
+  <div class="divider"></div>
+  {% endif %}
+
+  {% if cv.work_experience %}
+  <div class="section-title">Experience</div>
+  {% for job in cv.work_experience %}
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">{{ job.job_title }}</span> <span class="entry-subtitle">{{ job.company }}</span></div>
+      <span class="entry-date">{{ job.start_date }} – {{ job.end_date or 'Present' }}</span>
+    </div>
+    {% if job.achievements %}<ul class="achievements" style="margin-top:3px">{% for a in job.achievements %}<li style="color:#52525b">{{ a }}</li>{% endfor %}</ul>{% endif %}
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  {% if cv.education %}
+  <div class="section-title">Education</div>
+  {% for edu in cv.education %}
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">{{ edu.degree }}</span> <span class="entry-subtitle">{{ edu.institution }}</span></div>
+      <span class="entry-date">{{ edu.end_date or edu.start_date }}</span>
+    </div>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <div style="display:flex;gap:20mm;margin-top:2px">
+    {% if cv.skills %}
+    <div style="flex:1">
+      <div class="section-title">Skills</div>
+      <div class="skills-grid">{% for s in cv.skills %}<span class="skill-tag">{{ s.name }}</span>{% endfor %}</div>
+    </div>
+    {% endif %}
+    {% if cv.languages %}
+    <div style="flex:0.5">
+      <div class="section-title">Languages</div>
+      {% for lang in cv.languages %}<div style="font-size:8.5pt;padding:2px 0;color:#3f3f46">{{ lang.name }} — {{ lang.level }}</div>{% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+</body>
+</html>

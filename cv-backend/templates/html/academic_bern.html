@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>{{ css }}</style>
+<style>
+.cv-page { font-family: 'Merriweather', Georgia, serif; padding: 18mm 16mm; }
+.header-name { font-size: 18pt; font-weight: 700; color: #1e293b; }
+.header-title { font-size: 10pt; color: #0369a1; font-style: italic; }
+.header-contact { font-family: 'Inter', sans-serif; font-size: 8pt; color: #64748b; margin-top: 6px; }
+.rule { height: 2px; background: #0369a1; margin: 10px 0; }
+.section-title { font-family: 'Inter', sans-serif; font-size: 9.5pt; color: #0369a1; border-bottom: 1px solid #bae6fd; }
+.pub { font-size: 8.5pt; margin-bottom: 4px; line-height: 1.5; }
+.pub em { color: #0369a1; }
+.skill-tag { background: #f0f9ff; color: #0c4a6e; border: 1px solid #bae6fd; }
+</style>
+</head>
+<body>
+<div class="cv-page">
+  <div style="text-align:center">
+    <div class="header-name">{{ pi.first_name }} {{ pi.last_name }}{% if pi.title %}, {{ pi.title }}{% endif %}</div>
+    <div class="header-contact">
+      {% if pi.email %}{{ pi.email }}{% endif %}
+      {% if pi.phone %} · {{ pi.phone }}{% endif %}
+      {% if pi.city %} · {{ pi.city }}, {{ pi.country }}{% endif %}
+    </div>
+  </div>
+  <div class="rule"></div>
+
+  {% if cv.summary %}
+  <div class="section-title">Research Interests</div>
+  <p style="margin-top:6px;color:#334155;font-size:9pt;line-height:1.6">{{ cv.summary }}</p>
+  {% endif %}
+
+  {% if cv.education %}
+  <div class="section-title">Education</div>
+  {% for edu in cv.education %}
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">{{ edu.degree }}</span></div>
+      <span class="entry-date">{{ edu.start_date }} – {{ edu.end_date or 'Present' }}</span>
+    </div>
+    <div class="entry-subtitle">{{ edu.institution }}{% if edu.location %}, {{ edu.location }}{% endif %}</div>
+    {% if edu.gpa %}<div style="font-size:8.5pt;color:#64748b">GPA: {{ edu.gpa }}</div>{% endif %}
+    {% if edu.honors %}<div style="font-size:8.5pt;color:#0369a1">{% for h in edu.honors %}{{ h }}{% if not loop.last %}, {% endif %}{% endfor %}</div>{% endif %}
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  {% if cv.work_experience %}
+  <div class="section-title">Academic Positions</div>
+  {% for job in cv.work_experience %}
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">{{ job.job_title }}</span> — <span class="entry-subtitle">{{ job.company }}</span></div>
+      <span class="entry-date">{{ job.start_date }} – {{ job.end_date or 'Present' }}</span>
+    </div>
+    {% if job.achievements %}<ul class="achievements">{% for a in job.achievements %}<li>{{ a }}</li>{% endfor %}</ul>{% endif %}
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  {% if cv.projects %}
+  <div class="section-title">Publications &amp; Research</div>
+  {% for p in cv.projects %}
+  <div class="pub">{{ p.name }}{% if p.description %} — <em>{{ p.description }}</em>{% endif %}{% if p.end_date %} ({{ p.end_date }}){% endif %}</div>
+  {% endfor %}
+  {% endif %}
+
+  <div style="display:flex;gap:16mm">
+    {% if cv.skills %}
+    <div style="flex:1"><div class="section-title">Expertise</div><div class="skills-grid" style="margin-top:6px">{% for s in cv.skills %}<span class="skill-tag">{{ s.name }}</span>{% endfor %}</div></div>
+    {% endif %}
+    {% if cv.languages %}
+    <div style="flex:0.5"><div class="section-title">Languages</div>{% for lang in cv.languages %}<div style="font-size:8.5pt;padding:2px 0">{{ lang.name }} ({{ lang.level }})</div>{% endfor %}</div>
+    {% endif %}
+  </div>
+
+  {% if cv.certifications %}
+  <div class="section-title">Awards &amp; Certifications</div>
+  {% for cert in cv.certifications %}<div style="font-size:8.5pt;margin-bottom:3px">{{ cert.name }}{% if cert.issuer %} — {{ cert.issuer }}{% endif %}{% if cert.date %} ({{ cert.date }}){% endif %}</div>{% endfor %}
+  {% endif %}
+</div>
+</body>
+</html>
