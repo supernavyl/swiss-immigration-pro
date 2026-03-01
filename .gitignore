@@ -161,6 +161,7 @@ swiss-immigration-pro/.env*
 swiss-immigration-pro/.vercel
 swiss-immigration-pro/*.tsbuildinfo
 swiss-immigration-pro/next-env.d.ts
+swiss-immigration-pro/.wrangler/
 
 # Backend
 backend/__pycache__/
@@ -177,11 +178,21 @@ cv-backend/venv/
 cv-backend/.venv/
 cv-backend/storage/
 
+# Mobile (skeleton — not ready for production)
+mobile/node_modules/
+mobile/.expo/
+mobile/dist/
+
 # Docker data
 postgres_data/
 
 # Local Netlify folder
 .netlify
+
+# Claude Code / Cursor IDE
+.claude/
+.cursor/
+.cursorignore
 
 # Project artifacts (temp/debug)
 screenshots/
@@ -191,6 +202,16 @@ final-audit.js
 mobile-audit.js
 more-audit.js
 screenshots-final.js
+
+# Large media files (use CDN, not git)
+swiss-immigration-pro/images/environment/
+swiss-immigration-pro/images/photo/
+swiss-immigration-pro/images/us-journey.mp4
+"swiss-immigration-pro/files-1 (2)/"
+
+# Generated documents
+SIP_*.pdf
+SIP_*.html
 
 # SSH keys
 *_key
