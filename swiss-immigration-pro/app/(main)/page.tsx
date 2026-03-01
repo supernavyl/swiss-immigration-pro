@@ -1,29 +1,31 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { 
-  ArrowRight, CheckCircle, Clock, Shield, 
+import { motion } from 'framer-motion'
+import {
+  ArrowRight, CheckCircle, Clock, Shield,
   Users, Briefcase, Globe,
   TrendingUp, Zap, Target, Star,
-  MapPin, Building, Rocket, Quote, Award, Heart
+  MapPin, Building, Rocket, Quote, Award, Heart, Mail
 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import MainHeader from '@/components/layout/MainHeader'
+import { useT } from '@/lib/i18n/useTranslation'
+import { SITE_STATS } from '@/lib/pricing'
 
 export default function Home() {
+  const { t } = useT()
   const [stats, setStats] = useState([
-    { value: '18,500+', label: 'Successful Applications' },
-    { value: '96%', label: 'Success Rate' },
-    { value: '6-8 Weeks', label: 'Average Processing' },
-    { value: '24/7', label: 'AI Support' }
+    { value: SITE_STATS.totalUsers, label: t('stats.successfulApps') },
+    { value: SITE_STATS.successRate, label: t('stats.successRate') },
+    { value: SITE_STATS.avgProcessingWeeks, label: t('stats.avgProcessing') },
+    { value: '24/7', label: t('stats.aiSupport') }
   ])
   const [mounted, setMounted] = useState(false)
-
-  const { scrollYProgress } = useScroll()
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0])
-  const heroScale = useTransform(scrollYProgress, [0, 0.3], [1, 0.95])
+  const [heroEmail, setHeroEmail] = useState('')
+  const [heroEmailSubmitted, setHeroEmailSubmitted] = useState(false)
+  const [heroEmailLoading, setHeroEmailLoading] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -32,18 +34,40 @@ export default function Home() {
         .then(res => res.ok ? res.json() : null)
         .then(data => {
           if (data && Array.isArray(data) && data.length > 0) {
-            setStats(data.map((stat: any) => ({
+            // Map API stats to translated labels
+            const labelMap: Record<string, string> = {
+              'Successful Applications': t('stats.successfulApps'),
+              'Success Rate': t('stats.successRate'),
+              'Average Processing': t('stats.avgProcessing'),
+              'AI Support': t('stats.aiSupport'),
+            }
+            setStats(data.map((stat: { value: string; label: string }) => ({
               value: stat.value,
-              label: stat.label,
+              label: labelMap[stat.label] || stat.label,
             })))
           }
         })
         .catch(() => {})
     }
-  }, [])
+  }, [t])
+
+  const handleHeroEmail = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!heroEmail.trim() || heroEmailLoading) return
+    setHeroEmailLoading(true)
+    try {
+      await fetch('/api/email-capture', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: heroEmail, source: 'hero' }),
+      })
+    } catch {}
+    setHeroEmailSubmitted(true)
+    setHeroEmailLoading(false)
+  }
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans selection:bg-blue-100 selection:text-blue-900">
+    <div className="min-h-screen bg-slate-50 dark:bg-gray-950 font-sans selection:bg-blue-100 selection:text-blue-900 dark:selection:bg-blue-900 dark:selection:text-blue-100">
       <MainHeader />
 
       {/* Enhanced Hero Section - Modern Design */}
@@ -60,8 +84,8 @@ export default function Home() {
             transition={{ duration: 1.5, ease: "easeOut" }}
           >
             <Image
-              src="/images/environment/image_1044945_20250813_ob_936fbe_adobestock-380240715-lac-leman.jpeg"
-              alt="Swiss Alps landscape - Your path to Switzerland"
+              src="/images/environment/zurich-city.jpg"
+              alt="Zurich city - Your path to Switzerland"
               fill
               className="object-cover"
               priority
@@ -122,19 +146,14 @@ export default function Home() {
               </motion.div>
 
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight tracking-tight">
-                Your Path to
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-200 to-indigo-200">
-                  Swiss Residency
-                </span>
+                {t('hero.title')}
               </h1>
 
               <p className="text-lg text-slate-200 mb-8 leading-relaxed max-w-xl font-light">
-                AI-powered guidance, expert support, and proven strategies. Join{' '}
-                <strong className="text-white font-semibold">18,500+ successful applicants</strong> who 
-                achieved their Swiss immigration goals.
+                {t('hero.subtitle', { count: '18,500+' })}
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 mb-12">
+              <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <motion.button
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
@@ -147,25 +166,61 @@ export default function Home() {
                   className="group inline-flex items-center justify-center gap-2 bg-white text-slate-900 font-semibold px-8 py-3.5 rounded-lg transition-all hover:bg-blue-50 shadow-lg hover:shadow-xl"
                 >
                   <Rocket className="w-4 h-4 text-blue-600" />
-                  Start Free Assessment
+                  {t('hero.cta')}
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1 text-blue-600" />
                 </motion.button>
-                <Link 
-                  href="/pricing" 
+                <Link
+                  href="/pricing"
                   className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white font-medium px-8 py-3.5 rounded-lg transition-all border border-white/20"
                 >
-                  View Pricing
+                  {t('hero.ctaSecondary')}
                 </Link>
+              </div>
+
+              {/* Email capture */}
+              <div className="mb-12">
+                {heroEmailSubmitted ? (
+                  <motion.div
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-center gap-2 text-green-300 text-sm font-medium"
+                  >
+                    <CheckCircle className="w-4 h-4" />
+                    Free guide sent! Check your inbox.
+                  </motion.div>
+                ) : (
+                  <form onSubmit={handleHeroEmail} className="flex flex-col sm:flex-row gap-2 max-w-sm">
+                    <div className="relative flex-1">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+                      <input
+                        type="email"
+                        value={heroEmail}
+                        onChange={(e) => setHeroEmail(e.target.value)}
+                        placeholder="your@email.com"
+                        className="w-full bg-white/10 backdrop-blur-sm border border-white/20 text-white placeholder-white/40 rounded-lg pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-white/30"
+                        required
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={heroEmailLoading}
+                      className="bg-blue-500 hover:bg-blue-400 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition-colors whitespace-nowrap disabled:opacity-60"
+                    >
+                      Get Free Guide
+                    </button>
+                  </form>
+                )}
+                <p className="text-white/40 text-[11px] mt-1.5">No spam. Unsubscribe anytime.</p>
               </div>
             </motion.div>
 
             {/* Hero Floating Cards - Glassmorphism */}
             <div className="hidden lg:grid grid-cols-2 gap-4">
-              {[
-                { value: '96%', label: 'Success Rate', icon: TrendingUp },
-                { value: '24/7', label: 'AI Support', icon: Zap },
-                { value: '18.5K+', label: 'Applications', icon: Users },
-                { value: '6-8 Weeks', label: 'Processing', icon: Clock },
+            {[
+              { value: SITE_STATS.successRate, label: t('stats.successRate'), icon: TrendingUp },
+              { value: '24/7', label: t('stats.aiSupport'), icon: Zap },
+              { value: SITE_STATS.totalUsers, label: t('stats.successfulApps'), icon: Users },
+              { value: SITE_STATS.avgProcessingWeeks, label: t('stats.avgProcessing'), icon: Clock },
               ].map((stat, idx) => (
                 <motion.div 
                   key={idx}
@@ -196,41 +251,6 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* Stats Strip */}
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
-        className="bg-white border-b border-slate-100"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center divide-x divide-slate-100">
-            {[
-              { number: '18,500+', label: 'Successful Applications', icon: Users },
-              { number: '96%', label: 'Success Rate', icon: TrendingUp },
-              { number: '190+', label: 'Countries Served', icon: Globe },
-              { number: '24/7', label: 'AI Support', icon: Zap },
-            ].map((stat, idx) => (
-              <motion.div 
-                key={idx} 
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1, duration: 0.4 }}
-                whileHover={{ scale: 1.05 }}
-                className="text-center px-4 first:pl-0 last:pr-0 border-none md:border-solid cursor-default"
-              >
-                <div className="flex items-center justify-center gap-2 mb-1 text-slate-900 font-bold text-2xl">
-                  <stat.icon className="w-5 h-5 text-blue-600" />
-                  {stat.number}
-                </div>
-                <div className="text-xs font-medium text-slate-500 uppercase tracking-wide">{stat.label}</div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </motion.div>
 
       {/* Advantages Section - Modern Cards */}
       <motion.section 
@@ -238,7 +258,7 @@ export default function Home() {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6 }}
-        className="py-24 bg-white"
+        className="py-24 bg-white dark:bg-gray-950"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
@@ -248,11 +268,11 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="text-center max-w-3xl mx-auto mb-16"
           >
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">
-              Why Choose Swiss Immigration Pro
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">
+              {t('home.whyChoose')}
             </h2>
-            <p className="text-slate-600 text-lg font-light">
-              Proven results, expert guidance, and cutting-edge technology to simplify your journey.
+            <p className="text-slate-600 dark:text-gray-400 text-lg font-light">
+              {t('home.whyChooseDesc')}
             </p>
           </motion.div>
 
@@ -260,20 +280,20 @@ export default function Home() {
             {[
               {
                 icon: TrendingUp,
-                title: '96% Success Rate',
-                description: 'Industry-leading approval rate with comprehensive guidance and expert support throughout the process.',
+                title: t('home.successRate'),
+                description: t('home.successRateDesc'),
                 tag: 'Guaranteed'
               },
               {
                 icon: Clock,
-                title: '2x Faster Processing',
-                description: 'Average 6-8 weeks vs 12-16 weeks standard. Optimized workflows and expert document preparation.',
+                title: t('home.fastProcessing'),
+                description: t('home.fastProcessingDesc'),
                 tag: 'Fast Track'
               },
               {
                 icon: Zap,
-                title: 'AI-Powered Platform',
-                description: '24/7 Swiss Immigration AI Assistant providing instant answers and personalized guidance anytime.',
+                title: t('home.aiSupport'),
+                description: t('home.aiSupportDesc'),
                 tag: 'Innovative'
               },
             ].map((item, idx) => (
@@ -284,18 +304,18 @@ export default function Home() {
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ delay: idx * 0.15, duration: 0.5 }}
                 whileHover={{ y: -8, scale: 1.02 }}
-                className="bg-white rounded-2xl p-8 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.1)] transition-all duration-300 border border-slate-100"
+                className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.1)] dark:shadow-none transition-all duration-300 border border-slate-100 dark:border-gray-700"
               >
                 <div className="flex justify-between items-start mb-6">
-                  <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                    <item.icon className="w-6 h-6 text-blue-600" />
+                  <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/30 rounded-xl flex items-center justify-center group-hover:bg-blue-100 transition-colors">
+                    <item.icon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                   </div>
-                  <span className="bg-slate-100 text-slate-600 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wide">
+                  <span className="bg-slate-100 dark:bg-gray-700 text-slate-600 dark:text-gray-300 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wide">
                     {item.tag}
                   </span>
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3">{item.title}</h3>
-                <p className="text-slate-600 leading-relaxed text-sm">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{item.title}</h3>
+                <p className="text-slate-600 dark:text-gray-400 leading-relaxed text-sm">
                   {item.description}
                 </p>
               </motion.div>
@@ -310,7 +330,7 @@ export default function Home() {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6 }}
-        className="py-24 bg-white"
+        className="py-24 bg-white dark:bg-gray-950"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -327,7 +347,7 @@ export default function Home() {
                 className="relative rounded-2xl overflow-hidden shadow-2xl aspect-[4/3]"
               >
                 <Image
-                  src="/images/family/c41e6c67-7e1b-4bce-922b-1e21f696a6f2.png"
+                  src="/images/family/success-story.jpg"
                   alt="Success Story - Swiss Immigration"
                   fill
                   className="object-cover"
@@ -338,7 +358,7 @@ export default function Home() {
                     <Star className="w-4 h-4 text-blue-400 fill-blue-400" />
                     <span className="text-sm font-medium">Success Story</span>
                   </div>
-                  <p className="font-bold text-lg">Join 18,500+ Successful Applicants</p>
+                  <p className="font-bold text-lg">Join {SITE_STATS.totalUsers} Successful Applicants</p>
                   <p className="text-sm text-white/80">Your pathway to Switzerland starts here</p>
                 </div>
               </motion.div>
@@ -350,15 +370,15 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ delay: 0.3, duration: 0.5 }}
                 whileHover={{ y: -5, scale: 1.02 }}
-                className="absolute -bottom-6 -right-6 bg-white p-6 rounded-xl shadow-xl border border-slate-100 max-w-xs hidden md:block"
+                className="absolute -bottom-6 -right-6 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl border border-slate-100 dark:border-gray-700 max-w-xs hidden md:block"
               >
                 <div className="flex items-start gap-4">
-                  <div className="bg-blue-50 p-3 rounded-lg">
-                    <Building className="w-6 h-6 text-blue-600" />
+                  <div className="bg-blue-50 dark:bg-blue-900/30 p-3 rounded-lg">
+                    <Building className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-900 text-sm">Expert Support</h4>
-                    <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                    <h4 className="font-bold text-slate-900 dark:text-white text-sm">Expert Support</h4>
+                    <p className="text-xs text-slate-500 dark:text-gray-400 mt-1 leading-relaxed">
                       Certified immigration specialists guide you through every step.
                     </p>
                   </div>
@@ -376,13 +396,11 @@ export default function Home() {
                 <span className="w-8 h-[2px] bg-blue-600"></span>
                 Your Journey Starts Here
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6 leading-tight">
-                Experience Excellence <br />
-                <span className="text-slate-400">Every Single Day</span>
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-6 leading-tight">
+                {t('home.startJourney')}
               </h2>
-              <p className="text-slate-600 text-lg mb-8 leading-relaxed font-light">
-                Join thousands who have successfully made Switzerland their home. 
-                Benefit from world-class infrastructure, safety, and high salaries.
+              <p className="text-slate-600 dark:text-gray-400 text-lg mb-8 leading-relaxed font-light">
+                {t('home.startJourneyDesc')}
               </p>
               
               <div className="space-y-4 mb-10">
@@ -401,8 +419,8 @@ export default function Home() {
                   >
                     <CheckCircle className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="font-semibold text-slate-900 text-sm">{item.title}</h4>
-                      <p className="text-slate-500 text-sm">{item.desc}</p>
+                      <h4 className="font-semibold text-slate-900 dark:text-white text-sm">{item.title}</h4>
+                      <p className="text-slate-500 dark:text-gray-400 text-sm">{item.desc}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -426,7 +444,7 @@ export default function Home() {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6 }}
-        className="py-24 bg-slate-50"
+        className="py-24 bg-slate-50 dark:bg-gray-900"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
@@ -437,8 +455,8 @@ export default function Home() {
             className="flex justify-between items-end mb-12"
           >
             <div>
-              <h2 className="text-3xl font-bold text-slate-900 mb-2">Choose Your Pathway</h2>
-              <p className="text-slate-600">Personalized solutions tailored to your background</p>
+              <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">{t('home.choosePathway')}</h2>
+              <p className="text-slate-600 dark:text-gray-400">Personalized solutions tailored to your background</p>
             </div>
             <Link href="/pricing" className="hidden md:flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors">
               View All Options <ArrowRight className="w-4 h-4" />
@@ -483,17 +501,23 @@ export default function Home() {
                   viewport={{ once: true, margin: "-50px" }}
                   transition={{ delay: idx * 0.15, duration: 0.5 }}
                   whileHover={{ y: -8, scale: 1.02 }}
-                  className="bg-white p-6 rounded-xl border border-slate-100 shadow-sm hover:shadow-lg transition-all duration-300"
+                  className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-slate-100 dark:border-gray-700 shadow-sm hover:shadow-lg dark:shadow-none transition-all duration-300"
                 >
-                  <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center mb-4 group-hover:bg-blue-600 transition-colors">
-                    <pathway.icon className="w-5 h-5 text-blue-600 group-hover:text-white transition-colors" />
+                  <div className="w-10 h-10 bg-blue-50 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mb-4 group-hover:bg-blue-600 transition-colors">
+                    <pathway.icon className="w-5 h-5 text-blue-600 dark:text-blue-400 group-hover:text-white transition-colors" />
                   </div>
-                  <div className="text-xs font-semibold text-blue-600 mb-1 uppercase tracking-wider">{pathway.type}</div>
-                  <h3 className="text-lg font-bold text-slate-900 mb-1">{pathway.name}</h3>
-                  <div className="text-xs text-slate-400 mb-3 font-medium">{pathway.duration}</div>
-                  <p className="text-slate-500 text-sm leading-relaxed">
+                  <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1 uppercase tracking-wider">{pathway.type}</div>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">{pathway.name}</h3>
+                  <div className="text-xs text-slate-400 dark:text-gray-500 mb-3 font-medium">{pathway.duration}</div>
+                  <p className="text-slate-500 dark:text-gray-400 text-sm leading-relaxed mb-4">
                     {pathway.desc}
                   </p>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-slate-400 dark:text-gray-500">From CHF 9/mo</span>
+                    <span className="text-blue-600 dark:text-blue-400 font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
+                      See plans <ArrowRight className="w-3 h-3" />
+                    </span>
+                  </div>
                 </motion.div>
               </Link>
             ))}
@@ -507,7 +531,7 @@ export default function Home() {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6 }}
-        className="py-24 bg-gradient-to-br from-blue-50 via-white to-slate-50"
+        className="py-24 bg-gradient-to-br from-blue-50 via-white to-slate-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
@@ -517,14 +541,14 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-1.5 rounded-full text-xs font-semibold mb-4">
+            <div className="inline-flex items-center gap-2 bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-4 py-1.5 rounded-full text-xs font-semibold mb-4">
               <Heart className="w-3.5 h-3.5" />
               <span>Real Success Stories</span>
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Join 18,500+ Successful Applicants
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
+              {t('home.testimonials')}
             </h2>
-            <p className="text-slate-600 text-lg max-w-2xl mx-auto">
+            <p className="text-slate-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
               Real people who made Switzerland their home. See how our platform transformed their immigration journey.
             </p>
           </motion.div>
@@ -535,7 +559,9 @@ export default function Home() {
                 name: 'Sarah Chen',
                 role: 'Software Engineer from Singapore',
                 location: 'Zurich, Switzerland',
-                image: '/images/family/c41e6c67-7e1b-4bce-922b-1e21f696a6f2.png',
+                photo: '/images/testimonials/sarah-chen.jpg',
+                accent: 'bg-violet-50 dark:bg-violet-900/20',
+                badge: 'bg-violet-100 dark:bg-violet-900/40 text-violet-700 dark:text-violet-300',
                 quote: 'I was rejected twice before finding Swiss Immigration Pro. Their AI assistant helped me identify critical document issues. Approved in 8 weeks!',
                 result: 'L Permit • CHF 120k Salary',
                 rating: 5
@@ -544,7 +570,9 @@ export default function Home() {
                 name: 'Michael Rodriguez',
                 role: 'Pharma Researcher from USA',
                 location: 'Basel, Switzerland',
-                image: '/images/family/download (4).jpeg',
+                photo: '/images/testimonials/michael-rodriguez.jpg',
+                accent: 'bg-blue-50 dark:bg-blue-900/20',
+                badge: 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300',
                 quote: 'The cantonal strategy module was a game-changer. Switched from Zurich to Basel and got approved in 6 weeks when colleagues waited 16+ weeks.',
                 result: 'B Permit • 6 Weeks Processing',
                 rating: 5
@@ -553,7 +581,9 @@ export default function Home() {
                 name: 'Priya Patel',
                 role: 'Finance Professional from India',
                 location: 'Geneva, Switzerland',
-                image: '/images/americans/success-us-professional.png',
+                photo: '/images/testimonials/priya-patel.jpg',
+                accent: 'bg-rose-50 dark:bg-rose-900/20',
+                badge: 'bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300',
                 quote: 'The salary negotiation scripts saved me CHF 25,000 annually. The CV optimization got me 3 interviews in 2 weeks. Worth every franc.',
                 result: 'CHF 145k Salary • B Permit',
                 rating: 5
@@ -562,7 +592,9 @@ export default function Home() {
                 name: 'Marie Dubois',
                 role: 'Banking Executive from France',
                 location: 'Geneva, Switzerland',
-                image: '/images/europeans/success-eu-family.jpeg',
+                photo: '/images/testimonials/marie-dubois.jpg',
+                accent: 'bg-emerald-50 dark:bg-emerald-900/20',
+                badge: 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300',
                 quote: 'The CV templates are incredible. Applied the banking sector template and got 4 interviews. The embassy process guide eliminated all stress.',
                 result: 'B Permit • 4 Interviews',
                 rating: 5
@@ -571,7 +603,9 @@ export default function Home() {
                 name: 'Ahmed Hassan',
                 role: 'Tech Professional from Jordan',
                 location: 'Zurich, Switzerland',
-                image: '/images/americans/lifestyle-us-family.png',
+                photo: '/images/testimonials/ahmed-hassan.jpg',
+                accent: 'bg-amber-50 dark:bg-amber-900/20',
+                badge: 'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300',
                 quote: 'Brought my family to Switzerland using the family reunification guide. The checklist covered everything. Immigration office had no questions.',
                 result: 'Family Reunified • Zurich',
                 rating: 5
@@ -580,7 +614,9 @@ export default function Home() {
                 name: 'Sofia Martinez',
                 role: 'Marketing Director from Spain',
                 location: 'Lausanne, Switzerland',
-                image: '/images/others/lifestyle-integration.png',
+                photo: '/images/testimonials/sofia-martinez.jpg',
+                accent: 'bg-indigo-50 dark:bg-indigo-900/20',
+                badge: 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300',
                 quote: 'The integration guide helped my family adapt quickly. Language resources and cultural insights made the transition smooth and enjoyable.',
                 result: 'C Permit • Full Integration',
                 rating: 5
@@ -592,44 +628,45 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ delay: idx * 0.1, duration: 0.5 }}
-                whileHover={{ y: -8, scale: 1.02 }}
-                className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all border border-slate-100 overflow-hidden"
+                whileHover={{ y: -6, scale: 1.01 }}
+                className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl dark:shadow-none transition-all border border-slate-100 dark:border-gray-700"
               >
-                <div className="relative h-48 mb-4 rounded-xl overflow-hidden">
-                  <Image
-                    src={story.image}
-                    alt={story.name}
-                    fill
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <div className="flex items-center gap-2 mb-1">
+                {/* Person header with real photo */}
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="relative w-14 h-14 rounded-full overflow-hidden shrink-0 ring-2 ring-white dark:ring-gray-700 shadow-md">
+                    <Image
+                      src={story.photo}
+                      alt={story.name}
+                      fill
+                      className="object-cover"
+                      sizes="56px"
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="font-bold text-slate-900 dark:text-white text-sm truncate">{story.name}</h4>
+                    <p className="text-slate-500 dark:text-gray-400 text-xs truncate">{story.role}</p>
+                    <div className="flex items-center gap-0.5 mt-1.5">
                       {[...Array(story.rating)].map((_, i) => (
                         <Star key={i} className="w-3 h-3 text-yellow-400 fill-yellow-400" />
                       ))}
                     </div>
-                    <h4 className="text-white font-bold text-sm">{story.name}</h4>
-                    <p className="text-white/80 text-xs">{story.role}</p>
                   </div>
                 </div>
-                
-                <div className="mb-4">
-                  <Quote className="w-6 h-6 text-blue-600 opacity-30 mb-2" />
-                  <p className="text-slate-700 text-sm leading-relaxed italic">
-                    "{story.quote}"
+
+                <div className="mb-5">
+                  <Quote className="w-5 h-5 text-blue-400 opacity-40 mb-2" />
+                  <p className="text-slate-600 dark:text-gray-300 text-sm leading-relaxed">
+                    &ldquo;{story.quote}&rdquo;
                   </p>
                 </div>
-                
-                <div className="flex items-center justify-between pt-4 border-t border-slate-100">
-                  <div>
-                    <div className="text-xs text-slate-500 mb-1">Result</div>
-                    <div className="text-sm font-semibold text-blue-600">{story.result}</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-xs text-slate-500 mb-1">Location</div>
-                    <div className="text-sm font-medium text-slate-700">{story.location}</div>
-                  </div>
+
+                <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-gray-700">
+                  <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${story.badge}`}>
+                    {story.result}
+                  </span>
+                  <span className="text-xs text-slate-400 dark:text-gray-500 flex items-center gap-1">
+                    <MapPin className="w-3 h-3" />{story.location.split(',')[0]}
+                  </span>
                 </div>
               </motion.div>
             ))}
@@ -643,7 +680,7 @@ export default function Home() {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6 }}
-        className="py-24 bg-white"
+        className="py-24 bg-white dark:bg-gray-950"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
@@ -653,10 +690,10 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
               Everything You Need to Succeed
             </h2>
-            <p className="text-slate-600 text-lg max-w-2xl mx-auto">
+            <p className="text-slate-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
               Comprehensive resources, expert guidance, and proven strategies for your Swiss immigration journey.
             </p>
           </motion.div>
@@ -719,13 +756,13 @@ export default function Home() {
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ delay: idx * 0.05, duration: 0.4 }}
                 whileHover={{ y: -5 }}
-                className="bg-slate-50 rounded-xl p-6 border border-slate-100 hover:border-blue-200 transition-all"
+                className="bg-slate-50 dark:bg-gray-800 rounded-xl p-6 border border-slate-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700 transition-all"
               >
-                <div className={`w-12 h-12 ${item.color} rounded-lg flex items-center justify-center mb-4`}>
+                <div className={`w-12 h-12 ${item.color} dark:bg-blue-900/30 dark:text-blue-400 rounded-lg flex items-center justify-center mb-4`}>
                   <item.icon className="w-6 h-6" />
                 </div>
-                <h3 className="font-bold text-slate-900 mb-2">{item.title}</h3>
-                <p className="text-slate-600 text-sm leading-relaxed">{item.desc}</p>
+                <h3 className="font-bold text-slate-900 dark:text-white mb-2">{item.title}</h3>
+                <p className="text-slate-600 dark:text-gray-400 text-sm leading-relaxed">{item.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -738,7 +775,7 @@ export default function Home() {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6 }}
-        className="py-24 bg-slate-50 overflow-hidden"
+        className="py-24 bg-slate-50 dark:bg-gray-900 overflow-hidden"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
@@ -748,8 +785,8 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">How It Works</h2>
-            <p className="text-slate-600">Simple steps to your Swiss residency</p>
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">{t('home.howItWorks')}</h2>
+            <p className="text-slate-600 dark:text-gray-400">Simple steps to your Swiss residency</p>
           </motion.div>
 
           <div className="relative max-w-4xl mx-auto">
@@ -763,45 +800,41 @@ export default function Home() {
             />
 
             {[
-              { step: 1, title: 'Free Assessment', desc: 'Complete our quick quiz to get personalized guidance', icon: Target },
-              { step: 2, title: 'Choose Your Plan', desc: 'Select the plan that best fits your needs', icon: Briefcase },
-              { step: 3, title: 'Get Expert Support', desc: 'Access tools, documents, and AI assistance', icon: Shield },
-              { step: 4, title: 'Submit & Succeed', desc: 'Submit your application with confidence', icon: CheckCircle },
-            ].map((item, idx) => (
-              <motion.div 
-                key={idx} 
-                initial={{ opacity: 0, x: idx % 2 === 0 ? -30 : 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ delay: idx * 0.2, duration: 0.6 }}
-                className={`relative flex items-center gap-8 mb-12 last:mb-0 ${idx % 2 === 0 ? 'md:flex-row-reverse' : ''}`}
-              >
-                <div className="flex-1 md:text-right">
-                  <div className={`hidden md:block ${idx % 2 === 0 ? 'text-left' : 'text-right'}`}>
-                    <h3 className="text-lg font-bold text-slate-900">{item.title}</h3>
-                    <p className="text-slate-500 text-sm">{item.desc}</p>
-                  </div>
-                </div>
-                
-                <motion.div 
-                  whileHover={{ scale: 1.1, rotate: 360 }}
-                  transition={{ duration: 0.5 }}
-                  className="relative z-10 w-12 h-12 bg-white border-4 border-blue-100 rounded-full flex items-center justify-center shadow-sm shrink-0 group hover:border-blue-300 transition-colors"
+              { step: 1, title: t('home.step1Title'), desc: t('home.step1Desc'), icon: Target },
+              { step: 2, title: t('home.step2Title'), desc: t('home.step2Desc'), icon: Briefcase },
+              { step: 3, title: t('home.step3Title'), desc: t('home.step3Desc'), icon: Shield },
+              { step: 4, title: t('home.step4Title'), desc: t('home.step4Desc'), icon: CheckCircle },
+            ].map((item, idx) => {
+              const isEven = idx % 2 === 0
+              return (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, x: isEven ? -30 : 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ delay: idx * 0.2, duration: 0.6 }}
+                  className={`relative flex items-center gap-8 mb-12 last:mb-0 ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'}`}
                 >
-                  <span className="text-blue-600 font-bold text-sm">{item.step}</span>
-                </motion.div>
+                  {/* Content left/right depending on even/odd */}
+                  <div className={`flex-1 ${isEven ? 'md:text-right' : 'md:text-left'}`}>
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white">{item.title}</h3>
+                    <p className="text-slate-500 dark:text-gray-400 text-sm mt-1">{item.desc}</p>
+                  </div>
 
-                <div className="flex-1">
-                  <div className={`md:hidden`}>
-                    <h3 className="text-lg font-bold text-slate-900">{item.title}</h3>
-                    <p className="text-slate-500 text-sm">{item.desc}</p>
-                  </div>
-                  <div className={`hidden md:block ${idx % 2 === 0 ? 'text-right' : 'text-left'}`}>
-                    {/* Spacer for alignment */}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+                  {/* Step circle */}
+                  <motion.div
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.2 }}
+                    className="relative z-10 w-14 h-14 bg-white dark:bg-gray-800 border-4 border-blue-100 dark:border-blue-900 rounded-full flex items-center justify-center shadow-md shrink-0 hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
+                  >
+                    <span className="text-blue-600 font-bold">{item.step}</span>
+                  </motion.div>
+
+                  {/* Spacer on the other side */}
+                  <div className="flex-1 hidden md:block" />
+                </motion.div>
+              )
+            })}
           </div>
         </div>
       </motion.section>
@@ -854,7 +887,7 @@ export default function Home() {
               className="inline-flex items-center gap-2 bg-blue-500/20 backdrop-blur-sm px-4 py-1.5 rounded-full text-xs font-medium mb-6 border border-blue-400/30 text-blue-200"
             >
               <Star className="w-3.5 h-3.5 text-white fill-white" />
-              <span>Join 18,500+ Successful Applicants</span>
+              <span>{t('hero.trustedBy', { count: '18,500+' })}</span>
             </motion.div>
 
             <motion.h2 
@@ -864,7 +897,7 @@ export default function Home() {
               transition={{ delay: 0.3, duration: 0.5 }}
               className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight"
             >
-              Start Your Journey Today
+              {t('home.startJourney')}
             </motion.h2>
             
             <motion.p 
@@ -874,7 +907,7 @@ export default function Home() {
               transition={{ delay: 0.4, duration: 0.5 }}
               className="text-slate-300 text-lg md:text-xl mb-8 max-w-2xl mx-auto font-light leading-relaxed"
             >
-              Use our free assessment to check your eligibility or get personalized guidance for a smooth transition.
+              {t('home.startJourneyDesc')}
             </motion.p>
 
             {/* Trust Indicators */}
@@ -895,7 +928,7 @@ export default function Home() {
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-blue-400" />
-                <span>96% Success Rate</span>
+                <span>{SITE_STATS.successRate} Success Rate</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-blue-400" />
@@ -923,7 +956,7 @@ export default function Home() {
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <Rocket className="w-5 h-5 text-white relative z-10 group-hover:translate-y-[-2px] transition-transform" />
-                <span className="relative z-10">Start Free Assessment</span>
+                <span className="relative z-10">{t('hero.cta')}</span>
                 <ArrowRight className="w-4 h-4 text-white relative z-10 transition-transform group-hover:translate-x-1" />
               </motion.button>
               
@@ -936,7 +969,7 @@ export default function Home() {
                   href="/pricing" 
                   className="group bg-white/10 hover:bg-white/20 backdrop-blur-md text-white px-10 py-4 rounded-xl font-semibold transition-all border border-white/20 hover:border-white/30 inline-flex items-center justify-center gap-2"
                 >
-                  View Pricing Plans
+                  {t('hero.ctaSecondary')}
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </motion.div>
