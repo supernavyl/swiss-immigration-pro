@@ -1,16 +1,17 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { useState, useEffect, useRef } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import {
   ArrowRight, CheckCircle, Shield, Users, Clock,
-  TrendingUp, Zap, Rocket, Mail,
+  TrendingUp, Zap, Rocket, Mail, ChevronDown,
 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useT } from '@/lib/i18n/useTranslation'
 import { SITE_STATS } from '@/lib/pricing'
 import { api } from '@/lib/api'
+import { cn } from '@/lib/utils/cn'
 
 interface StatItem {
   value: string
@@ -22,11 +23,15 @@ function openQuiz() {
   win.openInitialQuiz?.()
 }
 
+const STAGGER = 0.12
+const EASE = [0.25, 0.1, 0.25, 1] as const
+
 export default function HeroSection() {
   const { t } = useT()
+  const sectionRef = useRef<HTMLElement>(null)
   const [stats, setStats] = useState<StatItem[]>([
-    { value: SITE_STATS.totalUsers, label: t('stats.successfulApps') },
     { value: SITE_STATS.successRate, label: t('stats.successRate') },
+    { value: SITE_STATS.totalUsers, label: t('stats.successfulApps') },
     { value: SITE_STATS.avgProcessingWeeks, label: t('stats.avgProcessing') },
     { value: '24/7', label: t('stats.aiSupport') },
   ])
@@ -34,6 +39,13 @@ export default function HeroSection() {
   const [heroEmail, setHeroEmail] = useState('')
   const [heroEmailSubmitted, setHeroEmailSubmitted] = useState(false)
   const [heroEmailLoading, setHeroEmailLoading] = useState(false)
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  })
+  const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '20%'])
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
 
   useEffect(() => {
     setMounted(true)
@@ -61,184 +73,214 @@ export default function HeroSection() {
     setHeroEmailLoading(true)
     try {
       await api.post('/api/email-capture', { email: heroEmail, source: 'hero' })
-    } catch {}
+    } catch { /* silent */ }
     setHeroEmailSubmitted(true)
     setHeroEmailLoading(false)
   }
 
+  const statIcons = [TrendingUp, Users, Clock, Zap]
+
   return (
     <motion.section
-      className="relative overflow-hidden min-h-screen h-screen flex items-center"
+      ref={sectionRef}
+      className="relative overflow-hidden min-h-screen flex flex-col"
       suppressHydrationWarning
     >
+      {/* ── Background: Image + single overlay ── */}
       <div className="absolute inset-0 z-0">
-        <motion.div
-          className="absolute inset-0"
-          initial={{ scale: 1.1 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 1.5, ease: 'easeOut' }}
-        >
+        <motion.div className="absolute inset-0" style={{ y: bgY }}>
           <Image
             src="/images/environment/zurich-city.jpg"
-            alt="Zurich city - Your path to Switzerland"
+            alt="Zurich cityscape"
             fill
-            className="object-cover"
+            className="object-cover object-center scale-110"
             priority
-            quality={95}
+            quality={90}
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-black/20" />
         </motion.div>
-
-        {/* Subtle background video overlay */}
-        <div className="absolute inset-0 opacity-15 pointer-events-none">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full h-full object-cover"
-            src="/images/videos/swiss-family-success.mp4"
-          />
-        </div>
-
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/95 via-blue-900/85 to-indigo-900/90" />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-900/80 via-transparent to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
-
-        <motion.div
-          className="absolute inset-0"
-          animate={{
-            background: [
-              'radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.25) 0%, transparent 50%)',
-              'radial-gradient(circle at 80% 50%, rgba(99, 102, 241, 0.25) 0%, transparent 50%)',
-              'radial-gradient(circle at 50% 20%, rgba(139, 92, 246, 0.25) 0%, transparent 50%)',
-              'radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.25) 0%, transparent 50%)',
-            ],
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-        />
-
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-600/15 via-transparent to-transparent" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-indigo-600/10 via-transparent to-transparent" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_30%,_rgba(0,0,0,0.3)_100%)]" />
+        {/* Single refined overlay — dark left, fading right to reveal city */}
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/92 to-slate-900/75" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-slate-950/30" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full" suppressHydrationWarning>
-        <div className="grid lg:grid-cols-2 gap-12 items-center" suppressHydrationWarning>
-          <motion.div
-            initial={false}
-            animate={mounted ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="text-white"
-          >
+      {/* ── Swiss red accent — top edge ── */}
+      <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-red-600 via-red-500 to-transparent z-20" />
+
+      {/* ── Main content ── */}
+      <motion.div
+        className="relative z-10 flex-1 flex items-center"
+        style={{ opacity: contentOpacity }}
+      >
+        <div className="w-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-32 lg:py-0">
+          <div className="max-w-3xl">
+
+            {/* Badge */}
             <motion.div
-              initial={false}
-              animate={mounted ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.2, duration: 0.6 }}
-              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-medium mb-6 border border-white/10 text-blue-100"
+              initial={{ opacity: 0, x: -20 }}
+              animate={mounted ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.6, ease: EASE }}
+              className="flex items-center gap-3 mb-8"
             >
-              <Shield className="w-3.5 h-3.5 text-white" />
-              <span>#1 Swiss Immigration Platform</span>
+              {/* Swiss cross mark */}
+              <span className="inline-flex items-center justify-center w-6 h-6 bg-red-600 rounded-sm">
+                <svg viewBox="0 0 16 16" className="w-3.5 h-3.5" fill="white">
+                  <rect x="3" y="6.5" width="10" height="3" rx="0.5" />
+                  <rect x="6.5" y="3" width="3" height="10" rx="0.5" />
+                </svg>
+              </span>
+              <span className="text-sm font-medium tracking-wide text-white/70 uppercase">
+                #1 Swiss Immigration Platform
+              </span>
             </motion.div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight tracking-tight">
+            {/* Heading */}
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={mounted ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: STAGGER, ease: EASE }}
+              className="text-[clamp(2.5rem,6vw,4.5rem)] font-bold leading-[1.05] tracking-tight text-white mb-6"
+            >
               {t('hero.title')}
-            </h1>
+            </motion.h1>
 
-            <p className="text-lg text-slate-200 mb-8 leading-relaxed max-w-xl font-light">
+            {/* Red accent rule */}
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={mounted ? { scaleX: 1 } : {}}
+              transition={{ duration: 0.8, delay: STAGGER * 2, ease: EASE }}
+              className="origin-left w-16 h-[3px] bg-red-500 rounded-full mb-6"
+            />
+
+            {/* Subtitle */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={mounted ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: STAGGER * 3, ease: EASE }}
+              className="text-lg sm:text-xl text-slate-300 leading-relaxed max-w-xl mb-10 font-light"
+            >
               {t('hero.subtitle', { count: '18,500+' })}
-            </p>
+            </motion.p>
 
-            <div className="flex flex-col sm:flex-row gap-4 mb-8">
-              <motion.button
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+            {/* CTAs */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={mounted ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: STAGGER * 4, ease: EASE }}
+              className="flex flex-col sm:flex-row gap-3 mb-8"
+            >
+              <button
                 onClick={openQuiz}
-                className="group inline-flex items-center justify-center gap-2 bg-white text-slate-900 font-semibold px-8 py-3.5 rounded-lg transition-all hover:bg-blue-50 shadow-lg hover:shadow-xl"
+                className="group relative inline-flex items-center justify-center gap-2.5 bg-white text-slate-900 font-semibold px-7 py-3.5 rounded-lg overflow-hidden transition-all hover:shadow-[0_0_30px_rgba(255,255,255,0.15)]"
               >
-                <Rocket className="w-4 h-4 text-blue-600" />
-                {t('hero.cta')}
-                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1 text-blue-600" />
-              </motion.button>
+                <span className="absolute inset-0 bg-gradient-to-r from-red-50 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <Rocket className="relative w-4 h-4 text-red-600" />
+                <span className="relative">{t('hero.cta')}</span>
+                <ArrowRight className="relative w-4 h-4 transition-transform group-hover:translate-x-1 text-red-600" />
+              </button>
               <Link
                 href="/pricing"
-                className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white font-medium px-8 py-3.5 rounded-lg transition-all border border-white/20"
+                className="inline-flex items-center justify-center gap-2 text-white/90 font-medium px-7 py-3.5 rounded-lg transition-all border border-white/15 hover:border-white/30 hover:bg-white/5"
               >
                 {t('hero.ctaSecondary')}
               </Link>
-            </div>
+            </motion.div>
 
-            <div className="mb-12">
+            {/* Email capture */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={mounted ? { opacity: 1 } : {}}
+              transition={{ duration: 0.6, delay: STAGGER * 5, ease: EASE }}
+              className="mb-12"
+            >
               {heroEmailSubmitted ? (
                 <motion.div
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center gap-2 text-green-300 text-sm font-medium"
+                  className="flex items-center gap-2 text-emerald-400 text-sm font-medium"
                 >
                   <CheckCircle className="w-4 h-4" />
                   Free guide sent! Check your inbox.
                 </motion.div>
               ) : (
-                <form onSubmit={handleHeroEmail} className="flex flex-col sm:flex-row gap-2 max-w-sm">
+                <form onSubmit={handleHeroEmail} className="flex flex-col sm:flex-row gap-2 max-w-md">
                   <div className="relative flex-1">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
                     <input
                       type="email"
                       value={heroEmail}
                       onChange={(e) => setHeroEmail(e.target.value)}
                       placeholder="your@email.com"
-                      className="w-full bg-white/10 backdrop-blur-sm border border-white/20 text-white placeholder-white/40 rounded-lg pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-white/30"
+                      className="w-full bg-white/[0.06] border border-white/10 text-white placeholder-white/30 rounded-lg pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:border-white/25 focus:bg-white/[0.08] transition-colors"
                       required
                     />
                   </div>
                   <button
                     type="submit"
                     disabled={heroEmailLoading}
-                    className="bg-blue-500 hover:bg-blue-400 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition-colors whitespace-nowrap disabled:opacity-60"
+                    className="bg-red-600 hover:bg-red-500 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors whitespace-nowrap disabled:opacity-60"
                   >
                     Get Free Guide
                   </button>
                 </form>
               )}
-              <p className="text-white/40 text-[11px] mt-1.5">No spam. Unsubscribe anytime.</p>
-            </div>
-          </motion.div>
+              <p className="text-white/30 text-xs mt-2 tracking-wide">No spam. Unsubscribe anytime.</p>
+            </motion.div>
 
-          <div className="hidden lg:grid grid-cols-2 gap-4">
-            {stats.map((stat, idx) => {
-              const icons = [TrendingUp, Zap, Users, Clock]
-              const Icon = icons[idx] || TrendingUp
-              return (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  transition={{
-                    delay: 0.4 + idx * 0.1,
-                    duration: 0.6,
-                    type: 'spring',
-                    stiffness: 100,
-                  }}
-                  whileHover={{
-                    scale: 1.05,
-                    y: -5,
-                    transition: { duration: 0.2 },
-                  }}
-                  className="bg-white/5 backdrop-blur-md rounded-2xl p-5 border border-white/10 hover:bg-white/10 transition-all duration-300"
-                >
-                  <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center mb-3">
-                    <Icon className="w-5 h-5 text-white" />
+            {/* ── Stats strip — editorial/institutional style ── */}
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={mounted ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: STAGGER * 6, ease: EASE }}
+              className="flex flex-wrap gap-y-4"
+            >
+              {stats.map((stat, idx) => {
+                const Icon = statIcons[idx] || TrendingUp
+                return (
+                  <div key={idx} className="flex items-center">
+                    <div className="flex items-center gap-3 px-1 sm:px-3">
+                      <div className="hidden sm:flex w-8 h-8 items-center justify-center rounded-md bg-white/[0.06]">
+                        <Icon className="w-3.5 h-3.5 text-red-400" />
+                      </div>
+                      <div>
+                        <div className="text-lg sm:text-xl font-bold text-white tracking-tight leading-none">
+                          {stat.value}
+                        </div>
+                        <div className="text-[11px] sm:text-xs text-white/40 mt-0.5 tracking-wide">
+                          {stat.label}
+                        </div>
+                      </div>
+                    </div>
+                    {idx < stats.length - 1 && (
+                      <div className="w-px h-8 bg-white/10 mx-2 sm:mx-4" />
+                    )}
                   </div>
-                  <div className="text-xl font-bold text-white mb-0.5">{stat.value}</div>
-                  <div className="text-slate-300 text-xs">{stat.label}</div>
-                </motion.div>
-              )
-            })}
+                )
+              })}
+            </motion.div>
           </div>
         </div>
-      </div>
+      </motion.div>
+
+      {/* ── Scroll indicator ── */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={mounted ? { opacity: 1 } : {}}
+        transition={{ delay: 1.5, duration: 0.8 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
+      >
+        <motion.div
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          className="flex flex-col items-center gap-1"
+        >
+          <span className="text-[10px] uppercase tracking-[0.2em] text-white/25 font-medium">Scroll</span>
+          <ChevronDown className="w-4 h-4 text-white/25" />
+        </motion.div>
+      </motion.div>
+
+      {/* ── Bottom fade to next section ── */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-slate-50 dark:from-gray-950 to-transparent z-10 pointer-events-none" />
     </motion.section>
   )
 }
