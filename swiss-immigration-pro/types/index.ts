@@ -87,8 +87,3 @@ export interface Subscription {
   current_period_end?: string
 }
 
-// Export CV types
-export * from './cv'
-
-// Export Resume types
-export * from './resume'
