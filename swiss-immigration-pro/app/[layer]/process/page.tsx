@@ -108,7 +108,7 @@ export default function ProcessPage({ params }: PageProps) {
                         height={400}
                         onError={(e) => {
                           const target = e.target as HTMLImageElement
-                          target.src = '/images/environment/mountains-2982087_1280.jpg'
+                          target.src = '/images/environment/swiss-alps-panorama.jpg'
                         }}
                       />
                     </div>
@@ -124,7 +124,7 @@ export default function ProcessPage({ params }: PageProps) {
                         height={400}
                         onError={(e) => {
                           const target = e.target as HTMLImageElement
-                          target.src = '/images/environment/mountains-2982087_1280.jpg'
+                          target.src = '/images/environment/swiss-alps-panorama.jpg'
                         }}
                       />
                     </div>
@@ -140,7 +140,7 @@ export default function ProcessPage({ params }: PageProps) {
                         height={400}
                         onError={(e) => {
                           const target = e.target as HTMLImageElement
-                          target.src = '/images/environment/mountains-2982087_1280.jpg'
+                          target.src = '/images/environment/swiss-alps-panorama.jpg'
                         }}
                       />
                     </div>

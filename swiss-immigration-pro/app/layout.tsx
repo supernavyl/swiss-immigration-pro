@@ -192,7 +192,7 @@ export default function RootLayout({
               "description": "AI-Powered Swiss immigration platform with expert guidance. Success rate: 87%. Join 18,500+ successful applicants.",
               "url": process.env.NEXT_PUBLIC_SITE_URL || "https://swissimmigrationpro.com",
               "logo": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://swissimmigrationpro.com'}/images/logo.png`,
-              "image": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://swissimmigrationpro.com'}/images/og-image.jpg`,
+              "image": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://swissimmigrationpro.com'}/og-image.jpg`,
               "priceRange": "CHF 29 - CHF 199",
               "aggregateRating": {
                 "@type": "AggregateRating",

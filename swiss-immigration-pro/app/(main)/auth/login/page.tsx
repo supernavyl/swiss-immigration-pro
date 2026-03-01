@@ -61,8 +61,8 @@ export default function LoginPage() {
       } else {
         throw new Error('Login failed without specific error')
       }
-    } catch (err: any) {
-      setError(err.message || 'Invalid email or password')
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Invalid email or password')
     } finally {
       setLoading(false)
     }

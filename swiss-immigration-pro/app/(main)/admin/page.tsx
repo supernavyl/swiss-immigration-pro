@@ -20,13 +20,16 @@ import UserUpgradeModal from '@/components/admin/UserUpgradeModal'
 import AdminHeader from '@/components/layout/AdminHeader'
 import { useToast } from '@/components/providers/ToastProvider'
 
-interface User {
+interface AdminUser {
   id: string
   email: string
-  full_name: string
+  full_name: string | null
   pack_id: string
-  pack_expires_at: string | null
   is_admin: boolean
+}
+
+interface User extends AdminUser {
+  pack_expires_at: string | null
   created_at: string
   subscription_count: number
   payment_count: number
@@ -40,11 +43,38 @@ interface PackStats {
   expired_count: number
 }
 
+interface AdminAnalytics {
+  revenueByMonth?: Array<{ month: string; revenue: number }>
+  userGrowth?: Array<{ month: string; users: number }>
+  revenueByPack?: Array<{ packId: string; revenue: number }>
+  dailyActiveUsers?: Array<{ date: string; users: number }>
+  topUsers?: Array<{ id: string; fullName?: string; email: string; messageCount: number; totalSpent: number }>
+  moduleStats?: Array<{ moduleId: string; totalUsers: number; completedUsers: number; avgProgress: number }>
+}
+
+interface AdminPayment {
+  id: string
+  created_at: string
+  user_email?: string
+  pack_id?: string
+  amount: number
+  status: string
+  stripe_payment_id?: string
+}
+
+interface ActivityLog {
+  type: string
+  action: string
+  description?: string
+  user_email?: string
+  created_at: string
+}
+
 export default function AdminDashboard() {
   const router = useRouter()
   const { showToast } = useToast()
   const { data: session, status } = useSession()
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<AdminUser | null>(null)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'stats' | 'content' | 'payments' | 'tools' | 'activity'>('overview')
   const [searchQuery, setSearchQuery] = useState('')
@@ -64,12 +94,12 @@ export default function AdminDashboard() {
   const [packStats, setPackStats] = useState<PackStats[]>([])
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [upgradeUser, setUpgradeUser] = useState<User | null>(null)
-  const [analytics, setAnalytics] = useState<any>(null)
+  const [analytics, setAnalytics] = useState<AdminAnalytics | null>(null)
   const [sortBy, setSortBy] = useState<'name' | 'email' | 'pack' | 'spent' | 'date'>('date')
   const [filterPack, setFilterPack] = useState<string>('all')
   const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set())
-  const [payments, setPayments] = useState<any[]>([])
-  const [activityLogs, setActivityLogs] = useState<any[]>([])
+  const [payments, setPayments] = useState<AdminPayment[]>([])
+  const [activityLogs, setActivityLogs] = useState<ActivityLog[]>([])
   const [emailModal, setEmailModal] = useState(false)
   const [emailRecipients, setEmailRecipients] = useState<string[]>([])
   const [emailSubject, setEmailSubject] = useState('')
@@ -93,7 +123,7 @@ export default function AdminDashboard() {
     const userData = {
       id: session.user.id,
       email: session.user.email,
-      full_name: session.user.name,
+      full_name: session.user.name ?? null,
       pack_id: session.user.packId || 'free',
       is_admin: session.user.isAdmin || false,
     }
@@ -894,7 +924,7 @@ export default function AdminDashboard() {
                       fill="#8884d8"
                       dataKey="revenue"
                     >
-                      {analytics.revenueByPack.map((entry: any, index: number) => {
+                      {analytics.revenueByPack.map((_entry, index: number) => {
                         const colors = ['#8b5cf6', '#3b82f6', '#10b981', '#f59e0b']
                         return <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
                       })}
@@ -955,7 +985,7 @@ export default function AdminDashboard() {
                   <span>Top Active Users</span>
                 </h3>
                 <div className="space-y-3">
-                  {analytics.topUsers.slice(0, 10).map((user: any, idx: number) => (
+                  {analytics.topUsers.slice(0, 10).map((user, idx: number) => (
                     <div
                       key={user.id}
                       className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
@@ -1011,7 +1041,7 @@ export default function AdminDashboard() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                      {analytics.moduleStats.map((module: any) => {
+                      {analytics.moduleStats.map((module) => {
                         const completionRate = module.totalUsers > 0 
                           ? Math.round((module.completedUsers / module.totalUsers) * 100) 
                           : 0

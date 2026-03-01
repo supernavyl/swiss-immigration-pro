@@ -3,11 +3,14 @@
 import { motion } from 'framer-motion'
 import { CheckCircle, Clock, MapPin, TrendingUp, Users, Award, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 import MainHeader from '@/components/layout/MainHeader'
+import VisualTimeline from '@/components/ui/VisualTimeline'
 
 const caseStudies = [
   {
     id: 1,
+    photo: '/images/avatars/priya-k.jpg',
     name: 'Rajesh K.',
     role: 'Senior Software Engineer',
     origin: 'India',
@@ -67,6 +70,7 @@ const caseStudies = [
   },
   {
     id: 2,
+    photo: '/images/avatars/sarah-m.jpg',
     name: 'Maria S.',
     role: 'Pharmaceutical Research Scientist',
     origin: 'Brazil',
@@ -129,6 +133,7 @@ const caseStudies = [
   },
   {
     id: 3,
+    photo: '/images/avatars/james-l.jpg',
     name: 'James T.',
     role: 'Investment Banking Director',
     origin: 'United States',
@@ -195,6 +200,7 @@ const caseStudies = [
   },
   {
     id: 4,
+    photo: '/images/avatars/sophie-mueller.jpg',
     name: 'Sophie L.',
     role: 'Marketing Director',
     origin: 'France',
@@ -257,6 +263,7 @@ const caseStudies = [
   },
   {
     id: 5,
+    photo: '/images/avatars/daniel-t.jpg',
     name: 'Chen W.',
     role: 'Data Scientist',
     origin: 'China',
@@ -359,8 +366,8 @@ export default function CaseStudiesPage() {
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-2xl font-bold">
-                        {study.id}
+                      <div className="relative w-12 h-12 rounded-full overflow-hidden ring-2 ring-white/40 shrink-0">
+                        <Image src={study.photo} alt={study.name} fill className="object-cover" sizes="48px" />
                       </div>
                       <div>
                         <h2 className="text-2xl font-bold">{study.name}</h2>
@@ -451,16 +458,7 @@ export default function CaseStudiesPage() {
                     <Clock className="w-5 h-5 text-blue-600" />
                     Timeline
                   </h3>
-                  <div className="space-y-3">
-                    {study.timeline.map((item, i) => (
-                      <div key={i} className="flex gap-4">
-                        <div className="flex-shrink-0 w-24 text-sm font-medium text-gray-600">
-                          {item.month}
-                        </div>
-                        <div className="flex-1 text-gray-700">{item.action}</div>
-                      </div>
-                    ))}
-                  </div>
+                  <VisualTimeline steps={study.timeline} />
                 </section>
 
                 {/* Outcome */}

@@ -118,8 +118,8 @@ export default function AdminNewsletter() {
           setSendResults(null)
         }, 5000)
       }
-    } catch (error: any) {
-      setSendResults({ success: false, error: error.message })
+    } catch (error: unknown) {
+      setSendResults({ success: false, error: error instanceof Error ? error.message : 'Failed to send' })
     } finally {
       setSending(false)
     }

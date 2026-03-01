@@ -1,47 +1,8 @@
 // Comprehensive Content for Each Pricing Pack
+// NOTE: Enhanced module content is lazy-loaded via enhanced-module-loader.ts
+// to keep it out of the client JS bundle (~710KB savings).
 
-import { ADVANCED_MODULE_CONTENT } from './modules/advanced-modules'
-import { ADV_MODULES_3_TO_9 } from './modules/adv-03-to-09'
-import { ADV_MODULES_7_TO_9 as ADV_MODULES_7_TO_9_CONTENT } from './modules/adv-07-to-09'
-import { workPermitsEnhancedModule } from './enhanced-modules/work-permits-enhanced'
-import { 
-  freeModule01Enhanced, 
-  freeModule02Enhanced, 
-  freeModule03Enhanced 
-} from './enhanced-modules/free-modules'
-import { 
-  imm01Enhanced,
-  imm02Enhanced
-} from './enhanced-modules/non-free-enhanced-modules'
-// Import all individual enhanced module files
-import { imm01Enhanced as imm01EnhancedNew } from './enhanced-modules/imm-01-enhanced'
-import { imm02Enhanced as imm02EnhancedNew } from './enhanced-modules/imm-02-enhanced'
-import { imm03Enhanced } from './enhanced-modules/imm-03-enhanced'
-import { imm04Enhanced } from './enhanced-modules/imm-04-enhanced'
-import { imm05Enhanced } from './enhanced-modules/imm-05-enhanced'
-import { imm06Enhanced } from './enhanced-modules/imm-06-enhanced'
-import { imm07Enhanced } from './enhanced-modules/imm-07-enhanced'
-import { imm08Enhanced } from './enhanced-modules/imm-08-enhanced'
-import { adv01Enhanced } from './enhanced-modules/adv-01-enhanced'
-import { adv02Enhanced } from './enhanced-modules/adv-02-enhanced'
-import { adv03Enhanced } from './enhanced-modules/adv-03-enhanced'
-import { adv04Enhanced } from './enhanced-modules/adv-04-enhanced'
-import { adv05Enhanced } from './enhanced-modules/adv-05-enhanced'
-import { adv06Enhanced } from './enhanced-modules/adv-06-enhanced'
-import { adv07Enhanced } from './enhanced-modules/adv-07-enhanced'
-import { adv08Enhanced } from './enhanced-modules/adv-08-enhanced'
-import { adv09Enhanced } from './enhanced-modules/adv-09-enhanced'
-import { adv10Enhanced } from './enhanced-modules/adv-10-enhanced'
-import { cit01Enhanced } from './enhanced-modules/cit-01-enhanced'
-import { cit02Enhanced } from './enhanced-modules/cit-02-enhanced'
-import { cit03Enhanced } from './enhanced-modules/cit-03-enhanced'
-import { cit04Enhanced } from './enhanced-modules/cit-04-enhanced'
-import { cit05Enhanced } from './enhanced-modules/cit-05-enhanced'
-import { cit06Enhanced } from './enhanced-modules/cit-06-enhanced'
-import { cit07Enhanced } from './enhanced-modules/cit-07-enhanced'
-import { cit08Enhanced } from './enhanced-modules/cit-08-enhanced'
-import { cit09Enhanced } from './enhanced-modules/cit-09-enhanced'
-import { cit10Enhanced } from './enhanced-modules/cit-10-enhanced'
+import type { EnhancedModule } from './enhanced-modules/non-free-enhanced-modules'
 
 export interface PackContent {
   packId: string
@@ -72,7 +33,7 @@ export interface Module {
     title: string
     description: string
   }>
-  enhancedModule?: any // For enhanced modules with interactive components
+  enhancedModule?: EnhancedModule
 }
 
 export interface Resource {
@@ -98,13 +59,13 @@ export const PACK_CONTENT: Record<string, PackContent> = {
     modules: [
       {
         id: 'free-01',
-        title: freeModule01Enhanced.title,
-        description: freeModule01Enhanced.description,
+        title: 'Complete Guide to the Swiss Immigration System',
+        description: 'A comprehensive and authoritative introduction to Switzerland\'s immigration framework. This guide covers the complete legal foundations, all residence permit categories, entry requirements, and practical pathways for foreign nationals seeking to establish residence and employment in Switzerland.',
         type: 'interactive',
-        duration: freeModule01Enhanced.estimatedReadTime,
+        duration: '75-90 minutes',
         order: 1,
         completed: false,
-        enhancedModule: freeModule01Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'What is the main distinction in Switzerland\'s immigration system?', options: ['Age-based track', 'Dual-track (EU/EFTA vs Third-Country)', 'Income-based track', 'Language-based track'], correct: 1 },
@@ -120,13 +81,13 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'free-02',
-        title: freeModule02Enhanced.title,
-        description: freeModule02Enhanced.description,
+        title: 'Application Process: Documentation and Timelines',
+        description: 'A detailed procedural guide covering all documentation requirements, realistic processing timelines, common application pitfalls, and proven strategies for successful residence permit applications in Switzerland.',
         type: 'interactive',
-        duration: freeModule02Enhanced.estimatedReadTime,
+        duration: '60-70 minutes',
         order: 2,
         completed: false,
-        enhancedModule: freeModule02Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'How long must your passport be valid beyond the permit period?', options: ['3 months', '6 months', '12 months', '15 months'], correct: 3 },
@@ -142,13 +103,13 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'free-03',
-        title: freeModule03Enhanced.title,
-        description: freeModule03Enhanced.description,
+        title: 'Integration Requirements and Swiss Society',
+        description: 'Understanding integration as both a legal requirement and practical necessity in Switzerland. This module covers language proficiency standards, economic participation requirements, and practical guidance for successfully establishing yourself within Swiss society.',
         type: 'interactive',
-        duration: freeModule03Enhanced.estimatedReadTime,
+        duration: '50-60 minutes',
         order: 3,
         completed: false,
-        enhancedModule: freeModule03Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'What is the annual quota for non-EU/EFTA work permits?', options: ['4,000', '6,500', '8,500', '12,000'], correct: 2 },
@@ -176,12 +137,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
     modules: [
       {
         id: 'imm-01',
-        title: imm01Enhanced.title,
-        description: imm01Enhanced.description,
+        title: 'Swiss CV Template and Formatting',
+        description: 'Master the Swiss CV format with comprehensive templates, formatting guidelines, cultural insights, and proven strategies. Learn exactly how Swiss employers evaluate CVs, what information to include, what to exclude, and how to optimize your CV for maximum impact in the Swiss job market.',
         type: 'interactive',
-        duration: imm01Enhanced.estimatedReadTime,
+        duration: '85-110 minutes',
         order: 1,
-        enhancedModule: imm01Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'What is the maximum duration of an L Permit?', options: ['6 months', '12 months', '24 months', '5 years'], correct: 1 },
@@ -199,12 +160,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'imm-02',
-        title: imm02EnhancedNew.title,
-        description: imm02EnhancedNew.description,
+        title: 'Swiss Cover Letter Mastery',
+        description: 'Master the art of writing compelling Swiss cover letters (Bewerbungsschreiben) that get results. Learn Swiss professional communication standards, cultural nuances, legal compliance requirements, and proven frameworks that increase application success rates by 3x in the competitive Swiss job market.',
         type: 'interactive',
-        duration: imm02EnhancedNew.estimatedReadTime,
+        duration: '90-120 minutes',
         order: 2,
-        enhancedModule: imm02EnhancedNew,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             {
@@ -238,12 +199,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'imm-03',
-        title: imm03Enhanced.title,
-        description: imm03Enhanced.description,
+        title: 'Swiss CV Templates and Interactive Builder',
+        description: 'Access comprehensive Swiss CV templates for every career level and industry. Includes ready-to-use formats with real example content, Swiss vs. international format comparison, ATS optimization checklist, and sector-specific templates for tech, finance, pharma, and consulting.',
         type: 'interactive',
-        duration: imm03Enhanced.estimatedReadTime,
+        duration: '75-95 minutes',
         order: 3,
-        enhancedModule: imm03Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'What is the standard length for a Swiss CV?', options: ['1 page', '2 pages', '3-5 pages', 'No limit'], correct: 1 },
@@ -260,12 +221,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'imm-04',
-        title: imm04Enhanced.title,
-        description: imm04Enhanced.description,
+        title: 'Swiss Salary Benchmarks and Negotiation',
+        description: 'Comprehensive salary analysis across all industries, cantons, and experience levels. Master salary negotiation strategies, understand total compensation packages, and maximize your earning potential in the Swiss job market with data-driven insights and proven negotiation frameworks based on official SECO data.',
         type: 'interactive',
-        duration: imm04Enhanced.estimatedReadTime,
+        duration: '90-120 minutes',
         order: 4,
-        enhancedModule: imm04Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'What is the approximate median annual salary in Switzerland?', options: ['CHF 50,000', 'CHF 65,000', 'CHF 80,000', 'CHF 120,000'], correct: 2 },
@@ -282,12 +243,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'imm-05',
-        title: imm05Enhanced.title,
-        description: imm05Enhanced.description,
+        title: 'Embassy Submission Guide',
+        description: 'Master the embassy submission process with comprehensive checklists, document preparation guides, appointment scheduling strategies, and step-by-step procedures for successful permit collection at Swiss embassies and consulates worldwide. Includes legal requirements, common issues resolution, and embassy-specific procedures.',
         type: 'interactive',
-        duration: imm05Enhanced.estimatedReadTime,
+        duration: '75-90 minutes',
         order: 5,
-        enhancedModule: imm05Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'Where do you collect your Swiss residence permit after approval?', options: ['At the cantonal office', 'At the Swiss embassy/consulate in your home country', 'It is mailed to you', 'At the airport on arrival'], correct: 1 },
@@ -303,12 +264,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'imm-06',
-        title: imm06Enhanced.title,
-        description: imm06Enhanced.description,
+        title: 'Finding Work in Switzerland',
+        description: 'Master the Swiss job market with proven strategies, official platforms, networking approaches, and employer outreach. Covers job-room.ch, LinkedIn, recruitment agencies, Swiss business etiquette, application timing, and what employers look for.',
         type: 'interactive',
-        duration: imm06Enhanced.estimatedReadTime,
+        duration: '60-80 minutes',
         order: 6,
-        enhancedModule: imm06Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'What is the official Swiss job portal run by SECO and the RAVs?', options: ['LinkedIn', 'jobs.ch', 'job-room.ch', 'Indeed Switzerland'], correct: 2 },
@@ -325,12 +286,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'imm-07',
-        title: imm07Enhanced.title,
-        description: imm07Enhanced.description,
+        title: 'Health Insurance and Your First 30 Days',
+        description: 'Everything you need to know when you first arrive in Switzerland: mandatory registration within 14 days, Swiss health insurance (KVG) within 3 months, opening a bank account, transport and mobile setup, finding housing, and essential services like AHV and integration resources.',
         type: 'interactive',
-        duration: imm07Enhanced.estimatedReadTime,
+        duration: '50-70 minutes',
         order: 7,
-        enhancedModule: imm07Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'Within how many days must you register at the commune (Einwohnerkontrolle) after moving in?', options: ['7 days', '14 days', '30 days', '90 days'], correct: 1 },
@@ -348,12 +309,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'imm-08',
-        title: imm08Enhanced.title,
-        description: imm08Enhanced.description,
+        title: 'Understanding Swiss Workplace Culture',
+        description: 'Navigate Swiss professional norms, expectations, communication style, and etiquette. Learn work-life balance expectations, regional differences, employment law essentials, and how to avoid common mistakes so you can integrate successfully into the Swiss workplace.',
         type: 'interactive',
-        duration: imm08Enhanced.estimatedReadTime,
+        duration: '45-60 minutes',
         order: 8,
-        enhancedModule: imm08Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'How early should you arrive for a meeting in Switzerland?', options: ['Right on time', '5 minutes early', '15 minutes early', 'It does not matter'], correct: 1 },
@@ -387,12 +348,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
     modules: [
       {
         id: 'adv-01',
-        title: adv01Enhanced.title,
-        description: adv01Enhanced.description,
+        title: 'Beat the Non-EU Quota System',
+        description: 'Master strategic approaches to navigate Switzerland\'s strict annual quota system for non-EU/EFTA nationals. Learn quota management strategies, timing optimization, exception categories, and proven methods to maximize your chances within the competitive 8,500 annual permit allocation. Includes detailed analysis of quota exhaustion patterns, cantonal distribution, and industry-specific strategies.',
         type: 'interactive',
-        duration: adv01Enhanced.estimatedReadTime,
+        duration: '100-130 minutes',
         order: 1,
-        enhancedModule: adv01Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'What is the total annual quota for non-EU/EFTA work permits?', options: ['4,000', '6,000', '8,500', '12,000'], correct: 2 },
@@ -409,12 +370,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'adv-02',
-        title: adv02Enhanced.title,
-        description: adv02Enhanced.description,
+        title: 'Employer Motivation Letters',
+        description: 'Master employer motivation letters for Swiss work permit applications with full letter templates for tech, finance, pharma, and consulting sectors, before/after weak-to-strong examples, mandatory legal content checklist, canton-specific preference guide, and common rejection pitfalls. Based on LEI Art. 23, OASA Art. 15-22, and SEM application requirements.',
         type: 'interactive',
-        duration: adv02Enhanced.estimatedReadTime,
+        duration: '85-110 minutes',
         order: 2,
-        enhancedModule: adv02Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'What must an employer motivation letter explicitly demonstrate?', options: ['Company profits', 'Why specifically this foreign worker is needed', 'Number of employees', 'Office location'], correct: 1 },
@@ -430,12 +391,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'adv-03',
-        title: adv03Enhanced.title,
-        description: adv03Enhanced.description,
+        title: 'Cantonal Immigration Variations',
+        description: 'Master cantonal variations in Swiss immigration processing. Comprehensive analysis of all 26 cantons, their success rates, requirements, processing times, and strategic selection criteria. Learn how choosing the right canton can multiply your approval chances 2-3x. Includes industry alignment, language requirements, salary thresholds, and quota availability by canton.',
         type: 'interactive',
-        duration: adv03Enhanced.estimatedReadTime,
+        duration: '110-140 minutes',
         order: 3,
-        enhancedModule: adv03Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             {
@@ -465,12 +426,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'adv-04',
-        title: adv04Enhanced.title,
-        description: adv04Enhanced.description,
+        title: 'Swiss Tax and Financial Planning',
+        description: 'Master Swiss tax system, optimize your financial planning, and maximize wealth building in Switzerland. Comprehensive guide to federal and cantonal taxes, Pillar 2 and 3a pension optimization, investment strategies, and financial planning frameworks. Includes full 2025 tax tables, cantonal comparisons, and Pillar 3a/2 optimization calculators.',
         type: 'interactive',
-        duration: adv04Enhanced.estimatedReadTime,
+        duration: '95-120 minutes',
         order: 4,
-        enhancedModule: adv04Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'What is Switzerland\'s federal tax rate for high earners?', options: ['About 11.5%', 'About 25%', 'About 40%', 'There is no federal tax'], correct: 0 },
@@ -487,12 +448,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'adv-05',
-        title: adv05Enhanced.title,
-        description: adv05Enhanced.description,
+        title: 'Swiss Language Requirements and Test Preparation',
+        description: 'Master Swiss language requirements for work permits, residence, and citizenship. Comprehensive guide to German, French, and Italian proficiency levels, test preparation strategies, certification options, and proven study frameworks. Includes detailed analysis of B1/B2 requirements, test formats, preparation resources, and optimization strategies for maximum success.',
         type: 'interactive',
-        duration: adv05Enhanced.estimatedReadTime,
+        duration: '100-130 minutes',
         order: 5,
-        enhancedModule: adv05Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'What is the minimum language level typically required for a C permit?', options: ['A1', 'A2', 'B1', 'B2'], correct: 2 },
@@ -509,12 +470,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'adv-06',
-        title: adv06Enhanced.title,
-        description: adv06Enhanced.description,
+        title: 'Swiss Integration and Social Adaptation',
+        description: 'Master the Swiss integration requirements for work permits, residence permits, and citizenship. Comprehensive guide to integration criteria, language proficiency, economic participation, social adaptation, integration agreements, and proven strategies for successful integration. Includes detailed analysis of LEI Art. 58a, OASA Art. 62, LN Art. 11-12, and cantonal integration requirements.',
         type: 'interactive',
-        duration: adv06Enhanced.estimatedReadTime,
+        duration: '110-140 minutes',
         order: 6,
-        enhancedModule: adv06Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'What does "integration" mean under Swiss law?', options: ['Assimilation into Swiss culture', 'A mutual process between immigrants and Swiss society', 'Learning Swiss German only', 'Getting a Swiss passport'], correct: 1 },
@@ -530,12 +491,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'adv-07',
-        title: adv07Enhanced.title,
-        description: adv07Enhanced.description,
+        title: 'Swiss Healthcare and Insurance System',
+        description: 'Master Switzerland\'s mandatory healthcare system, understand KVG requirements, navigate insurance selection, optimize costs, and ensure compliance. Comprehensive guide to Pillar 1 health insurance, insurance models, premium optimization, coverage options, and healthcare system navigation. Includes detailed analysis of KVG Art. 3, mandatory requirements, premium structures, and cost-saving strategies.',
         type: 'interactive',
-        duration: adv07Enhanced.estimatedReadTime,
+        duration: '100-130 minutes',
         order: 7,
-        enhancedModule: adv07Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'Is health insurance mandatory in Switzerland?', options: ['No, it is optional', 'Yes, within 3 months of arrival', 'Only for employed people', 'Only for families'], correct: 1 },
@@ -552,12 +513,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'adv-08',
-        title: adv08Enhanced.title,
-        description: adv08Enhanced.description,
+        title: 'Swiss Housing and Cost of Living',
+        description: 'Master Swiss rental markets, housing requirements, cost of living, and practical living expenses. Comprehensive guide to finding housing, rental contracts, deposits, utilities, living costs by canton, and budgeting strategies. Includes detailed analysis of rental law, housing documentation requirements, cost breakdowns, and optimization strategies.',
         type: 'interactive',
-        duration: adv08Enhanced.estimatedReadTime,
+        duration: '95-120 minutes',
         order: 8,
-        enhancedModule: adv08Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'What is the typical notice period for apartment rentals in Switzerland?', options: ['1 month', '3 months', '6 months', '1 year'], correct: 1 },
@@ -573,12 +534,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'adv-09',
-        title: adv09Enhanced.title,
-        description: adv09Enhanced.description,
+        title: 'Swiss Family Reunification',
+        description: 'Master the Swiss family reunification process, understand legal requirements, prepare comprehensive applications, and successfully reunite with family members. Comprehensive guide to eligibility criteria, documentation requirements, application procedures, timelines, and common challenges. Includes detailed analysis of LEI Art. 44-46, OASA Art. 42-47, and cantonal family reunification requirements.',
         type: 'interactive',
-        duration: adv09Enhanced.estimatedReadTime,
+        duration: '110-140 minutes',
         order: 9,
-        enhancedModule: adv09Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'Can a B permit holder bring their spouse to Switzerland?', options: ['No', 'Yes, through family reunification', 'Only after 5 years', 'Only with C permit'], correct: 1 },
@@ -594,12 +555,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'adv-10',
-        title: adv10Enhanced.title,
-        description: adv10Enhanced.description,
+        title: 'Success Stories and Lessons Learned',
+        description: 'Learn from successful Swiss immigrants who navigated the system effectively. Comprehensive collection of real-world success stories, proven strategies, common mistakes to avoid, and actionable lessons learned. Includes detailed case studies across different nationalities, industries, permit types, and immigration pathways.',
         type: 'interactive',
-        duration: adv10Enhanced.estimatedReadTime,
+        duration: '85-110 minutes',
         order: 10,
-        enhancedModule: adv10Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'What is the most common reason for initial permit rejection?', options: ['Criminal record', 'Incomplete documentation', 'Low salary', 'Wrong canton'], correct: 1 },
@@ -633,12 +594,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
     modules: [
       {
         id: 'cit-01',
-        title: cit01Enhanced.title,
-        description: cit01Enhanced.description,
+        title: '10-Year Path to Swiss Citizenship',
+        description: 'Master the complete 10-year journey from first arrival to Swiss citizenship. Comprehensive guide to permit progression (L → B → C), year-by-year milestones, cantonal comparison for strategic residence planning, and detailed application preparation. Includes LN Art. 9-19 analysis, residency calculation rules, and a practical year-by-year checklist.',
         type: 'interactive',
-        duration: cit01Enhanced.estimatedReadTime,
+        duration: '120-150 minutes',
         order: 1,
-        enhancedModule: cit01Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'How many years of residence are required for ordinary naturalization?', options: ['5 years', '8 years', '10 years', '12 years'], correct: 2 },
@@ -655,12 +616,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'cit-02',
-        title: cit02Enhanced.title,
-        description: cit02Enhanced.description,
+        title: 'Spouse Route to Swiss Citizenship',
+        description: 'Master the facilitated naturalization pathway for spouses of Swiss citizens, reducing the citizenship timeline from 10 years to 5 years. Covers LN Art. 21 (spouse in Switzerland), LN Art. 22 (spouse abroad), union conjugale assessment, sham marriage scrutiny, common rejection reasons, and step-by-step SEM application procedure.',
         type: 'interactive',
-        duration: cit02Enhanced.estimatedReadTime,
+        duration: '100-130 minutes',
         order: 2,
-        enhancedModule: cit02Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'How many years of residence does the spouse route require?', options: ['3 years', '5 years', '8 years', '10 years'], correct: 1 },
@@ -676,12 +637,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'cit-03',
-        title: cit03Enhanced.title,
-        description: cit03Enhanced.description,
+        title: 'Third-Generation Accelerated Path',
+        description: 'Master the accelerated naturalization pathway for third-generation immigrants born in Switzerland. Covers LN Art. 24-26 eligibility (must be under 25), parent and grandparent residence requirements, complete document checklist, eligibility decision tree, application procedure, and key pitfalls. In force since February 15, 2018.',
         type: 'interactive',
-        duration: cit03Enhanced.estimatedReadTime,
+        duration: '90-115 minutes',
         order: 3,
-        enhancedModule: cit03Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'Who qualifies for the third-generation accelerated path?', options: ['Anyone born in Switzerland', 'People whose grandparent had a Swiss residence permit', 'People born in Switzerland with at least one grandparent who held Swiss residence', 'Third-generation EU citizens'], correct: 2 },
@@ -695,12 +656,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'cit-04',
-        title: cit04Enhanced.title,
-        description: cit04Enhanced.description,
+        title: 'Language Test Mastery: B1 Certification',
+        description: 'Master Swiss language requirements for citizenship: understand OLN Art. 6 requirements, choose the right test (fide, Goethe, DELF, telc, TestDaF), prepare with proven strategies, and understand certificate equivalency. Includes fide test sample questions, full registration process, study resources list, and a 12-week preparation plan.',
         type: 'interactive',
-        duration: cit04Enhanced.estimatedReadTime,
+        duration: '95-120 minutes',
         order: 4,
-        enhancedModule: cit04Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'What is the minimum language level for citizenship?', options: ['A2 speaking, A2 writing', 'B1 speaking, A2 writing', 'B1 speaking, B1 writing', 'B2 speaking, B1 writing'], correct: 1 },
@@ -716,12 +677,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'cit-05',
-        title: cit05Enhanced.title,
-        description: cit05Enhanced.description,
+        title: 'Integration Test Success',
+        description: 'Master cantonal integration tests and naturalization interviews, understand test formats, prepare comprehensively, and pass on first attempt. Comprehensive guide to integration test content, interview preparation, cultural knowledge requirements, Swiss history and politics, and proven success strategies. Includes detailed analysis of test formats, common questions, preparation techniques, and practical tips.',
         type: 'interactive',
-        duration: cit05Enhanced.estimatedReadTime,
+        duration: '85-110 minutes',
         order: 5,
-        enhancedModule: cit05Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'What topics does the integration test cover?', options: ['Only Swiss history', 'Geography, history, politics, and daily life', 'Language only', 'Employment law only'], correct: 1 },
@@ -737,12 +698,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'cit-06',
-        title: cit06Enhanced.title,
-        description: cit06Enhanced.description,
+        title: 'Citizenship Application Submission',
+        description: 'Master the complete citizenship application submission process from document assembly to final filing. Covers all required documents by category, cantonal fee tables for all 26 cantons, the three-level submission procedure (commune → canton → SEM), common rejection reasons with statistics, and a week-by-week preparation timeline. Based on LN Art. 13-19 and cantonal naturalization regulations.',
         type: 'interactive',
-        duration: cit06Enhanced.estimatedReadTime,
+        duration: '75-100 minutes',
         order: 6,
-        enhancedModule: cit06Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'Where do you submit your citizenship application?', options: ['Federal SEM office', 'Your commune/municipality', 'The Swiss embassy', 'Online portal only'], correct: 1 },
@@ -758,12 +719,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'cit-07',
-        title: cit07Enhanced.title,
-        description: cit07Enhanced.description,
+        title: 'Naturalization Interview Preparation',
+        description: 'Master naturalization interview preparation with 30+ real sample questions by category (Swiss history, politics, geography, culture, daily life), model answers, canton-specific variations, scoring criteria, and a 6-week preparation plan. Covers interview formats across German, French, and Italian-speaking cantons, assessment areas, and proven techniques for confident performance.',
         type: 'interactive',
-        duration: cit07Enhanced.estimatedReadTime,
+        duration: '90-120 minutes',
         order: 7,
-        enhancedModule: cit07Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'What is typically assessed in a naturalization interview?', options: ['Only language skills', 'Integration, knowledge of Switzerland, and local community involvement', 'Criminal record only', 'Financial status'], correct: 1 },
@@ -779,12 +740,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'cit-08',
-        title: cit08Enhanced.title,
-        description: cit08Enhanced.description,
+        title: 'Dual Citizenship Strategy',
+        description: 'Master Swiss dual citizenship policies with a comprehensive 30+ country policy table, renunciation procedures by country, tax implications of holding multiple citizenships, military service obligations, voting rights comparison, and strategic planning for citizenship retention. Covers Swiss policy history, country-specific restrictions, and practical considerations for dual nationals.',
         type: 'interactive',
-        duration: cit08Enhanced.estimatedReadTime,
+        duration: '80-100 minutes',
         order: 8,
-        enhancedModule: cit08Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'Does Switzerland allow dual citizenship?', options: ['No, never', 'Yes, since 1992', 'Only with EU countries', 'Only for birth citizens'], correct: 1 },
@@ -800,12 +761,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'cit-09',
-        title: cit09Enhanced.title,
-        description: cit09Enhanced.description,
+        title: 'Facilitated Naturalization & Special Cases',
+        description: 'Master the facilitated naturalization paths available under Swiss law: spouse of a Swiss citizen (LN Art. 21-22), third-generation foreigners (LN Art. 24-25), former Swiss citizens seeking reintegration (LN Art. 27-29), and stateless persons (LN Art. 23). Includes detailed eligibility criteria, processing time comparisons, required documentation, and canton-by-canton differences.',
         type: 'interactive',
-        duration: cit09Enhanced.estimatedReadTime,
+        duration: '70-90 minutes',
         order: 9,
-        enhancedModule: cit09Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'Who can access simplified naturalization?', options: ['Anyone after 5 years', 'Spouses of Swiss citizens and third-generation residents', 'All EU citizens', 'Only refugees'], correct: 1 },
@@ -819,12 +780,12 @@ export const PACK_CONTENT: Record<string, PackContent> = {
       },
       {
         id: 'cit-10',
-        title: cit10Enhanced.title,
-        description: cit10Enhanced.description,
+        title: 'Oath Ceremony and Becoming Swiss',
+        description: 'Master the final steps to Swiss citizenship: oath ceremony procedures by language region, post-naturalization checklist (passport, military registration, AHV, voting), full breakdown of citizenship rights and obligations, Swiss passport application guide, and what changes (and what does not) after becoming Swiss. Covers ceremonies across German, French, and Italian-speaking cantons.',
         type: 'interactive',
-        duration: cit10Enhanced.estimatedReadTime,
+        duration: '65-85 minutes',
         order: 10,
-        enhancedModule: cit10Enhanced,
+        // enhancedModule loaded lazily via loadEnhancedModule()
         quiz: {
           questions: [
             { question: 'What happens at the oath ceremony?', options: ['You receive your passport', 'You formally pledge allegiance to the Swiss Confederation', 'You take a written test', 'You meet the Federal Council'], correct: 1 },

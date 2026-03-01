@@ -123,7 +123,7 @@ export function InitialQuizGate({ children }: { children: React.ReactNode }) {
     setShowModal(false)
   }
 
-  const updatePreference = (key: keyof Omit<UserPreferences, 'confirmed'>, value: any) => {
+  const updatePreference = (key: keyof Omit<UserPreferences, 'confirmed'>, value: RegionType | LanguageType | CurrencyType) => {
     setPreferences(prev => ({ ...prev, [key]: value }))
   }
 

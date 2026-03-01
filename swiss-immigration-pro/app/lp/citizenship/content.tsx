@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import {
   ArrowRight, CheckCircle, ChevronDown, Star, Shield,
@@ -93,18 +94,21 @@ const TESTIMONIALS = [
     quote: 'After 8 years in Switzerland, I had no idea where to start with citizenship. SIP mapped out exactly what I needed — I passed the integration test on the first try.',
     author: 'Michael B.',
     role: '12 years in Zurich, now Swiss citizen',
+    photo: '/images/avatars/michael-b.jpg',
     rating: 5,
   },
   {
     quote: 'The canton guide saved me. I was about to apply in my municipality without realizing they require B2 German, not B1. Would have been rejected and had to wait another year.',
     author: 'Elena R.',
     role: 'Dual Italian-Swiss citizen since 2025',
+    photo: '/images/avatars/elena-r.jpg',
     rating: 5,
   },
   {
     quote: 'My Swiss spouse and I used the 5-year shortcut path. SIP tracked every deadline and told us exactly when to submit. Smoothest bureaucratic experience I have ever had in Switzerland.',
     author: 'Daniel T.',
     role: 'Naturalized via marriage pathway',
+    photo: '/images/avatars/daniel-t.jpg',
     rating: 5,
   },
 ]
@@ -460,9 +464,14 @@ export default function CitizenshipContent({ faqItems }: { faqItems: FAQItem[] }
                   ))}
                 </div>
                 <p className="text-slate-700 leading-relaxed mb-6 italic">&ldquo;{t.quote}&rdquo;</p>
-                <div>
-                  <div className="font-semibold text-slate-900 text-sm">{t.author}</div>
-                  <div className="text-xs text-slate-500">{t.role}</div>
+                <div className="flex items-center gap-3">
+                  <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-white shadow-md shrink-0">
+                    <Image src={t.photo} alt={t.author} fill className="object-cover" sizes="40px" />
+                  </div>
+                  <div>
+                    <div className="font-semibold text-slate-900 text-sm">{t.author}</div>
+                    <div className="text-xs text-slate-500">{t.role}</div>
+                  </div>
                 </div>
               </motion.div>
             ))}

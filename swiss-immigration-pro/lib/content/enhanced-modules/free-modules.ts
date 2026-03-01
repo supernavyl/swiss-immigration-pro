@@ -1,6 +1,7 @@
 // Enhanced Free Pack Modules - Professional, Comprehensive Content
 
 export const freeModule01Enhanced = {
+  id: 'free-01-enhanced',
   title: 'Complete Guide to the Swiss Immigration System',
   description: 'A comprehensive and authoritative introduction to Switzerland\'s immigration framework. This guide covers the complete legal foundations, all residence permit categories, entry requirements, and practical pathways for foreign nationals seeking to establish residence and employment in Switzerland.',
   estimatedReadTime: '75-90 minutes',
@@ -351,6 +352,7 @@ The C permit can only be revoked under exceptional circumstances, such as convic
 }
 
 export const freeModule02Enhanced = {
+  id: 'free-02-enhanced',
   title: 'Application Process: Documentation and Timelines',
   description: 'A detailed procedural guide covering all documentation requirements, realistic processing timelines, common application pitfalls, and proven strategies for successful residence permit applications in Switzerland.',
   estimatedReadTime: '60-70 minutes',
@@ -571,6 +573,7 @@ Analysis of rejection data reveals clear patterns in why applications fail. Know
 }
 
 export const freeModule03Enhanced = {
+  id: 'free-03-enhanced',
   title: 'Integration Requirements and Swiss Society',
   description: 'Understanding integration as both a legal requirement and practical necessity in Switzerland. This module covers language proficiency standards, economic participation requirements, and practical guidance for successfully establishing yourself within Swiss society.',
   estimatedReadTime: '50-60 minutes',

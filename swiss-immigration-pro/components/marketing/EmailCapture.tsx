@@ -28,7 +28,7 @@ export default function EmailCapture() {
       setStatus('success')
       setEmail('')
       setTimeout(() => setStatus('idle'), 5000)
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Newsletter subscription error:', error)
       setStatus('error')
       setTimeout(() => setStatus('idle'), 3000)

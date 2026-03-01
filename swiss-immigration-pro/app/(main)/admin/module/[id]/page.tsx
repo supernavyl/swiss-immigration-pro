@@ -6,14 +6,16 @@ import { useSession } from '@/lib/auth-client'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowLeft, BookOpen, CheckCircle, Clock, Play, FileText, Download, Award, HelpCircle, BarChart3, Menu, X, Maximize2, Minimize2, Bookmark } from 'lucide-react'
-import { getAllModulesForAdmin, getModulePack } from '@/lib/content/pack-content'
-import { PRICING_PACKS } from '@/lib/pricing'
+import { getAllModulesForAdmin, getModulePack, type Module } from '@/lib/content/pack-content'
+import { PRICING_PACKS, type PackId } from '@/lib/pricing'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
 import EnhancedModuleDisplay from '@/components/modules/EnhancedModuleDisplay'
 import AdminHeader from '@/components/layout/AdminHeader'
+import { loadEnhancedModule } from '@/lib/content/enhanced-module-loader'
+import type { EnhancedModule } from '@/lib/content/enhanced-modules/non-free-enhanced-modules'
 import { useToast } from '@/components/providers/ToastProvider'
 
 export default function AdminModuleView({ 
@@ -30,8 +32,9 @@ export default function AdminModuleView({
   const { showToast } = useToast()
   const { data: session, status } = useSession()
   const [loading, setLoading] = useState(true)
-  const [module, setModule] = useState<any>(null)
-  const [packInfo, setPackInfo] = useState<any>(null)
+  const [module, setModule] = useState<Module | null>(null)
+  const [enhancedContent, setEnhancedContent] = useState<EnhancedModule | null>(null)
+  const [packInfo, setPackInfo] = useState<(typeof PRICING_PACKS)[PackId] | null>(null)
   const [progress, setProgress] = useState(0)
   const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({})
   const [quizScore, setQuizScore] = useState<number | null>(null)
@@ -124,7 +127,7 @@ export default function AdminModuleView({
     if (!moduleId) return
 
     const modules = getAllModulesForAdmin()
-    const matched = modules.find((mod: any) => mod.id === moduleId)
+    const matched = modules.find((mod) => mod.id === moduleId)
 
     if (matched) {
       setModule(matched)
@@ -146,6 +149,16 @@ export default function AdminModuleView({
 
     setLoading(false)
   }, [session, status, router, moduleId, extractSectionsLocal, organizeSectionsIntoCategoriesLocal])
+
+  // ── Lazy-load enhanced module content ──────────────────────────
+  useEffect(() => {
+    if (!module) return
+    let cancelled = false
+    loadEnhancedModule(module.id).then((content) => {
+      if (!cancelled) setEnhancedContent(content)
+    })
+    return () => { cancelled = true }
+  }, [module])
 
   // Compute sections early (before early returns) to avoid hook order issues
   // Use useMemo to ensure stable reference - use module?.id to avoid reference issues
@@ -271,8 +284,8 @@ export default function AdminModuleView({
     )
   }
 
-  // Check if this is an enhanced module with interactive components
-  if (module.enhancedModule && typeof module.enhancedModule === 'object' && module.enhancedModule.title) {
+  // Check if enhanced content has been lazily loaded
+  if (enhancedContent) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-950">
         <AdminHeader />
@@ -288,9 +301,9 @@ export default function AdminModuleView({
                 Back to Admin Dashboard
               </Link>
             </div>
-            
+
             {/* Enhanced Module Display */}
-            <EnhancedModuleDisplay module={module.enhancedModule} moduleId={moduleId} />
+            <EnhancedModuleDisplay module={enhancedContent} moduleId={moduleId} />
           </div>
         </div>
       </div>
@@ -549,23 +562,24 @@ export default function AdminModuleView({
                       em: ({ node, ...props }) => (
                         <em className="text-gray-900 italic" style={{ color: '#111827' }} {...props} />
                       ),
-                      span: ({ node, className, ...props }: any) => {
+                      span: ({ node, className, ...props }) => {
                         // Preserve notranslate spans for translation prevention
                         const isNotranslate = className?.includes('notranslate')
                         return (
-                          <span 
-                            className={className || ''} 
+                          <span
+                            className={className || ''}
                             translate={isNotranslate ? 'no' : undefined}
                             style={{ color: '#111827' }}
                             {...props}
                           />
                         )
                       },
-                      code: ({ node, inline, ...props }: any) => {
-                        if (inline) {
-                          return <code className="text-gray-900 bg-gray-100 px-1.5 py-0.5 rounded text-sm font-mono" style={{ color: '#111827' }} {...props} />
+                      code: ({ node, className, children, ...props }) => {
+                        const isBlock = typeof className === 'string' && /language-/.test(className)
+                        if (!isBlock) {
+                          return <code className="text-gray-900 bg-gray-100 px-1.5 py-0.5 rounded text-sm font-mono" style={{ color: '#111827' }} {...props}>{children}</code>
                         }
-                        return <code className="text-gray-900 bg-gray-100 block p-4 rounded-lg text-sm font-mono overflow-x-auto mb-4" style={{ color: '#111827' }} {...props} />
+                        return <code className="text-gray-900 bg-gray-100 block p-4 rounded-lg text-sm font-mono overflow-x-auto mb-4" style={{ color: '#111827' }} {...props}>{children}</code>
                       },
                       blockquote: ({ node, ...props }) => (
                         <blockquote className="text-gray-900 border-l-4 border-blue-500 pl-4 italic my-4" style={{ color: '#111827' }} {...props} />
@@ -602,7 +616,7 @@ export default function AdminModuleView({
                     </h2>
                   </div>
                   <div className="space-y-6">
-                    {module.quiz.questions?.map((q: any, idx: number) => (
+                    {module.quiz.questions?.map((q, idx: number) => (
                       <div key={idx} className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
                         <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                           <span className="w-8 h-8 bg-purple-100 text-purple-700 rounded-full flex items-center justify-center text-sm font-bold mr-3">
@@ -674,7 +688,7 @@ export default function AdminModuleView({
                     </h2>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {module.exercises.map((exercise: any, idx: number) => (
+                    {module.exercises.map((exercise, idx: number) => (
                       <div
                         key={idx}
                         className="border border-gray-200 dark:border-gray-700 rounded-lg p-6 hover:border-purple-300 transition-colors"

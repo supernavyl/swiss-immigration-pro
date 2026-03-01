@@ -9,12 +9,15 @@ import MainHeader from '@/components/layout/MainHeader'
 
 export const dynamic = 'force-dynamic'
 
+interface Milestone { date: Date; task: string; status: string }
+interface Timeline { targetDate: Date; totalMonths: number; milestones: Milestone[]; isFeasible: boolean }
+
 export default function TimelinePlanner() {
   const { showToast } = useToast()
   const [targetDate, setTargetDate] = useState('')
   const [nationality, setNationality] = useState<'eu' | 'non-eu'>('non-eu')
   const [hasJobOffer, setHasJobOffer] = useState(false)
-  const [timeline, setTimeline] = useState<any>(null)
+  const [timeline, setTimeline] = useState<Timeline | null>(null)
 
   const calculateTimeline = () => {
     if (!targetDate) {
@@ -180,7 +183,7 @@ export default function TimelinePlanner() {
             </h2>
 
             <div className="space-y-4">
-              {timeline.milestones.map((milestone: any, idx: number) => {
+              {timeline.milestones.map((milestone, idx: number) => {
                 const isPast = milestone.date < new Date()
                 return (
                   <div

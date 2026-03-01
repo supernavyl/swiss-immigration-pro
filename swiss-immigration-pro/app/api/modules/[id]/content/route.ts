@@ -1,6 +1,7 @@
 import { createHmac, timingSafeEqual } from 'crypto'
 import { NextRequest, NextResponse } from 'next/server'
 import { getAllModulesForAdmin, getModulePack } from '@/lib/content/pack-content'
+import { loadEnhancedModule } from '@/lib/content/enhanced-module-loader'
 
 // Pack access hierarchy — each pack also grants access to lower packs
 const PACK_LEVELS: Record<string, number> = {
@@ -110,7 +111,7 @@ export async function GET(
     )
   }
 
-  const enhanced = module.enhancedModule
+  const enhanced = await loadEnhancedModule(id)
 
   return NextResponse.json({
     id: module.id,

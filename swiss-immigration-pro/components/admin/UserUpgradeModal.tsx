@@ -9,7 +9,7 @@ interface UserUpgradeModalProps {
   user: {
     id: string
     email: string
-    full_name: string
+    full_name: string | null
     pack_id: string
     pack_expires_at: string | null
   }

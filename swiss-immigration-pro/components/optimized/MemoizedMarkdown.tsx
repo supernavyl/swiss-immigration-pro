@@ -121,29 +121,35 @@ const MemoizedMarkdown = memo(({ content, className = '' }: MemoizedMarkdownProp
               }}
             />
           ),
-          code: ({ node, inline, ...props }: any) =>
-            inline ? (
-              <code
-                className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-400 rounded text-sm font-mono"
-                {...props}
-              />
-            ) : (
+          code: ({ node, className, children, ...props }) => {
+            const isBlock = typeof className === 'string' && /language-/.test(className)
+            return isBlock ? (
               <code
                 className="block p-4 bg-gray-100 dark:bg-gray-800 rounded-lg text-sm font-mono overflow-x-auto mb-4"
                 {...props}
-                style={{ 
+                style={{
                   contain: 'layout style paint',
                   willChange: 'scroll-position'
                 }}
-              />
-            ),
+              >
+                {children}
+              </code>
+            ) : (
+              <code
+                className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-400 rounded text-sm font-mono"
+                {...props}
+              >
+                {children}
+              </code>
+            )
+          },
           blockquote: ({ node, ...props }) => (
             <blockquote
               className="border-l-4 border-blue-500 pl-4 italic text-gray-700 dark:text-gray-300 my-4"
               {...props}
             />
           ),
-          a: ({ node, ...props }: any) => (
+          a: ({ node, ...props }) => (
             <a
               className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline transition-colors"
               {...props}

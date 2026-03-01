@@ -18,6 +18,16 @@ interface Session {
 
 type SessionStatus = 'loading' | 'authenticated' | 'unauthenticated'
 
+/** Shape of the decoded JWT payload from the backend */
+interface JwtPayload {
+  sub: string
+  email: string
+  name?: string
+  pack_id?: string
+  is_admin?: boolean
+  exp: number
+}
+
 interface SessionContextValue {
   data: Session | null
   status: SessionStatus
@@ -54,7 +64,7 @@ function removeTokens() {
   document.cookie = 'sip_token=; path=/; max-age=0; SameSite=Lax'
 }
 
-function parseJwt(token: string): any | null {
+function parseJwt(token: string): JwtPayload | null {
   try {
     const base64Url = token.split('.')[1]
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
@@ -64,7 +74,11 @@ function parseJwt(token: string): any | null {
         .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
         .join('')
     )
-    return JSON.parse(jsonPayload)
+    const parsed: unknown = JSON.parse(jsonPayload)
+    if (typeof parsed === 'object' && parsed !== null && 'sub' in parsed && 'exp' in parsed) {
+      return parsed as JwtPayload
+    }
+    return null
   } catch {
     return null
   }
@@ -170,7 +184,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     scheduleRefresh(token)
   }, [])
 
-  const setSessionFromPayload = (payload: any) => {
+  const setSessionFromPayload = (payload: JwtPayload) => {
     setSession({
       user: {
         id: payload.sub,
@@ -256,8 +270,9 @@ export async function signIn(
     window.dispatchEvent(new Event('storage'))
 
     return { ok: true }
-  } catch (err: any) {
-    return { error: err.message || 'Login failed' }
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Login failed'
+    return { error: message }
   }
 }
 

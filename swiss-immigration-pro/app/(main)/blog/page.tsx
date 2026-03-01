@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   Calendar, Clock, ArrowRight, ChevronRight,
   FileText, Users, Briefcase, Globe, Home, Star, Languages, Shield,
@@ -18,6 +19,7 @@ interface CategoryStyle {
   text: string
   gradient: string
   icon: React.ElementType
+  thumbnail?: string
 }
 
 const CATEGORY_STYLES: Record<string, CategoryStyle> = {
@@ -27,6 +29,7 @@ const CATEGORY_STYLES: Record<string, CategoryStyle> = {
     text: 'text-blue-700 dark:text-blue-300',
     gradient: 'from-blue-500 to-indigo-600',
     icon: Shield,
+    thumbnail: '/images/blog/permits.jpg',
   },
   Citizenship: {
     dot: 'bg-emerald-500',
@@ -34,6 +37,7 @@ const CATEGORY_STYLES: Record<string, CategoryStyle> = {
     text: 'text-emerald-700 dark:text-emerald-300',
     gradient: 'from-emerald-500 to-teal-600',
     icon: Star,
+    thumbnail: '/images/blog/citizenship.jpg',
   },
   'Immigration Strategy': {
     dot: 'bg-violet-500',
@@ -41,6 +45,7 @@ const CATEGORY_STYLES: Record<string, CategoryStyle> = {
     text: 'text-violet-700 dark:text-violet-300',
     gradient: 'from-violet-500 to-purple-600',
     icon: Globe,
+    thumbnail: '/images/blog/integration.jpg',
   },
   'Employment & Career': {
     dot: 'bg-amber-500',
@@ -48,6 +53,7 @@ const CATEGORY_STYLES: Record<string, CategoryStyle> = {
     text: 'text-amber-700 dark:text-amber-300',
     gradient: 'from-amber-500 to-orange-600',
     icon: Briefcase,
+    thumbnail: '/images/blog/work.jpg',
   },
   'Family & Immigration': {
     dot: 'bg-rose-500',
@@ -55,6 +61,7 @@ const CATEGORY_STYLES: Record<string, CategoryStyle> = {
     text: 'text-rose-700 dark:text-rose-300',
     gradient: 'from-rose-500 to-pink-600',
     icon: Users,
+    thumbnail: '/images/blog/family.jpg',
   },
   'Living in Switzerland': {
     dot: 'bg-teal-500',
@@ -62,6 +69,7 @@ const CATEGORY_STYLES: Record<string, CategoryStyle> = {
     text: 'text-teal-700 dark:text-teal-300',
     gradient: 'from-teal-500 to-cyan-600',
     icon: Home,
+    thumbnail: '/images/blog/legal.jpg',
   },
   'Integration & Language': {
     dot: 'bg-indigo-500',
@@ -69,6 +77,7 @@ const CATEGORY_STYLES: Record<string, CategoryStyle> = {
     text: 'text-indigo-700 dark:text-indigo-300',
     gradient: 'from-indigo-500 to-blue-600',
     icon: Languages,
+    thumbnail: '/images/blog/integration.jpg',
   },
 }
 
@@ -217,9 +226,17 @@ function ArticleCardHeader({ category }: { category: string }) {
   const Icon = c.icon
   return (
     <div
-      className={`relative h-24 bg-gradient-to-br ${c.gradient} flex items-center justify-center overflow-hidden`}
+      className={`relative h-32 bg-gradient-to-br ${c.gradient} flex items-center justify-center overflow-hidden`}
     >
-      {/* Decorative circles */}
+      {c.thumbnail && (
+        <Image
+          src={c.thumbnail}
+          alt={category}
+          fill
+          className="object-cover opacity-30 mix-blend-overlay"
+          sizes="(max-width: 768px) 100vw, 33vw"
+        />
+      )}
       <div className="absolute -top-4 -right-4 w-20 h-20 rounded-full bg-white/10" />
       <div className="absolute -bottom-6 -left-6 w-24 h-24 rounded-full bg-white/10" />
       <Icon className="w-9 h-9 text-white/80 relative z-10" />

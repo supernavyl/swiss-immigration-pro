@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import {
   ArrowRight, CheckCircle, ChevronDown, Star, Shield,
@@ -93,18 +94,21 @@ const TESTIMONIALS = [
     quote: 'I was rejected twice before finding SIP. Their checklist caught three missing documents I had no idea about. Third application — approved!',
     author: 'Sarah M.',
     role: 'Marketing Manager, now in Zurich',
+    photo: '/images/avatars/sarah-m.jpg',
     rating: 5,
   },
   {
     quote: 'The Swiss CV templates alone are worth the subscription. My old CV format was completely wrong for Swiss employers. Got interview callbacks within a week.',
     author: 'James L.',
     role: 'Software Engineer, moved from London',
+    photo: '/images/avatars/james-l.jpg',
     rating: 5,
   },
   {
     quote: 'As a non-EU applicant, the quota system was terrifying. SIP showed me exactly when to apply and which canton had openings. Permit approved in 8 weeks.',
     author: 'Priya K.',
     role: 'Data Scientist, relocated from India',
+    photo: '/images/avatars/priya-k.jpg',
     rating: 5,
   },
 ]
@@ -460,9 +464,14 @@ export default function WorkPermitContent({ faqItems }: { faqItems: FAQItem[] })
                   ))}
                 </div>
                 <p className="text-slate-700 leading-relaxed mb-6 italic">&ldquo;{t.quote}&rdquo;</p>
-                <div>
-                  <div className="font-semibold text-slate-900 text-sm">{t.author}</div>
-                  <div className="text-xs text-slate-500">{t.role}</div>
+                <div className="flex items-center gap-3">
+                  <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-white shadow-md shrink-0">
+                    <Image src={t.photo} alt={t.author} fill className="object-cover" sizes="40px" />
+                  </div>
+                  <div>
+                    <div className="font-semibold text-slate-900 text-sm">{t.author}</div>
+                    <div className="text-xs text-slate-500">{t.role}</div>
+                  </div>
                 </div>
               </motion.div>
             ))}

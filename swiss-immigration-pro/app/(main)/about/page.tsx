@@ -10,6 +10,7 @@ import {
 } from 'lucide-react'
 import Tooltip from '@/components/ui/Tooltip'
 import Link from 'next/link'
+import Image from 'next/image'
 import MainHeader from '@/components/layout/MainHeader'
 
 export default function AboutPage() {
@@ -395,7 +396,7 @@ export default function AboutPage() {
                 experience: '25+ years in Swiss immigration law',
                 specialty: 'Non-EU permits, citizenship applications, complex cases',
                 tooltip: 'Dr. Schmidt has successfully handled over 5,000 immigration cases and is a recognized expert in Swiss immigration law, regularly consulted by cantonal authorities.',
-                emoji: '👩‍⚖️'
+                photo: '/images/avatars/maria-schmidt.jpg'
               },
               {
                 name: 'Jean-Luc Dubois',
@@ -404,7 +405,7 @@ export default function AboutPage() {
                 experience: '15+ years building user-centric products',
                 specialty: 'AI-powered platforms, product strategy, user experience',
                 tooltip: 'Jean-Luc brings extensive experience from leading tech companies, specializing in building scalable platforms that solve complex problems.',
-                emoji: '👨‍💻'
+                photo: '/images/avatars/thomas-weber.jpg'
               },
               {
                 name: 'Sofia Chen',
@@ -413,7 +414,7 @@ export default function AboutPage() {
                 experience: '8+ years in immigration services',
                 specialty: 'User experience, customer success, process optimization',
                 tooltip: 'Sofia has personally guided thousands of immigrants through the Swiss system, bringing deep understanding of user needs and challenges.',
-                emoji: '👩‍💼'
+                photo: '/images/avatars/sophie-mueller.jpg'
               }
             ].map((member, idx) => (
               <motion.div
@@ -426,8 +427,8 @@ export default function AboutPage() {
               >
                 <div className="bg-white dark:bg-gray-800 rounded-xl p-8 border-2 border-gray-200 dark:border-gray-700 transition-all duration-300 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-xl h-full">
                   <div className="text-center mb-6">
-                    <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center text-5xl mx-auto mb-4 border-4 border-white shadow-lg">
-                      {member.emoji}
+                    <div className="relative w-24 h-24 rounded-full overflow-hidden mx-auto mb-4 border-4 border-white shadow-lg">
+                      <Image src={member.photo} alt={member.name} fill className="object-cover" sizes="96px" />
                     </div>
                     
                     <div className="flex items-center justify-center gap-2 mb-2">

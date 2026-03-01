@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Search, X, FileText, Calculator, Users, MapPin, Sparkles, TrendingUp, Globe, Brain, Zap } from 'lucide-react'
+import { Search, X, FileText, Calculator, Users, MapPin, Sparkles, TrendingUp, Globe, Brain, Zap, type LucideIcon } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 
@@ -11,7 +11,7 @@ interface SearchResult {
   description: string
   url: string
   category: 'page' | 'tool' | 'guide' | 'resource'
-  icon: any
+  icon: LucideIcon
   keywords: string[]
 }
 
@@ -101,10 +101,10 @@ export default function AdvancedSearch() {
         if (response.ok) {
           const data = await response.json()
           // Map API results back to full SEARCH_INDEX items to get icons
-          const resultsWithIcons = (data.results || []).map((apiResult: any) => {
+          const resultsWithIcons = (data.results || []).map((apiResult: { id: string }) => {
             const fullItem = SEARCH_INDEX.find(item => item.id === apiResult.id)
-            return fullItem || apiResult
-          })
+            return fullItem || null
+          }).filter(Boolean) as SearchResult[]
           setResults(resultsWithIcons)
           setAiSuggestion(data.aiSuggestion || null)
           setDirectAnswer(data.directAnswer || null)

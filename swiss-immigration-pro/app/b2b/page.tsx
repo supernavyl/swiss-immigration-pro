@@ -2,12 +2,14 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import {
   Building2, Users, Shield, AlertTriangle, FileText, BarChart3,
   CheckCircle, ArrowRight, Globe, Clock, TrendingUp, Zap,
   ChevronDown, Star, Lock, Briefcase,
 } from 'lucide-react'
+import TrustBar from '@/components/marketing/TrustBar'
 
 const B2B_PLANS = [
   {
@@ -108,18 +110,21 @@ const TESTIMONIALS = [
     quote: 'We were spending 2 days per month manually tracking permit renewals. Now it takes 10 minutes.',
     author: 'HR Director',
     company: 'International Trading Company, Zurich',
+    photo: '/images/avatars/anna-k.jpg',
     rating: 5,
   },
   {
     quote: 'The compliance alerts saved us from a CHF 15,000 fine when we almost missed a renewal.',
     author: 'Head of People',
     company: 'Tech Startup, Lausanne',
+    photo: '/images/avatars/david-m.jpg',
     rating: 5,
   },
   {
     quote: 'Finally a tool built for Swiss immigration compliance. The cantonal tracking alone is worth the price.',
     author: 'Operations Manager',
     company: 'Pharmaceutical Company, Basel',
+    photo: '/images/avatars/lisa-w.jpg',
     rating: 5,
   },
 ]
@@ -203,7 +208,7 @@ export default function B2BLandingPage() {
                 Track expirations, prevent fines, and keep HR overhead to a minimum.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 mb-12">
+              <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <Link
                   href="/auth/register?redirect=/b2b/onboarding"
                   className="inline-flex items-center justify-center gap-2 bg-white text-slate-900 font-semibold px-8 py-3.5 rounded-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5"
@@ -218,6 +223,7 @@ export default function B2BLandingPage() {
                   View Pricing
                 </a>
               </div>
+              <TrustBar className="mb-4 [&_span]:text-white/80 [&_.font-semibold]:text-white" />
             </motion.div>
 
             {/* Stats row */}
@@ -438,9 +444,14 @@ export default function B2BLandingPage() {
                   ))}
                 </div>
                 <p className="text-slate-700 leading-relaxed mb-6 italic">&ldquo;{t.quote}&rdquo;</p>
-                <div>
-                  <div className="font-semibold text-slate-900 text-sm">{t.author}</div>
-                  <div className="text-xs text-slate-500">{t.company}</div>
+                <div className="flex items-center gap-3">
+                  <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-white shadow-md shrink-0">
+                    <Image src={t.photo} alt={t.author} fill className="object-cover" sizes="40px" />
+                  </div>
+                  <div>
+                    <div className="font-semibold text-slate-900 text-sm">{t.author}</div>
+                    <div className="text-xs text-slate-500">{t.company}</div>
+                  </div>
                 </div>
               </motion.div>
             ))}

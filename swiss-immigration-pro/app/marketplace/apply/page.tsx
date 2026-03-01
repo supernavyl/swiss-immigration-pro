@@ -35,7 +35,7 @@ export default function MarketplaceApplyPage() {
     setError('')
 
     const form = new FormData(e.currentTarget)
-    let body: any = {}
+    let body: Record<string, unknown> = {}
     let endpoint = ''
 
     if (type === 'lawyer') {

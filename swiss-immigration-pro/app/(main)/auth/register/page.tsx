@@ -80,8 +80,8 @@ export default function RegisterPage() {
       } else {
         router.push('/auth/login?message=Registration successful! Please sign in.')
       }
-    } catch (err: any) {
-      setError(err.message || 'Registration failed')
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Registration failed')
     } finally {
       setLoading(false)
     }

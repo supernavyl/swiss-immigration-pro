@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Calendar, Clock, CheckCircle, AlertCircle, CreditCard } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 import MainHeader from '@/components/layout/MainHeader'
 
 const CONSULTATION_TYPES = [
@@ -122,10 +123,12 @@ export default function ConsultationPage() {
       {/* Hero Section with Image */}
       <div className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white overflow-hidden">
         <div className="absolute inset-0 opacity-10">
-          <img
-            src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&h=600&fit=crop"
-            alt="Swiss Alps"
-            className="w-full h-full object-cover"
+          <Image
+            src="/images/environment/consultation-hero.jpg"
+            alt="Swiss business district"
+            fill
+            className="object-cover"
+            sizes="100vw"
           />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">

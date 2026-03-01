@@ -8,18 +8,7 @@ import { User, Lock, Globe, Mail, Save, Eye, EyeOff, LogOut, ArrowLeft } from 'l
 import Link from 'next/link'
 import LanguageSwitcher from '@/components/layout/LanguageSwitcher'
 
-// Declare Google Translate types
-declare global {
-  interface Window {
-    google?: {
-      translate: {
-        TranslateElement: any
-        TranslateElementInit: any
-      }
-    }
-    googleTranslateElementInit?: () => void
-  }
-}
+// Google Translate types in types/google-translate.d.ts
 
 export default function ProfilePage() {
   const router = useRouter()
@@ -129,8 +118,8 @@ export default function ProfilePage() {
       
       setSuccess('Profile updated successfully!')
       setTimeout(() => setSuccess(''), 3000)
-    } catch (err: any) {
-      setError(err.message || 'Failed to update profile')
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to update profile')
     } finally {
       setSaving(false)
     }
@@ -268,8 +257,8 @@ export default function ProfilePage() {
       setNewPassword('')
       setConfirmPassword('')
       setTimeout(() => setSuccess(''), 3000)
-    } catch (err: any) {
-      setError(err.message || 'Failed to change password')
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to change password')
     } finally {
       setSaving(false)
     }

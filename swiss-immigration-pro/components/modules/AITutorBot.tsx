@@ -1,5 +1,14 @@
 'use client'
 
+/* eslint-disable @typescript-eslint/no-explicit-any -- Web Speech API lacks standard TS types */
+type SpeechRecognitionInstance = {
+  continuous: boolean; interimResults: boolean; lang: string
+  start(): void; stop(): void; abort(): void
+  onresult: ((event: { results: SpeechRecognitionResultList }) => void) | null
+  onerror: ((event: { error: string }) => void) | null
+  onend: (() => void) | null
+}
+
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
@@ -60,7 +69,7 @@ export default function AITutorBot({
   const [isVoiceMode, setIsVoiceMode] = useState(false)
   const [isListening, setIsListening] = useState(false)
   const [isSpeaking, setIsSpeaking] = useState(false)
-  const recognitionRef = useRef<any>(null)
+  const recognitionRef = useRef<SpeechRecognitionInstance | null>(null)
   const synthRef = useRef<SpeechSynthesis | null>(null)
   const currentUtteranceRef = useRef<SpeechSynthesisUtterance | null>(null)
 
@@ -68,20 +77,21 @@ export default function AITutorBot({
   useEffect(() => {
     if (typeof window !== 'undefined') {
       // Check for Web Speech API support
-      if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-        const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition
-        recognitionRef.current = new SpeechRecognition()
+      const Win = window as Window & { webkitSpeechRecognition?: new () => SpeechRecognitionInstance; SpeechRecognition?: new () => SpeechRecognitionInstance }
+      const SpeechRecognitionCtor = Win.webkitSpeechRecognition || Win.SpeechRecognition
+      if (SpeechRecognitionCtor) {
+        recognitionRef.current = new SpeechRecognitionCtor()
         recognitionRef.current.continuous = false
         recognitionRef.current.interimResults = false
         recognitionRef.current.lang = 'en-US'
-        
-        recognitionRef.current.onresult = (event: any) => {
+
+        recognitionRef.current.onresult = (event) => {
           const transcript = event.results[0][0].transcript
           setInput(transcript)
           setIsListening(false)
         }
-        
-        recognitionRef.current.onerror = (event: any) => {
+
+        recognitionRef.current.onerror = (event) => {
           console.error('Speech recognition error:', event.error)
           setIsListening(false)
           if (event.error === 'no-speech') {

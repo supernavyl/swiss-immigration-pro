@@ -258,6 +258,25 @@ export default function USPage() {
         </div>
       </section>
 
+      {/* US Journey Video */}
+      <section className="relative bg-slate-900 overflow-hidden">
+        <div className="max-w-5xl mx-auto px-4 py-16">
+          <h2 className="text-2xl font-bold text-white text-center mb-8">
+            Your Journey to Switzerland
+          </h2>
+          <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-video">
+            <video
+              controls
+              playsInline
+              preload="metadata"
+              poster="/images/environment/zurich-city.jpg"
+              className="w-full h-full object-cover"
+              src="/images/americans/video-us-journey.mp4"
+            />
+          </div>
+        </div>
+      </section>
+
       {/* Success Stories - Enhanced */}
       <section className="py-24 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-900 text-white overflow-hidden relative">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-indigo-900/20 blur-3xl rounded-full transform translate-x-1/3"></div>

@@ -344,12 +344,13 @@ export default function SwissVirtualLawyer() {
       return;
     }
 
-    const SpeechRecognition =
-      (window as any).SpeechRecognition ||
-      (window as any).webkitSpeechRecognition;
-    if (!SpeechRecognition) return;
+    // Web Speech API — vendor-prefixed, no standard TS types
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const Win = window as any;
+    const Ctor = Win.SpeechRecognition || Win.webkitSpeechRecognition;
+    if (!Ctor) return;
 
-    const recognition = new SpeechRecognition();
+    const recognition = new Ctor();
     recognition.continuous = false;
     recognition.interimResults = true;
     recognition.lang =
@@ -357,9 +358,9 @@ export default function SwissVirtualLawyer() {
         t("__lang") || "en"
       ] || "en-US";
 
-    recognition.onresult = (event: any) => {
+    recognition.onresult = (event: { results: ArrayLike<{ 0: { transcript: string } }> }) => {
       const transcript = Array.from(event.results)
-        .map((r: any) => r[0].transcript)
+        .map((r) => r[0].transcript)
         .join("");
       setInputValue(transcript);
     };

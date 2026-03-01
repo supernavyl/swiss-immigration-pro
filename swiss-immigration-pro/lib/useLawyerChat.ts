@@ -50,6 +50,21 @@ export interface UploadedDoc {
   conversation_id: string
 }
 
+/** API response DTOs (snake_case from backend) */
+interface ConversationDTO {
+  id: string; title: string; case_id?: string | null
+  created_at: string; updated_at: string
+}
+interface MessageDTO {
+  id: string; role: 'user' | 'assistant'; content: string; created_at: string
+  legal_basis?: string[]; next_steps?: string[]; deadlines?: string[]
+  complexity?: string; sources?: Array<{ file: string; article: string; score: number }>
+}
+interface CaseDTO {
+  id: string; title: string; status: string; category: string
+  created_at: string; updated_at: string
+}
+
 export interface UseLawyerChatReturn {
   messages: LawyerMessage[]
   isLoading: boolean
@@ -293,7 +308,7 @@ export function useLawyerChat(): UseLawyerChatReturn {
       const res = await fetch('/api/lawyer/conversations', { headers: getAuthHeaders() })
       if (!res.ok) return
       const data = await res.json()
-      const convos: LawyerConversation[] = (data.conversations || []).map((c: any) => ({
+      const convos: LawyerConversation[] = (data.conversations || []).map((c: ConversationDTO) => ({
         id: c.id, title: c.title, case_id: c.case_id,
         messages: [], createdAt: c.created_at, updatedAt: c.updated_at,
       }))
@@ -310,7 +325,7 @@ export function useLawyerChat(): UseLawyerChatReturn {
       const res = await fetch(`/api/lawyer/conversations/${id}`, { headers: getAuthHeaders() })
       if (!res.ok) return
       const data = await res.json()
-      const msgs: LawyerMessage[] = (data.messages || []).map((m: any) => ({
+      const msgs: LawyerMessage[] = (data.messages || []).map((m: MessageDTO) => ({
         id: m.id, role: m.role, content: m.content,
         timestamp: new Date(m.created_at),
         legalBasis: m.legal_basis, nextSteps: m.next_steps,
@@ -473,8 +488,8 @@ export function useLawyerChat(): UseLawyerChatReturn {
           incrementAnonCount()
           setAnonMessagesUsed((p) => p + 1)
         }
-      } catch (err: any) {
-        if (err.name === 'AbortError') return
+      } catch (err: unknown) {
+        if (err instanceof DOMException && err.name === 'AbortError') return
 
         if (retryAttempt < 2 && isOnline) {
           const delay = Math.pow(2, retryAttempt) * 1000
@@ -658,7 +673,7 @@ export function useLawyerChat(): UseLawyerChatReturn {
       const res = await fetch('/api/lawyer/cases', { headers: getAuthHeaders() })
       if (!res.ok) return
       const data = await res.json()
-      setCases((data.cases || []).map((c: any) => ({
+      setCases((data.cases || []).map((c: CaseDTO) => ({
         id: c.id, title: c.title, status: c.status, category: c.category,
         createdAt: c.created_at, updatedAt: c.updated_at,
       })))

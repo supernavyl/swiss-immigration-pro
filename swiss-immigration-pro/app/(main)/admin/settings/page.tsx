@@ -114,8 +114,8 @@ export default function AdminSettings() {
       await update()
       setSuccess('Profile updated successfully!')
       setTimeout(() => setSuccess(''), 3000)
-    } catch (err: any) {
-      setError(err.message || 'Failed to update profile')
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to update profile')
     } finally {
       setSaving(false)
     }
@@ -160,8 +160,8 @@ export default function AdminSettings() {
 
       setSuccess(`${category} settings saved successfully!`)
       setTimeout(() => setSuccess(''), 3000)
-    } catch (err: any) {
-      setError(err.message || 'Failed to save settings')
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to save settings')
     } finally {
       setSaving(false)
     }

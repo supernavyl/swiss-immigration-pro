@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Download, FileText, BookOpen, CheckCircle, ArrowRight, Search, X, Sparkles, Filter, Zap, Briefcase, Star, Globe, TrendingUp, Users, MapPin, Grid3x3, List, SortAsc, SortDesc, Settings, Heart, Bookmark, Share2, Eye, Clock, TrendingDown, Award, Lightbulb, Target, BarChart3, Calendar, AlertTriangle, DollarSign, Scale, Shield, Building2, Languages, MessageCircle } from 'lucide-react'
+import { Download, FileText, BookOpen, CheckCircle, ArrowRight, Search, X, Sparkles, Filter, Zap, Briefcase, Star, Globe, TrendingUp, Users, MapPin, Grid3x3, List, SortAsc, SortDesc, Settings, Heart, Bookmark, Share2, Eye, Clock, TrendingDown, Award, Lightbulb, Target, BarChart3, Calendar, AlertTriangle, DollarSign, Scale, Shield, Building2, Languages, MessageCircle, type LucideIcon } from 'lucide-react'
 import Link from 'next/link'
 import MainHeader from '@/components/layout/MainHeader'
 
@@ -470,7 +470,7 @@ export default function ResourcesPage() {
   // Enhanced AI-powered suggestions with context awareness
   const aiSuggestions = useMemo(() => {
     const suggestions: Array<{
-      icon: any
+      icon: LucideIcon
       title: string
       description: string
       category: string
