@@ -90,16 +90,16 @@ export default function PolicyLayout({
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Header with Search */}
-      <div className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
+      <div className="sticky top-0 z-50 bg-white dark:bg-gray-950 border-b border-gray-100 dark:border-gray-700 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             {/* Title */}
             <div className="flex items-center gap-4">
               <Link 
                 href="/"
-                className="text-gray-400 hover:text-gray-600 transition-colors"
+                className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 transition-colors"
               >
                 <ChevronRight className="w-5 h-5 rotate-180" />
               </Link>
@@ -130,7 +130,7 @@ export default function PolicyLayout({
                 )}
               </div>
               {searchQuery && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg max-h-64 overflow-y-auto z-50">
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-64 overflow-y-auto z-50">
                   {filteredSections.length > 0 ? (
                     <div className="p-2">
                       {filteredSections.map((section) => (
@@ -160,10 +160,10 @@ export default function PolicyLayout({
           {/* Table of Contents - Desktop */}
           <aside className="hidden lg:block lg:w-64 flex-shrink-0">
             <div className="sticky top-24">
-              <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
+              <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-6 border border-gray-100 dark:border-gray-700">
                 <div className="flex items-center gap-2 mb-4">
                   <BookOpen className="w-5 h-5 text-blue-600" />
-                  <h3 className="font-semibold text-gray-900">Table of Contents</h3>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">Table of Contents</h3>
                 </div>
                 <nav className="space-y-2">
                   {sections.map((section) => {
@@ -174,8 +174,8 @@ export default function PolicyLayout({
                         onClick={() => scrollToSection(section.id)}
                         className={`w-full text-left px-3 py-2 rounded-md text-sm transition-all ${
                           isHighlighted
-                            ? 'bg-blue-50 text-blue-700 font-medium border border-blue-200'
-                            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                            ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-200 font-medium border border-blue-200 dark:border-blue-800'
+                            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'
                         }`}
                         style={{ paddingLeft: `${(section.level - 1) * 12 + 12}px` }}
                       >
@@ -193,7 +193,7 @@ export default function PolicyLayout({
             {/* Mobile TOC Toggle */}
             <button
               onClick={() => setIsTocOpen(!isTocOpen)}
-              className="lg:hidden mb-6 w-full flex items-center justify-between px-4 py-3 bg-gray-50 rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-100 transition-colors"
+              className="lg:hidden mb-6 w-full flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             >
               <div className="flex items-center gap-2">
                 <BookOpen className="w-5 h-5 text-blue-600" />
@@ -250,7 +250,7 @@ export default function PolicyLayout({
             {/* Content */}
             <div 
               ref={contentRef}
-              className="prose prose-lg max-w-none prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-ul:text-gray-700 prose-li:text-gray-700 prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900"
+              className="prose prose-lg max-w-none prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-white prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed prose-ul:text-gray-700 dark:prose-ul:text-gray-300 prose-li:text-gray-700 dark:prose-li:text-gray-300 prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 dark:prose-strong:text-white"
             >
               {children}
             </div>

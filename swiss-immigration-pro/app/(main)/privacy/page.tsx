@@ -1,5 +1,3 @@
-'use client'
-
 import PolicyLayout from '@/components/policies/PolicyLayout'
 import { Shield, Lock, Database, Users, Mail, FileText } from 'lucide-react'
 

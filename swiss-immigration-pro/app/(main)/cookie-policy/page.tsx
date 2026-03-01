@@ -1,5 +1,3 @@
-'use client'
-
 import PolicyLayout from '@/components/policies/PolicyLayout'
 import { Cookie, Settings, Shield, BarChart3 } from 'lucide-react'
 

@@ -68,6 +68,7 @@ export default function ConsultationPage() {
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -98,21 +99,24 @@ export default function ConsultationPage() {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to book guidance session')
+        throw new Error(data.detail || data.error || 'Failed to book guidance session')
       }
 
-      // Redirect to Stripe checkout
       if (data.checkoutUrl) {
         window.location.href = data.checkoutUrl
+        return
       }
-    } catch (err: any) {
-      setError(err.message || 'Something went wrong. Please try again.')
+
+      setSuccess('Booking confirmed! Check your email for details.')
+      setLoading(false)
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50 dark:bg-gray-900">
       <MainHeader />
 
       {/* Hero Section with Image */}
@@ -151,10 +155,10 @@ export default function ConsultationPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
               onClick={() => setSelectedType(type.id)}
-              className={`relative bg-white rounded-xl shadow-lg p-8 cursor-pointer transition-all ${
+              className={`relative bg-white dark:bg-gray-800 rounded-xl shadow-lg dark:shadow-none p-8 cursor-pointer transition-all ${
                 selectedType === type.id
                   ? 'ring-4 ring-blue-500 scale-105'
-                  : 'hover:shadow-xl hover:scale-102'
+                  : 'hover:shadow-xl dark:hover:shadow-none hover:scale-102'
               } ${type.popular ? 'border-2 border-blue-500' : ''}`}
             >
               {type.popular && (
@@ -166,8 +170,8 @@ export default function ConsultationPage() {
               )}
 
               <div className="text-center mb-6">
-                <h3 className="text-2xl font-bold text-slate-900 mb-2">{type.name}</h3>
-                <div className="flex items-center justify-center gap-2 text-slate-600 mb-4">
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">{type.name}</h3>
+                <div className="flex items-center justify-center gap-2 text-slate-600 dark:text-gray-400 mb-4">
                   <Clock className="w-4 h-4" />
                   <span>{type.duration}</span>
                 </div>
@@ -175,11 +179,11 @@ export default function ConsultationPage() {
                   CHF {type.price}
                 </div>
                 {type.id !== 'support' && (
-                  <p className="text-sm text-slate-500">one-time payment</p>
+                  <p className="text-sm text-slate-500 dark:text-gray-400">one-time payment</p>
                 )}
               </div>
 
-              <p className="text-slate-600 mb-6 text-center">{type.description}</p>
+              <p className="text-slate-600 dark:text-gray-400 mb-6 text-center">{type.description}</p>
 
               <ul className="space-y-3 mb-6">
                 {type.features.map((feature, idx) => (
@@ -194,7 +198,7 @@ export default function ConsultationPage() {
                 <div className={`w-6 h-6 rounded-full border-2 mx-auto ${
                   selectedType === type.id
                     ? 'bg-blue-500 border-blue-500'
-                    : 'border-slate-300'
+                    : 'border-slate-300 dark:border-gray-700'
                 }`}>
                   {selectedType === type.id && (
                     <div className="w-full h-full rounded-full bg-blue-500 scale-50" />
@@ -210,18 +214,26 @@ export default function ConsultationPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-8"
+            className="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg dark:shadow-none p-8"
           >
+            {success ? (
+              <div className="text-center py-8">
+                <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">Booking Request Received!</h2>
+                <p className="text-slate-600 dark:text-gray-300">{success}</p>
+              </div>
+            ) : (
+            <>
             <div className="flex items-center gap-3 mb-6">
               <Calendar className="w-6 h-6 text-blue-600" />
-              <h2 className="text-2xl font-bold text-slate-900">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
                 Book Your {CONSULTATION_TYPES.find(t => t.id === selectedType)?.name} Session
               </h2>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label className="block text-sm font-medium text-slate-700 dark:text-gray-200 mb-2">
                   Full Name *
                 </label>
                 <input
@@ -229,13 +241,13 @@ export default function ConsultationPage() {
                   required
                   value={formData.fullName}
                   onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                  className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-3 border border-slate-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-900"
                   placeholder="John Doe"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label className="block text-sm font-medium text-slate-700 dark:text-gray-200 mb-2">
                   Email Address *
                 </label>
                 <input
@@ -243,14 +255,14 @@ export default function ConsultationPage() {
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-3 border border-slate-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-900"
                   placeholder="john@example.com"
                 />
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-gray-200 mb-2">
                     Preferred Date *
                   </label>
                   <input
@@ -259,12 +271,12 @@ export default function ConsultationPage() {
                     value={formData.preferredDate}
                     onChange={(e) => setFormData({ ...formData, preferredDate: e.target.value })}
                     min={new Date().toISOString().split('T')[0]}
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-4 py-3 border border-slate-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-900"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-gray-200 mb-2">
                     Preferred Time *
                   </label>
                   <input
@@ -272,36 +284,36 @@ export default function ConsultationPage() {
                     required
                     value={formData.preferredTime}
                     onChange={(e) => setFormData({ ...formData, preferredTime: e.target.value })}
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-4 py-3 border border-slate-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-900"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label className="block text-sm font-medium text-slate-700 dark:text-gray-200 mb-2">
                   Timezone
                 </label>
                 <input
                   type="text"
                   value={formData.timezone}
                   onChange={(e) => setFormData({ ...formData, timezone: e.target.value })}
-                  className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-slate-50"
+                  className="w-full px-4 py-3 border border-slate-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-slate-50 dark:bg-gray-800"
                   readOnly
                 />
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-slate-500 dark:text-gray-400 mt-1">
                   We'll confirm the exact time based on your timezone
                 </p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label className="block text-sm font-medium text-slate-700 dark:text-gray-200 mb-2">
                   Additional Notes (Optional)
                 </label>
                 <textarea
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                   rows={4}
-                  className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-3 border border-slate-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-900"
                   placeholder="Tell us about your specific situation or questions..."
                 />
               </div>
@@ -313,14 +325,14 @@ export default function ConsultationPage() {
                 </div>
               )}
 
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+              <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-gray-700 rounded-lg p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-slate-700 font-medium">Total Amount</span>
+                  <span className="text-slate-700 dark:text-gray-200 font-medium">Total Amount</span>
                   <span className="text-2xl font-bold text-blue-600">
                     CHF {CONSULTATION_TYPES.find(t => t.id === selectedType)?.price}
                   </span>
                 </div>
-                <p className="text-sm text-slate-600">
+                <p className="text-sm text-slate-600 dark:text-gray-400">
                   Payment will be processed securely through Stripe. You'll receive a confirmation email with meeting details after payment.
                 </p>
               </div>
@@ -341,12 +353,14 @@ export default function ConsultationPage() {
               </button>
             </form>
 
-            <p className="text-sm text-slate-500 text-center mt-6">
+            <p className="text-sm text-slate-500 dark:text-gray-400 text-center mt-6">
               By booking guidance, you agree to our{' '}
               <Link href="/terms" className="text-blue-600 hover:underline">Terms of Service</Link>
               {' '}and{' '}
               <Link href="/privacy" className="text-blue-600 hover:underline">Privacy Policy</Link>
             </p>
+            </>
+            )}
           </motion.div>
         )}
 
@@ -358,7 +372,7 @@ export default function ConsultationPage() {
           transition={{ delay: 0.3 }}
           className="max-w-3xl mx-auto mt-16"
         >
-          <h2 className="text-3xl font-bold text-slate-900 mb-8 text-center">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8 text-center">
             Frequently Asked Questions
           </h2>
 
@@ -385,9 +399,9 @@ export default function ConsultationPage() {
                 a: 'Our guidance sessions provide general information and advice. For specific legal matters, we recommend consulting with a certified Swiss immigration lawyer.'
               }
             ].map((faq, idx) => (
-              <div key={idx} className="bg-white rounded-lg shadow p-6">
-                <h3 className="font-semibold text-slate-900 mb-2">{faq.q}</h3>
-                <p className="text-slate-600">{faq.a}</p>
+              <div key={idx} className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-none p-6">
+                <h3 className="font-semibold text-slate-900 dark:text-white mb-2">{faq.q}</h3>
+                <p className="text-slate-600 dark:text-gray-400">{faq.a}</p>
               </div>
             ))}
           </div>

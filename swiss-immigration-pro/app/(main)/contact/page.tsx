@@ -266,10 +266,10 @@ export default function ContactPage() {
                   <div>
                     <h4 className="font-semibold text-slate-900 mb-1">Phone</h4>
                     <a
-                      href="tel:+41XXXXXXXXX"
+                      href="mailto:contact@swissimmigrationpro.com"
                       className="text-slate-700 hover:text-blue-600 font-medium transition-colors"
                     >
-                      +41 XX XXX XX XX
+                      Use the contact form below
                     </a>
                   </div>
                 </motion.div>

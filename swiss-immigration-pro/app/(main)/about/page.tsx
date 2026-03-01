@@ -124,13 +124,13 @@ export default function AboutPage() {
       y: 0,
       transition: {
         duration: 0.5,
-        ease: 'easeOut'
+        ease: 'easeOut' as const
       }
     }
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50 dark:from-gray-950 dark:via-gray-950 dark:to-gray-950">
       <MainHeader />
       
       <div className="relative overflow-hidden">
@@ -150,7 +150,7 @@ export default function AboutPage() {
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: 'easeOut' }}
+              transition={{ duration: 0.8, ease: 'easeOut' as const }}
             >
               <motion.div
                 className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-100 rounded-full mb-6"
@@ -181,25 +181,25 @@ export default function AboutPage() {
                 transition={{ delay: 0.4, duration: 0.6 }}
                 className="flex flex-wrap justify-center gap-6 mt-12"
               >
-                <div className="flex items-center gap-3 px-6 py-3 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
                   <Shield className="w-5 h-5 text-blue-600" />
                   <div className="text-left">
-                    <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">Verified</div>
-                    <div className="text-sm font-semibold text-gray-900">Expert-Led Platform</div>
+                    <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Verified</div>
+                    <div className="text-sm font-semibold text-gray-900 dark:text-white">Expert-Led Platform</div>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 px-6 py-3 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
                   <BarChart3 className="w-5 h-5 text-green-600" />
                   <div className="text-left">
-                    <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">Success Rate</div>
-                    <div className="text-sm font-semibold text-gray-900">92% Approval Rate</div>
+                    <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Success Rate</div>
+                    <div className="text-sm font-semibold text-gray-900 dark:text-white">92% Approval Rate</div>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 px-6 py-3 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
                   <Users className="w-5 h-5 text-purple-600" />
                   <div className="text-left">
-                    <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">Community</div>
-                    <div className="text-sm font-semibold text-gray-900">10,000+ Success Stories</div>
+                    <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Community</div>
+                    <div className="text-sm font-semibold text-gray-900 dark:text-white">10,000+ Success Stories</div>
                   </div>
                 </div>
               </motion.div>
@@ -217,13 +217,13 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-2 gap-12 mb-20">
             <motion.div
               variants={itemVariants}
-              className="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm hover:shadow-lg transition-shadow"
+              className="bg-white dark:bg-gray-800 rounded-2xl p-8 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-lg transition-shadow"
             >
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
                   <Target className="w-6 h-6 text-blue-600" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900">Our Mission</h3>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Our Mission</h3>
               </div>
               <p className="text-gray-600 leading-relaxed text-lg">
                 To democratize access to expert Swiss immigration guidance by combining legal expertise, cutting-edge technology, and comprehensive resources. We empower individuals and families worldwide to navigate the Swiss immigration system with confidence, clarity, and success.
@@ -232,13 +232,13 @@ export default function AboutPage() {
 
             <motion.div
               variants={itemVariants}
-              className="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm hover:shadow-lg transition-shadow"
+              className="bg-white dark:bg-gray-800 rounded-2xl p-8 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-lg transition-shadow"
             >
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
                   <Lightbulb className="w-6 h-6 text-purple-600" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900">Our Vision</h3>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Our Vision</h3>
               </div>
               <p className="text-gray-600 leading-relaxed text-lg">
                 To become the world's most trusted and comprehensive platform for Swiss immigration, recognized for our accuracy, innovation, and commitment to helping people achieve their dreams of living and working in Switzerland.
@@ -254,8 +254,8 @@ export default function AboutPage() {
               <div className="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent flex-1" />
             </div>
             
-            <div className="bg-white rounded-2xl p-10 border border-gray-200 shadow-sm">
-              <div className="prose prose-lg max-w-none">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-10 border border-gray-200 dark:border-gray-700 shadow-sm">
+              <div className="prose prose-lg dark:prose-invert max-w-none">
                 <p className="text-gray-700 mb-6 text-lg leading-relaxed">
                   Founded in 2020, Swiss Immigration Pro emerged from a shared frustration with the complexity and opacity of Swiss immigration processes. Our founding team—comprising experienced immigration lawyers, former SEM officials, and technology entrepreneurs—recognized that critical information was scattered across 26 cantons, often outdated, or accessible only through expensive legal consultations.
                 </p>
@@ -348,7 +348,7 @@ export default function AboutPage() {
                 whileHover={{ y: -4 }}
                 className="relative group"
               >
-                <div className={`bg-white border-2 ${value.color} rounded-xl p-8 h-full transition-all duration-300 hover:shadow-xl`}>
+                <div className={`bg-white dark:bg-gray-800 border-2 ${value.color} dark:border-gray-700 rounded-xl p-8 h-full transition-all duration-300 hover:shadow-xl`}>
                   <div className="flex items-start justify-between gap-4 mb-6">
                     <div className={`w-14 h-14 ${value.iconBg} rounded-xl flex items-center justify-center flex-shrink-0`}>
                       <value.icon className={`w-7 h-7 ${value.iconColor}`} />
@@ -424,7 +424,7 @@ export default function AboutPage() {
                 whileHover={{ y: -4 }}
                 className="relative group"
               >
-                <div className="bg-white rounded-xl p-8 border-2 border-gray-200 transition-all duration-300 hover:border-blue-400 hover:shadow-xl h-full">
+                <div className="bg-white dark:bg-gray-800 rounded-xl p-8 border-2 border-gray-200 dark:border-gray-700 transition-all duration-300 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-xl h-full">
                   <div className="text-center mb-6">
                     <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center text-5xl mx-auto mb-4 border-4 border-white shadow-lg">
                       {member.emoji}
@@ -610,9 +610,9 @@ export default function AboutPage() {
           transition={{ duration: 0.6 }}
           className="mb-24"
         >
-          <div className="bg-white rounded-2xl p-10 border border-gray-200 shadow-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-10 border border-gray-200 dark:border-gray-700 shadow-sm">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Certifications & Trust</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">Certifications & Trust</h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                 We maintain the highest standards of accuracy, security, and professional integrity
               </p>
@@ -680,7 +680,7 @@ export default function AboutPage() {
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1 }}
                 whileHover={{ scale: 1.05 }}
-                className="flex flex-col items-center gap-3 px-6 py-4 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+                className="flex flex-col items-center gap-3 px-6 py-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow"
               >
                 <partner.icon className="w-8 h-8 text-gray-600" />
                 <div className="text-sm font-semibold text-gray-700 text-center max-w-[200px]">
