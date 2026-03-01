@@ -207,7 +207,7 @@ screenshots-final.js
 swiss-immigration-pro/images/environment/
 swiss-immigration-pro/images/photo/
 swiss-immigration-pro/images/us-journey.mp4
-"swiss-immigration-pro/files-1 (2)/"
+swiss-immigration-pro/files-1*/
 
 # Generated documents
 SIP_*.pdf
@@ -217,3 +217,10 @@ SIP_*.html
 *_key
 *.rsa
 *.ed25519
+
+# One-off generation scripts
+generate_*.py
+
+# Testimonial images and video assets (use CDN)
+swiss-immigration-pro/public/images/testimonials/
+swiss-immigration-pro/public/images/videos/
