@@ -10,7 +10,7 @@ import CTASection from '@/components/home/CTASection'
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-gray-950 font-sans selection:bg-blue-100 selection:text-blue-900 dark:selection:bg-blue-900 dark:selection:text-blue-100">
+    <div className="min-h-screen bg-white dark:bg-slate-950 font-sans selection:bg-blue-100 selection:text-blue-900 dark:selection:bg-blue-900 dark:selection:text-blue-100">
       <MainHeader />
       <HeroSection />
       <AdvantagesSection />

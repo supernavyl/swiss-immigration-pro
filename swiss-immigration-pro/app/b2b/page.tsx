@@ -190,6 +190,7 @@ export default function B2BLandingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
+              style={{ opacity: 1 }}
             >
               <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-medium border border-white/10 mb-6">
                 <Building2 className="w-3.5 h-3.5 text-blue-400" />
@@ -198,12 +199,12 @@ export default function B2BLandingPage() {
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.1] mb-6 tracking-tight">
                 Stop Tracking Permits{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-cyan-200">
                   in Spreadsheets
                 </span>
               </h1>
 
-              <p className="text-lg sm:text-xl text-blue-100/80 font-light leading-relaxed mb-8 max-w-2xl">
+              <p className="text-lg sm:text-xl text-white/90 font-light leading-relaxed mb-8 max-w-2xl">
                 Automate work permit compliance for your Swiss workforce.
                 Track expirations, prevent fines, and keep HR overhead to a minimum.
               </p>
@@ -227,12 +228,7 @@ export default function B2BLandingPage() {
             </motion.div>
 
             {/* Stats row */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="grid grid-cols-2 sm:grid-cols-4 gap-4"
-            >
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {COMPLIANCE_STATS.map((stat) => (
                 <div
                   key={stat.label}
@@ -243,7 +239,7 @@ export default function B2BLandingPage() {
                   <div className="text-xs text-blue-200/60 mt-1">{stat.label}</div>
                 </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -251,13 +247,7 @@ export default function B2BLandingPage() {
       {/* Problem / Pain Points */}
       <section className="py-20 sm:py-24 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
+          <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
               Swiss Immigration Compliance is Complex
             </h2>
@@ -265,7 +255,7 @@ export default function B2BLandingPage() {
               26 cantons, 6 permit types, different renewal rules. One missed deadline can mean
               a CHF 10,000+ fine and disrupted operations.
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-3 gap-6">
             {[
@@ -284,19 +274,15 @@ export default function B2BLandingPage() {
                 label: 'Of companies miss at least one renewal/year',
                 detail: 'Source: Swiss Federal Statistical Office',
               },
-            ].map((item, i) => (
-              <motion.div
+            ].map((item) => (
+              <div
                 key={item.stat}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
                 className="bg-white rounded-2xl p-8 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-100 text-center"
               >
                 <div className="text-4xl font-extrabold text-red-600 mb-2">{item.stat}</div>
                 <div className="text-base font-semibold text-slate-900 mb-2">{item.label}</div>
                 <div className="text-sm text-slate-500">{item.detail}</div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -305,13 +291,7 @@ export default function B2BLandingPage() {
       {/* Features Grid */}
       <section className="py-20 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
+          <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-1.5 rounded-full text-xs font-semibold mb-4 border border-blue-100">
               <Zap className="w-3.5 h-3.5" />
               Built for Swiss HR Teams
@@ -322,16 +302,12 @@ export default function B2BLandingPage() {
             <p className="text-lg text-slate-600 font-light max-w-2xl mx-auto">
               From permit tracking to compliance reporting — one platform for your entire workforce.
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {FEATURES.map((feature, i) => (
-              <motion.div
+            {FEATURES.map((feature) => (
+              <div
                 key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
                 className="bg-white rounded-2xl p-8 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.1)] border border-slate-100 transition-all duration-300 hover:-translate-y-1"
               >
                 <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mb-5">
@@ -339,7 +315,7 @@ export default function B2BLandingPage() {
                 </div>
                 <h3 className="text-lg font-bold text-slate-900 mb-2">{feature.title}</h3>
                 <p className="text-sm text-slate-600 leading-relaxed">{feature.description}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -349,21 +325,16 @@ export default function B2BLandingPage() {
       <section className="py-20 sm:py-24 bg-gradient-to-br from-blue-600 to-indigo-700 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
+            <div>
               <h2 className="text-3xl sm:text-4xl font-bold mb-6">
                 The Cost of <em className="not-italic text-red-300">Not</em> Using SIP Corporate
               </h2>
               <div className="space-y-6">
                 {[
-                  { label: 'One missed permit renewal fine', cost: 'CHF 10,000', saved: true },
-                  { label: 'HR admin time (40h/mo × CHF 50/h)', cost: 'CHF 24,000/yr', saved: true },
-                  { label: 'Legal consultation for compliance', cost: 'CHF 5,000/yr', saved: true },
-                  { label: 'Employee downtime during violations', cost: 'CHF 15,000+', saved: true },
+                  { label: 'One missed permit renewal fine', cost: 'CHF 10,000' },
+                  { label: 'HR admin time (40h/mo × CHF 50/h)', cost: 'CHF 24,000/yr' },
+                  { label: 'Legal consultation for compliance', cost: 'CHF 5,000/yr' },
+                  { label: 'Employee downtime during violations', cost: 'CHF 15,000+' },
                 ].map((item) => (
                   <div key={item.label} className="flex items-start gap-4">
                     <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center shrink-0 mt-0.5">
@@ -376,15 +347,9 @@ export default function B2BLandingPage() {
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20"
-            >
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
               <h3 className="text-xl font-bold mb-6">Your Annual Savings with SIP</h3>
               <div className="space-y-4 mb-8">
                 <div className="flex justify-between items-center py-3 border-b border-white/10">
@@ -409,7 +374,7 @@ export default function B2BLandingPage() {
                 <div className="text-4xl font-extrabold text-green-300">CHF 33,012</div>
                 <div className="text-sm text-blue-200 mt-2">5.5x return on investment</div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -417,25 +382,16 @@ export default function B2BLandingPage() {
       {/* Testimonials */}
       <section className="py-20 sm:py-24 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
+          <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
               Trusted by Swiss HR Teams
             </h2>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-3 gap-6">
             {TESTIMONIALS.map((t, i) => (
-              <motion.div
+              <div
                 key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
                 className="bg-white rounded-2xl p-8 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-100"
               >
                 <div className="flex gap-1 mb-4">
@@ -453,7 +409,7 @@ export default function B2BLandingPage() {
                     <div className="text-xs text-slate-500">{t.company}</div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -462,12 +418,7 @@ export default function B2BLandingPage() {
       {/* Pricing Section */}
       <section id="pricing" className="py-20 sm:py-24 scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
+          <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
               Simple, Transparent Pricing
             </h2>
@@ -498,20 +449,16 @@ export default function B2BLandingPage() {
                 </span>
               </span>
             </div>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
-            {B2B_PLANS.map((plan, i) => {
+            {B2B_PLANS.map((plan) => {
               const price = billingCycle === 'annual' ? plan.price.annual : plan.price.monthly
 
               return (
-                <motion.div
+                <div
                   key={plan.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  className={`relative bg-white rounded-2xl p-8 shadow-xl border transition-all hover:-translate-y-1 ${
+                  className={`relative bg-white rounded-2xl p-8 shadow-xl border transition-all duration-300 hover:-translate-y-1 ${
                     plan.popular
                       ? 'ring-2 ring-blue-500 border-blue-500 scale-[1.02]'
                       : 'border-slate-200 hover:border-blue-300'
@@ -558,7 +505,7 @@ export default function B2BLandingPage() {
                   >
                     Start Free Trial
                   </Link>
-                </motion.div>
+                </div>
               )
             })}
           </div>
@@ -605,38 +552,32 @@ export default function B2BLandingPage() {
       {/* Final CTA */}
       <section className="py-20 sm:py-24 bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <Briefcase className="w-12 h-12 mx-auto mb-6 text-blue-400" />
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              Ready to Automate Permit Compliance?
-            </h2>
-            <p className="text-lg text-blue-100/80 font-light mb-8 max-w-2xl mx-auto">
-              Join Swiss companies who save 40+ hours per month and avoid costly fines
-              with automated permit tracking.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/auth/register?redirect=/b2b/onboarding"
-                className="inline-flex items-center justify-center gap-2 bg-white text-slate-900 font-semibold px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 text-base"
-              >
-                Start Free Trial
-                <ArrowRight className="w-5 h-5" />
-              </Link>
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white border border-white/20 font-medium px-8 py-4 rounded-lg transition-all text-base"
-              >
-                Request a Demo
-              </Link>
-            </div>
-            <p className="text-xs text-blue-300/50 mt-6">
-              14-day free trial. No credit card required. Cancel anytime.
-            </p>
-          </motion.div>
+          <Briefcase className="w-12 h-12 mx-auto mb-6 text-blue-400" />
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+            Ready to Automate Permit Compliance?
+          </h2>
+          <p className="text-lg text-white/80 font-light mb-8 max-w-2xl mx-auto">
+            Join Swiss companies who save 40+ hours per month and avoid costly fines
+            with automated permit tracking.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/auth/register?redirect=/b2b/onboarding"
+              className="inline-flex items-center justify-center gap-2 bg-white text-slate-900 font-semibold px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 text-base"
+            >
+              Start Free Trial
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white border border-white/20 font-medium px-8 py-4 rounded-lg transition-all text-base"
+            >
+              Request a Demo
+            </Link>
+          </div>
+          <p className="text-xs text-blue-300/50 mt-6">
+            14-day free trial. No credit card required. Cancel anytime.
+          </p>
         </div>
       </section>
 

@@ -84,6 +84,7 @@ export default function HeroSection() {
     <motion.section
       ref={sectionRef}
       className="relative overflow-hidden min-h-screen flex flex-col"
+      style={{ opacity: 1 }}
       suppressHydrationWarning
     >
       {/* ── Background: Image + single overlay ── */}

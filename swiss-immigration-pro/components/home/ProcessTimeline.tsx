@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { Target, Briefcase, Shield, CheckCircle } from 'lucide-react'
 import { useT } from '@/lib/i18n/useTranslation'
 
@@ -15,66 +14,50 @@ export default function ProcessTimeline() {
   ]
 
   return (
-    <motion.section
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true, margin: '-100px' }}
-      transition={{ duration: 0.6 }}
-      className="py-24 bg-slate-50 dark:bg-gray-900 overflow-hidden"
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">
+    <section className="py-16 sm:py-20 bg-slate-50/50 dark:bg-slate-900/30">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8">
+        <div className="text-center mb-12">
+          <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 tracking-wide uppercase mb-3">
+            Simple Process
+          </p>
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-3">
             {t('home.howItWorks')}
           </h2>
-          <p className="text-slate-600 dark:text-gray-400">Simple steps to your Swiss residency</p>
-        </motion.div>
+          <p className="text-slate-500 dark:text-slate-400">
+            Simple steps to your Swiss residency
+          </p>
+        </div>
 
-        <div className="relative max-w-4xl mx-auto">
-          <motion.div
-            initial={{ scaleY: 0 }}
-            whileInView={{ scaleY: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, ease: 'easeOut' }}
-            className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-blue-200 via-blue-300 to-blue-200 -translate-x-1/2 hidden md:block"
-          />
-
-          {steps.map((item, idx) => {
-            const isEven = idx % 2 === 0
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {steps.map((item) => {
+            const Icon = item.icon
             return (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, x: isEven ? -30 : 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
-                transition={{ delay: idx * 0.2, duration: 0.6 }}
-                className={`relative flex items-center gap-8 mb-12 last:mb-0 ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'}`}
+              <div
+                key={item.step}
+                className="relative rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 hover:shadow-xl hover:shadow-slate-100/80 dark:hover:shadow-none transition-all duration-300 overflow-hidden"
               >
-                <div className={`flex-1 ${isEven ? 'md:text-right' : 'md:text-left'}`}>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">{item.title}</h3>
-                  <p className="text-slate-500 dark:text-gray-400 text-sm mt-1">{item.desc}</p>
+                {/* Watermark number */}
+                <span className="absolute top-3 right-4 text-5xl font-black text-slate-100 dark:text-slate-800 select-none pointer-events-none">
+                  {item.step}
+                </span>
+
+                <div className="relative">
+                  <span className="inline-flex items-center justify-center w-8 h-8 bg-blue-600 text-white text-xs font-bold rounded-full mb-4">
+                    {item.step}
+                  </span>
+                  <div className="w-11 h-11 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center mb-4">
+                    <Icon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <h3 className="font-bold text-slate-900 dark:text-white mb-2">{item.title}</h3>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                    {item.desc}
+                  </p>
                 </div>
-
-                <motion.div
-                  whileHover={{ scale: 1.1 }}
-                  transition={{ duration: 0.2 }}
-                  className="relative z-10 w-14 h-14 bg-white dark:bg-gray-800 border-4 border-blue-100 dark:border-blue-900 rounded-full flex items-center justify-center shadow-md shrink-0 hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
-                >
-                  <span className="text-blue-600 font-bold">{item.step}</span>
-                </motion.div>
-
-                <div className="flex-1 hidden md:block" />
-              </motion.div>
+              </div>
             )
           })}
         </div>
       </div>
-    </motion.section>
+    </section>
   )
 }
