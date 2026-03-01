@@ -1,7 +1,8 @@
 'use client'
 
-import { createContext, useContext, useState, ReactNode } from 'react'
-import ChatbotRight from './ChatbotRight'
+import { createContext, useContext, useState, useCallback, lazy, Suspense, ReactNode } from 'react'
+
+const ChatbotRight = lazy(() => import('./ChatbotRight'))
 
 interface ChatbotContextType {
   openChatbot: () => void
@@ -22,13 +23,17 @@ export function useChatbot() {
 export function ChatbotProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false)
 
-  const openChatbot = () => setIsOpen(true)
-  const closeChatbot = () => setIsOpen(false)
+  const openChatbot = useCallback(() => setIsOpen(true), [])
+  const closeChatbot = useCallback(() => setIsOpen(false), [])
 
   return (
     <ChatbotContext.Provider value={{ openChatbot, closeChatbot, isOpen }}>
       {children}
-      <ChatbotRight isOpen={isOpen} onClose={closeChatbot} />
+      {isOpen && (
+        <Suspense fallback={null}>
+          <ChatbotRight isOpen={isOpen} onClose={closeChatbot} />
+        </Suspense>
+      )}
     </ChatbotContext.Provider>
   )
 }

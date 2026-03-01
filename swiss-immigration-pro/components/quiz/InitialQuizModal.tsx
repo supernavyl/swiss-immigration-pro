@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, ArrowRight, ArrowLeft, CheckCircle, Globe, Mail, Briefcase, User, Calendar, Languages } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { classifyLayer, getLayerRoute, type QuizAnswers, getAllCountries } from '@/lib/layerLogic'
+import { analytics } from '@/lib/analytics'
 
 // Memoize countries list (doesn't change)
 const COUNTRIES_LIST = getAllCountries()
@@ -77,8 +78,8 @@ export default function InitialQuizModal({ isOpen, onClose, onComplete }: Initia
     if (!answers.countryOfOrigin) return
 
     setIsSubmitting(true)
+    analytics.quizCompleted(classifyLayer(answers.countryOfOrigin))
 
-    // Determine layer
     const layer = classifyLayer(answers.countryOfOrigin)
     const completeAnswers: QuizAnswers = {
       countryOfOrigin: answers.countryOfOrigin,
@@ -102,10 +103,15 @@ export default function InitialQuizModal({ isOpen, onClose, onComplete }: Initia
       document.cookie = `countryOfOrigin=${completeAnswers.countryOfOrigin}; path=/; max-age=${oneYear}`
     }
 
-    // Save to database if email provided
+    // Capture email lead and save quiz answers
     if (completeAnswers.email) {
-      try {
-        await fetch('/api/quiz/save', {
+      const savePromises = [
+        fetch('/api/newsletter/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: completeAnswers.email, source: 'quiz' }),
+        }).catch(() => {}),
+        fetch('/api/quiz/save', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -113,18 +119,16 @@ export default function InitialQuizModal({ isOpen, onClose, onComplete }: Initia
             layer,
             completedAt: new Date().toISOString(),
           }),
-        })
-      } catch (error) {
-        console.error('Failed to save quiz:', error)
-      }
+        }).catch(() => {}),
+      ]
+      await Promise.allSettled(savePromises)
     }
 
-    // Call completion handler
     onComplete(completeAnswers, layer)
 
-    // Redirect to layer route
+    // Redirect to personalized results page
     setTimeout(() => {
-      router.push(getLayerRoute(layer))
+      router.push('/quiz/results')
       setIsSubmitting(false)
     }, 500)
   }, [answers, router, onComplete])
@@ -136,19 +140,19 @@ export default function InitialQuizModal({ isOpen, onClose, onComplete }: Initia
       case 2:
         return answers.immigrationReason && answers.immigrationReason.length > 0
       case 3:
-        return true // Optional
+        return true
       case 4:
-        return true // Optional
+        return true
       case 5:
         return answers.hasJobOffer !== undefined
       case 6:
-        return true // Optional
+        return true
       case 7:
-        return true // Optional
+        return !!answers.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(answers.email)
       default:
         return false
     }
-  }, [currentStep, answers.countryOfOrigin, answers.immigrationReason?.length, answers.hasJobOffer])
+  }, [currentStep, answers.countryOfOrigin, answers.immigrationReason?.length, answers.hasJobOffer, answers.email])
 
   if (!isOpen) return null
 
@@ -480,7 +484,7 @@ export default function InitialQuizModal({ isOpen, onClose, onComplete }: Initia
                   </motion.div>
                 )}
 
-                {/* Step 7: Email */}
+                {/* Step 7: Email (required for personalized plan) */}
                 {currentStep === 7 && (
                   <motion.div
                     key="step7"
@@ -493,10 +497,10 @@ export default function InitialQuizModal({ isOpen, onClose, onComplete }: Initia
                       <Mail className="w-8 h-8 text-blue-600" />
                       <div>
                         <h3 className="text-2xl font-semibold text-gray-900">
-                          Get your personalized PDF summary?
+                          Get your free personalized immigration plan
                         </h3>
                         <p className="text-sm text-gray-600">
-                          (Optional - enter your email to receive a customized immigration pathway document)
+                          Enter your email to receive your custom pathway and recommendations
                         </p>
                       </div>
                     </div>
@@ -509,10 +513,11 @@ export default function InitialQuizModal({ isOpen, onClose, onComplete }: Initia
                     />
                     <div className="p-5 bg-green-50 rounded-xl">
                       <p className="text-sm text-green-900 leading-relaxed">
-                        ✓ You&apos;ll receive a personalized PDF with:
-                        <br />• Your customized immigration pathway
+                        You&apos;ll receive:
+                        <br />• Your personalized immigration pathway
                         <br />• Timeline and requirements checklist
-                        <br />• Next steps and resources
+                        <br />• Recommended next steps and resources
+                        <br />• No spam, unsubscribe anytime
                       </p>
                     </div>
                   </motion.div>

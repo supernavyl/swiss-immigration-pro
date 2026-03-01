@@ -7,7 +7,7 @@ import {
   HelpCircle, ChevronRight, Brain, Zap, Target, CheckCircle2,
   Minimize2, Maximize2, MessageSquare, Mic, MicOff, Volume2, VolumeX
 } from 'lucide-react'
-import { useSession } from 'next-auth/react'
+import { useSession } from '@/lib/auth-client'
 
 interface AITutorBotProps {
   moduleTitle?: string
@@ -313,6 +313,12 @@ Keep your response concise but comprehensive (2-4 paragraphs max).`
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Connection error. Please check your internet and try again.'
       setErrorMessage(errorMsg)
+      const errorResponse: ChatMessage = {
+        id: createMessageId(),
+        role: 'assistant',
+        content: `Sorry, something went wrong: ${errorMsg}`,
+        timestamp: new Date()
+      }
       setMessages(prev => [...prev, errorResponse])
     } finally {
       setIsLoading(false)
