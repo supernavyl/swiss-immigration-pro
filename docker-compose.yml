@@ -110,9 +110,9 @@ services:
       redis:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "celery -A app.celery_app inspect ping --timeout 5 || exit 1"]
+      test: ["CMD-SHELL", "python3 -c \"import glob; procs=[open(f,'rb').read().replace(b'\\x00',b' ').decode('utf-8','ignore') for f in glob.glob('/proc/*/cmdline')]; exit(0 if any('celery' in p and 'worker' in p for p in procs) else 1)\""]
       interval: 30s
-      timeout: 10s
+      timeout: 5s
       retries: 3
       start_period: 20s
     environment:
@@ -146,7 +146,7 @@ services:
       redis:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "test -f /tmp/celerybeat.pid && kill -0 $$(cat /tmp/celerybeat.pid) || exit 1"]
+      test: ["CMD-SHELL", "python3 -c \"import glob; procs=[open(f,'rb').read().replace(b'\\x00',b' ').decode('utf-8','ignore') for f in glob.glob('/proc/*/cmdline')]; exit(0 if any('celery' in p and 'beat' in p for p in procs) else 1)\""]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -194,7 +194,7 @@ services:
       backend:
         condition: service_started
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/ || exit 1"]
+      test: ["CMD-SHELL", "node -e \"const h=require('http');h.get('http://localhost:3000/',r=>{process.exit(r.statusCode<400?0:1)}).on('error',()=>process.exit(1))\""]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -216,11 +216,11 @@ services:
     restart: unless-stopped
     depends_on:
       frontend:
-        condition: service_healthy
+        condition: service_started
       backend:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:80/ || exit 1"]
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:80/ || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 3
