@@ -43,7 +43,17 @@ interface EnhancedModuleDisplayProps {
 }
 
 export default function EnhancedModuleDisplay({ module, moduleId, quiz }: EnhancedModuleDisplayProps) {
-  if (!module || !module.title || !module.sections || !Array.isArray(module.sections)) {
+  const isValid = module && module.title && module.sections && Array.isArray(module.sections)
+
+  const [activeSection, setActiveSection] = useState<string>(isValid ? module.sections[0]?.id || '' : '')
+  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [focusMode, setFocusMode] = useState(false)
+  const [aiAssistantOpen, setAiAssistantOpen] = useState(false)
+  const [completedSections, setCompletedSections] = useState<Set<string>>(new Set())
+  const sectionTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map())
+  const ttsRef = useRef<ModuleTTSHandle>(null)
+
+  if (!isValid) {
     console.error('Invalid module structure:', module)
     return (
       <div className="min-h-screen bg-white dark:bg-gray-950 p-8">
@@ -62,14 +72,6 @@ export default function EnhancedModuleDisplay({ module, moduleId, quiz }: Enhanc
       </div>
     )
   }
-
-  const [activeSection, setActiveSection] = useState<string>(module.sections[0]?.id || '')
-  const [sidebarOpen, setSidebarOpen] = useState(true)
-  const [focusMode, setFocusMode] = useState(false)
-  const [aiAssistantOpen, setAiAssistantOpen] = useState(false)
-  const [completedSections, setCompletedSections] = useState<Set<string>>(new Set())
-  const sectionTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map())
-  const ttsRef = useRef<ModuleTTSHandle>(null)
 
   // Load saved progress on mount
   useEffect(() => {
@@ -97,7 +99,7 @@ export default function EnhancedModuleDisplay({ module, moduleId, quiz }: Enhanc
         fetch('/api/modules/progress', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-          body: JSON.stringify({ moduleId, sectionId, completed: false }),
+          body: JSON.stringify({ moduleId, sectionId, completed: true }),
         }).catch(() => {})
       }
       return next

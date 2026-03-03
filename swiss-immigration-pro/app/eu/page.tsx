@@ -116,7 +116,7 @@ export default function EUPage() {
 
               <div className="flex gap-8 pt-8 border-t border-white/10">
                 {[
-                  { value: '87%', label: 'Success Rate' },
+                  { value: '96%', label: 'Success Rate' },
                   { value: '18.5K+', label: 'EU Clients' },
                   { value: '2-4', label: 'Weeks Avg.' }
                 ].map((stat, i) => (

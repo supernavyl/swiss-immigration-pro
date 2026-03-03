@@ -65,7 +65,9 @@ async def subscribe(body: SubscribeRequest, db: AsyncSession = Depends(get_db)):
 
 
 @router.post("/unsubscribe")
-async def unsubscribe_post(body: UnsubscribeRequest, db: AsyncSession = Depends(get_db)):
+async def unsubscribe_post(body: UnsubscribeRequest, token: str = Query(...), db: AsyncSession = Depends(get_db)):
+    if not _verify_unsub_token(body.email, token):
+        raise HTTPException(403, "Invalid unsubscribe token")
     await db.execute(update(EmailLead).where(EmailLead.email == body.email).values(subscribed=False))
     return {"success": True, "message": "Successfully unsubscribed"}
 

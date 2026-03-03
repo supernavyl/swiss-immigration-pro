@@ -1,19 +1,40 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { Mail, MapPin, ArrowRight, CheckCircle, MessageCircle } from "lucide-react";
+import { useState, useEffect, useMemo } from "react";
+import {
+  Mail,
+  MapPin,
+  ArrowRight,
+  CheckCircle,
+  MessageCircle,
+  Sparkles,
+} from "lucide-react";
 import { CONFIG } from "@/lib/config";
 import { useT } from "@/lib/i18n/useTranslation";
 import { api } from "@/lib/api";
+import { useSession } from "@/lib/auth-client";
 
 export default function Footer() {
   const { t } = useT();
+  const { data: session, status } = useSession();
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [year, setYear] = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
+
+  // Determine user pack tier for context-aware CTA
+  const appUser = useMemo(() => {
+    if (
+      typeof window === "undefined" ||
+      !mounted ||
+      status === "loading" ||
+      !session?.user
+    )
+      return null;
+    return { packId: (session.user as any)?.packId ?? "free" };
+  }, [session, status, mounted]);
 
   // Set year and mounted flag after hydration to avoid mismatch
   useEffect(() => {
@@ -64,11 +85,14 @@ export default function Footer() {
   const trustMetrics = [
     { value: "12,000+", label: "Applications guided" },
     { value: "4.9\u2605", label: "Average rating" },
-    { value: "98%", label: "Permit success rate" },
+    { value: "96%", label: "Permit success rate" },
   ];
 
   const socialLinks = [
-    { href: "https://linkedin.com/company/swissimmigrationpro", label: "LinkedIn" },
+    {
+      href: "https://linkedin.com/company/swissimmigrationpro",
+      label: "LinkedIn",
+    },
     { href: "https://x.com/swissimmipro", label: "X (Twitter)" },
   ];
 
@@ -250,15 +274,44 @@ export default function Footer() {
 
         {/* CTA row */}
         <div className="bg-gradient-to-r from-blue-600/10 to-indigo-600/10 border border-blue-500/20 rounded-2xl px-6 py-5 mt-12 mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-slate-300 font-medium">
-            Ready to start your Swiss journey?
-          </p>
-          <Link
-            href="/pricing"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-all"
-          >
-            Begin Free Assessment <ArrowRight className="w-4 h-4" />
-          </Link>
+          {mounted && appUser?.packId === "free" ? (
+            <>
+              <p className="text-slate-300 font-medium">
+                Ready to unlock unlimited AI guidance?
+              </p>
+              <Link
+                href="/pricing"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-all"
+              >
+                <Sparkles className="w-4 h-4" />
+                Upgrade to Pro <ArrowRight className="w-4 h-4" />
+              </Link>
+            </>
+          ) : mounted && appUser?.packId && appUser.packId !== "free" ? (
+            <>
+              <p className="text-slate-300 font-medium">
+                Need expert guidance on your application?
+              </p>
+              <Link
+                href="/consultation"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-all"
+              >
+                Book Consultation <ArrowRight className="w-4 h-4" />
+              </Link>
+            </>
+          ) : (
+            <>
+              <p className="text-slate-300 font-medium">
+                Ready to start your Swiss journey?
+              </p>
+              <Link
+                href="/pricing"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-all"
+              >
+                Begin Free Assessment <ArrowRight className="w-4 h-4" />
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Divider + Bottom */}
@@ -269,9 +322,7 @@ export default function Footer() {
               {t("footer.allRightsReserved")}
             </p>
             <span className="text-xs text-slate-600">|</span>
-            <p className="text-xs text-slate-500">
-              Built for Switzerland
-            </p>
+            <p className="text-xs text-slate-500">Built for Switzerland</p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-slate-500">
             {legalLinks.map((link) => (

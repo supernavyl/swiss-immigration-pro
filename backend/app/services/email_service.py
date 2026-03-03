@@ -1,4 +1,5 @@
 import asyncio
+import html as html_mod
 import logging
 
 from app.config import get_settings
@@ -66,7 +67,7 @@ def _base_template(title: str, body_content: str) -> str:
 
 
 async def send_welcome_email(email: str, name: str | None = None):
-    greeting = name or "there"
+    greeting = html_mod.escape(name) if name else "there"
     html = _base_template(
         "Welcome to Swiss Immigration Pro!",
         f"""
