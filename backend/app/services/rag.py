@@ -53,7 +53,7 @@ _chunks: list[DocumentChunk] = []
 _embeddings_matrix: np.ndarray | None = None
 _model = None
 _doc_hash: str = ""
-_init_lock = asyncio.Lock()
+_init_lock: asyncio.Lock | None = None
 _initialized = False
 
 _DOCS_DIR_DOCKER = Path("/app/docs")
@@ -202,6 +202,9 @@ async def initialize() -> None:
     """Load documents, chunk, and embed. Safe to call multiple times."""
     global _chunks, _embeddings_matrix, _doc_hash, _initialized
 
+    global _init_lock
+    if _init_lock is None:
+        _init_lock = asyncio.Lock()
     async with _init_lock:
         docs_dir = _get_docs_dir()
         current_hash = _compute_doc_hash(docs_dir)

@@ -8,6 +8,7 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import io
+import re
 import uuid
 from datetime import date, datetime
 from pathlib import Path
@@ -61,7 +62,10 @@ async def _check_anon_lawyer_limit(request: Request) -> None:
         if count == 1:
             await r.expire(key, 86400)
     except Exception:
-        return  # fail open if Redis is down
+        raise HTTPException(
+            status_code=503,
+            detail="Service temporarily unavailable. Please try again later.",
+        )
 
     if count > limit:
         raise HTTPException(
@@ -662,7 +666,7 @@ async def export_conversation_pdf(
     )
     messages = msgs_result.scalars().all()
 
-    pdf_bytes = _generate_pdf(convo, messages)
+    pdf_bytes = await asyncio.to_thread(_generate_pdf, convo, messages)
 
     return StreamingResponse(
         io.BytesIO(pdf_bytes),
@@ -755,7 +759,7 @@ def _generate_pdf(
         elements.append(Paragraph(f"<b>{role_label}</b> — {ts}", role_style))
 
         content = msg.content.replace("\n", "<br/>")
-        content = content.replace("**", "<b>").replace("**", "</b>")
+        content = re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', content)
         style = user_style if msg.role == "user" else assistant_style
         elements.append(Paragraph(content[:5000], style))
 

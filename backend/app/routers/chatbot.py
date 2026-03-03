@@ -45,7 +45,8 @@ async def _check_anon_chatbot_limit(request: Request) -> str | None:
         if count == 1:
             await r.expire(key, 86400)
     except Exception:
-        return None  # fail open if Redis is down
+        logger.warning("Redis unavailable for anonymous rate limiting")
+        return "Service temporarily unavailable. Please try again later."
 
     if count > limit:
         return f"Daily limit of {limit} messages reached. Sign up for unlimited access!"

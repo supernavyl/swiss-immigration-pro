@@ -117,7 +117,7 @@ async def get_admin_subscribers(db: AsyncSession = Depends(get_db)):
         }
     except Exception as e:
         logger.error("Error fetching subscribers: %s", str(e), exc_info=True)
-        raise HTTPException(500, f"Failed to fetch subscribers: {str(e)}")
+        raise HTTPException(500, "Failed to fetch subscribers") from None
 
 
 @router.post("/send")

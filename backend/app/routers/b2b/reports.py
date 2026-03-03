@@ -19,6 +19,13 @@ from app.routers.b2b.companies import get_company_member
 router = APIRouter(prefix="/reports", tags=["b2b-reports"])
 
 
+def _sanitize_csv(value: str) -> str:
+    """Prevent CSV formula injection by prefixing dangerous characters."""
+    if value and value[0] in ("=", "+", "-", "@", "\t", "\r"):
+        return "'" + value
+    return value
+
+
 @router.get("/{company_id}/compliance-summary")
 async def compliance_summary_report(
     company_id: str,
@@ -134,7 +141,7 @@ async def export_employees_csv(
             e.position or "",
             e.status,
         ]
-        output.write(",".join(f'"{v}"' for v in row) + "\n")
+        output.write(",".join(f'"{_sanitize_csv(v)}"' for v in row) + "\n")
 
     output.seek(0)
     return StreamingResponse(

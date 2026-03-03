@@ -135,8 +135,8 @@ async def create_b2b_checkout(
 
         return {"checkoutUrl": session.url, "sessionId": session.id}
     except Exception as e:
-        logger.error("B2B checkout error: %s", e)
-        raise HTTPException(status_code=500, detail=str(e)) from e
+        logger.error("B2B checkout error: %s", e, exc_info=True)
+        raise HTTPException(status_code=500, detail="Payment processing failed") from None
 
 
 @router.get("/plans/list")

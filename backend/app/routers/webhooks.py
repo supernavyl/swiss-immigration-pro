@@ -53,7 +53,7 @@ async def stripe_webhook(request: Request, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Invalid signature") from None
     except Exception as e:
         logger.error("Stripe webhook error: %s", e)
-        raise HTTPException(status_code=400, detail=str(e)) from e
+        raise HTTPException(status_code=400, detail="Webhook verification failed") from None
 
     event_type = event["type"]
     data = event["data"]["object"]
@@ -77,11 +77,10 @@ async def stripe_webhook(request: Request, db: AsyncSession = Depends(get_db)):
         else:
             logger.info("Unhandled Stripe event: %s", event_type)
 
-        await db.commit()
+        await db.flush()
     except Exception as e:
-        await db.rollback()
-        logger.error("Error handling %s: %s", event_type, e)
-        raise HTTPException(status_code=500, detail="Webhook processing failed") from e
+        logger.error("Error handling %s: %s", event_type, e, exc_info=True)
+        raise HTTPException(status_code=500, detail="Webhook processing failed") from None
 
     # Send confirmation emails after successful commit (best-effort)
     if email_task:
