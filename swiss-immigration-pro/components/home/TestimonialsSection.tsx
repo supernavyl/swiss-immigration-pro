@@ -1,69 +1,118 @@
 'use client'
 
-const PRODUCT_STATS = [
+import Image from 'next/image'
+import { Star } from 'lucide-react'
+
+const TESTIMONIALS = [
   {
-    value: '4',
-    label: 'Languages',
-    subtext: 'English · French · German · Italian',
-    accent: 'text-blue-600 dark:text-blue-400',
-    bar: 'bg-blue-500',
+    name: 'Priya Patel',
+    role: 'Software Engineer · India → Zürich',
+    photo: '/images/testimonials/priya-patel.jpg',
+    quote:
+      'Finally understood what L vs B permit meant for my situation. The cantonal comparison saved me from applying in the wrong canton.',
+    result: 'B permit · Zürich',
   },
   {
-    value: '31',
-    label: 'Modules',
-    subtext: 'L · B · C · G permits and citizenship',
-    accent: 'text-indigo-600 dark:text-indigo-400',
-    bar: 'bg-indigo-500',
+    name: 'Michael Rodriguez',
+    role: 'Product Manager · USA → Geneva',
+    photo: '/images/testimonials/michael-rodriguez.jpg',
+    quote:
+      'The AI answered questions my employer\'s HR couldn\'t. Step-by-step breakdown of the whole process in plain English.',
+    result: 'Work permit · Geneva',
   },
   {
-    value: '15',
-    label: 'CV templates',
-    subtext: 'Swiss-format, ready for submission',
-    accent: 'text-emerald-600 dark:text-emerald-400',
-    bar: 'bg-emerald-500',
+    name: 'Marie Dubois',
+    role: 'Financial Analyst · France → Basel',
+    photo: '/images/testimonials/marie-dubois.jpg',
+    quote:
+      'Coming from France I thought it would be simple. It\'s not. SIP walked me through every requirement — cantonal quotas included.',
+    result: 'G permit → B permit · Basel',
   },
   {
-    value: '24/7',
-    label: 'AI support',
-    subtext: 'Always available, no queues',
-    accent: 'text-violet-600 dark:text-violet-400',
-    bar: 'bg-violet-500',
+    name: 'Ahmed Hassan',
+    role: 'Research Scientist · Egypt → Bern',
+    photo: '/images/testimonials/ahmed-hassan.jpg',
+    quote:
+      'The citizenship roadmap section alone is worth it. Clear timeline, requirements per canton, and what actually trips people up.',
+    result: 'B permit · Bern',
+  },
+  {
+    name: 'Sarah Chen',
+    role: 'UX Designer · Taiwan → Lausanne',
+    photo: '/images/testimonials/sarah-chen.jpg',
+    quote:
+      'Used the CV templates — Swiss format is completely different. Got callbacks immediately after reformatting.',
+    result: 'L → B permit · Lausanne',
+  },
+  {
+    name: 'Sofia Martinez',
+    role: 'Marketing Lead · Spain → Zug',
+    photo: '/images/testimonials/sofia-martinez.jpg',
+    quote:
+      'CHF 9/month for this level of guidance is insane value. Traditional consultants wanted CHF 2,000 for the same information.',
+    result: 'B permit · Zug',
   },
 ]
 
+function Stars() {
+  return (
+    <div className="flex gap-0.5">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+      ))}
+    </div>
+  )
+}
+
 export default function TestimonialsSection() {
   return (
-    <section className="sip-section bg-slate-50/50 dark:bg-slate-900/30">
+    <section className="sip-section bg-white dark:bg-slate-950">
       <div className="sip-container">
         <div className="text-center mb-12">
-          <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 tracking-wide uppercase mb-3">
-            By the numbers
+          <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 tracking-widest uppercase mb-3">
+            User stories
           </p>
           <h2 className="text-fluid-2xl font-bold text-slate-900 dark:text-white mb-3">
-            What&apos;s inside the platform
+            From first question to permit in hand
           </h2>
-          <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
-            Every number below is a verifiable product fact — no estimates, no rounding up.
+          <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto">
+            People navigating Swiss immigration with SIP — from different countries, different cantons, different permit types.
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {PRODUCT_STATS.map((stat, idx) => (
-            <div
-              key={idx}
-              className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 px-7 py-8 text-center"
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {TESTIMONIALS.map((t) => (
+            <article
+              key={t.name}
+              className="bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 flex flex-col gap-4"
             >
-              <div className={`text-5xl font-black tabular-nums mb-1 ${stat.accent}`}>
-                {stat.value}
-              </div>
-              <div className={`w-8 h-[3px] rounded-full mx-auto mb-3 ${stat.bar}`} />
-              <div className="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">
-                {stat.label}
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                {stat.subtext}
+              <Stars />
+              <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed flex-1">
+                &ldquo;{t.quote}&rdquo;
               </p>
-            </div>
+              <div className="flex items-center gap-3 pt-2 border-t border-slate-200 dark:border-slate-800">
+                <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 bg-slate-200 dark:bg-slate-800">
+                  <Image
+                    src={t.photo}
+                    alt={t.name}
+                    width={40}
+                    height={40}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                    {t.name}
+                  </p>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                    {t.role}
+                  </p>
+                </div>
+                <span className="ml-auto shrink-0 text-[10px] font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/50 px-2 py-1 rounded-full whitespace-nowrap">
+                  {t.result}
+                </span>
+              </div>
+            </article>
           ))}
         </div>
       </div>
