@@ -273,9 +273,9 @@ export default function ProductPage({
                   <span className="ml-1">4.9/5</span>
                 </div>
                 <span className="text-slate-600">|</span>
-                <span>{SITE_STATS.totalUsers} customers</span>
+                <span>{SITE_STATS.modules} expert modules</span>
                 <span className="text-slate-600">|</span>
-                <span>{SITE_STATS.successRate} success rate</span>
+                <span>{SITE_STATS.cantons} cantons covered</span>
               </div>
 
               {/* Price + CTA */}
@@ -367,13 +367,13 @@ export default function ProductPage({
               },
               {
                 icon: Award,
-                label: SITE_STATS.successRate + " Success",
-                desc: "Proven results",
+                label: SITE_STATS.modules + " Modules",
+                desc: "Expert immigration content",
               },
               {
                 icon: TrendingUp,
-                label: SITE_STATS.totalUsers,
-                desc: "Happy customers",
+                label: SITE_STATS.cantons + " Cantons",
+                desc: "Full Swiss coverage",
               },
             ].map((item, idx) => (
               <div key={idx} className="flex flex-col items-center gap-1.5">
@@ -576,7 +576,7 @@ export default function ProductPage({
             Ready to Start?
           </h2>
           <p className="text-xl text-blue-100 mb-8">
-            Join {SITE_STATS.totalUsers} successful applicants. Get instant
+            Backed by {SITE_STATS.modules} expert modules covering all {SITE_STATS.cantons} Swiss cantons. Get instant
             access for CHF {priceCHF}.
           </p>
 

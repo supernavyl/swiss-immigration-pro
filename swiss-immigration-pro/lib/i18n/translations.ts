@@ -54,10 +54,10 @@ const en: TranslationDict = {
 
   // ── Hero / Home ─────────────────────────────────────────────────────────
   'hero.title': 'Get Your Swiss Permit in 6–8 Weeks',
-  'hero.subtitle': 'Others wait 16+ weeks and pay CHF 15,000 in consultant fees. Our AI has guided 18,500+ applicants to approval — from CHF 9/month.',
+  'hero.subtitle': 'Navigate Swiss work permits, residency, and citizenship with an AI trained on official immigration law and all 26 cantonal regulations. From CHF 9/month.',
   'hero.cta': 'Start Free Assessment',
   'hero.ctaSecondary': 'View Pricing',
-  'hero.trustedBy': 'Trusted by 18,500+ applicants worldwide',
+  'hero.trustedBy': 'Available across all 26 Swiss cantons',
 
   'home.whyChoose': 'Why Choose Swiss Immigration Pro',
   'home.whyChooseDesc': 'We combine cutting-edge AI with deep expertise in Swiss immigration law.',
@@ -80,8 +80,8 @@ const en: TranslationDict = {
   'home.step4Desc': 'Receive your permit and start your new life in Switzerland.',
   'home.choosePathway': 'Choose Your Pathway',
   'home.startJourney': 'Start Your Journey Today',
-  'home.startJourneyDesc': 'Join thousands who have successfully moved to Switzerland with our platform.',
-  'home.joinApplicants': 'Join {{count}} Successful Applicants',
+  'home.startJourneyDesc': 'AI-powered guidance, 31 expert modules, and 15 Swiss CV templates — everything you need for your Swiss immigration journey.',
+  'home.joinApplicants': 'Get Started',
   'home.testimonials': 'What Our Clients Say',
   'home.partners': 'Trusted Partners & Sources',
 
@@ -507,7 +507,7 @@ const de: TranslationDict = {
 
   // Hero / Home
   'hero.title': 'Ihre Schweizer Bewilligung in 6–8 Wochen',
-  'hero.subtitle': 'Andere warten 16+ Wochen und zahlen CHF 15.000 an Berater. Unsere KI hat 18.500+ Antragsteller zum Erfolg geführt — ab CHF 9/Monat.',
+  'hero.subtitle': 'Swiss-Aufenthalts- und Arbeitsbewilligungen mit einer KI navigieren, die auf dem offiziellen Einwanderungsrecht und allen 26 Kantonsregelungen trainiert wurde. Ab CHF 9/Monat.',
   'hero.cta': 'Kostenlose Bewertung starten',
   'hero.ctaSecondary': 'Preise ansehen',
   'hero.trustedBy': 'Über 18\'500 Antragsteller weltweit vertrauen uns',
@@ -533,7 +533,7 @@ const de: TranslationDict = {
   'home.step4Desc': 'Erhalten Sie Ihre Bewilligung und beginnen Sie Ihr neues Leben in der Schweiz.',
   'home.choosePathway': 'Wählen Sie Ihren Weg',
   'home.startJourney': 'Starten Sie Ihre Reise heute',
-  'home.startJourneyDesc': 'Schliessen Sie sich Tausenden an, die mit unserer Plattform erfolgreich in die Schweiz gezogen sind.',
+  'home.startJourneyDesc': 'KI-gestützte Beratung, 31 Expertenmodule und 15 Schweizer CV-Vorlagen — alles, was Sie für Ihre Einwanderung in die Schweiz benötigen.',
   'home.joinApplicants': '{{count}} erfolgreiche Antragsteller',
   'home.testimonials': 'Was unsere Kunden sagen',
   'home.partners': 'Vertrauenswürdige Partner & Quellen',
@@ -848,7 +848,7 @@ const fr: TranslationDict = {
 
   // Hero / Home
   'hero.title': 'Votre permis suisse en 6–8 semaines',
-  'hero.subtitle': "D'autres attendent 16+ semaines et paient CHF 15'000 en frais de consultant. Notre IA a guidé 18'500+ candidats vers l'approbation — dès CHF 9/mois.",
+  'hero.subtitle': "Naviguez dans les permis de travail, la résidence et la citoyenneté suisses avec une IA formée sur le droit de l'immigration officiel et les 26 réglementations cantonales. Dès CHF 9/mois.",
   'hero.cta': 'Évaluation gratuite',
   'hero.ctaSecondary': 'Voir les tarifs',
   'hero.trustedBy': 'Plus de 18 500 demandeurs nous font confiance',
@@ -874,7 +874,7 @@ const fr: TranslationDict = {
   'home.step4Desc': 'Recevez votre permis et commencez votre nouvelle vie en Suisse.',
   'home.choosePathway': 'Choisissez votre parcours',
   'home.startJourney': "Commencez votre aventure aujourd'hui",
-  'home.startJourneyDesc': 'Rejoignez des milliers de personnes qui ont réussi leur installation en Suisse grâce à notre plateforme.',
+  'home.startJourneyDesc': 'Assistance IA, 31 modules experts et 15 modèles de CV suisses — tout ce dont vous avez besoin pour votre immigration en Suisse.',
   'home.joinApplicants': '{{count}} demandeurs satisfaits',
   'home.testimonials': 'Ce que disent nos clients',
   'home.partners': 'Partenaires & Sources de confiance',
@@ -1301,7 +1301,7 @@ const it: TranslationDict = {
 
   // Hero / Home
   'hero.title': 'Il tuo percorso verso la residenza svizzera',
-  'hero.subtitle': "Consulenza esperta basata sull'IA per permessi, visti e cittadinanza — su misura per il tuo profilo.",
+  'hero.subtitle': "Naviga permessi di lavoro, residenza e cittadinanza svizzera con un'IA formata sul diritto dell'immigrazione ufficiale e le 26 normative cantonali. Da CHF 9/mese.",
   'hero.cta': 'Valutazione gratuita',
   'hero.ctaSecondary': 'Vedi i prezzi',
   'hero.trustedBy': 'Più di 18.500 richiedenti si fidano di noi',

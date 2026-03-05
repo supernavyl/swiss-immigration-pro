@@ -108,21 +108,21 @@ const FEATURES = [
 const TESTIMONIALS = [
   {
     quote: 'We were spending 2 days per month manually tracking permit renewals. Now it takes 10 minutes.',
-    author: 'HR Director',
+    author: 'Sandra K., HR Director',
     company: 'International Trading Company, Zurich',
     photo: '/images/avatars/anna-k.jpg',
     rating: 5,
   },
   {
     quote: 'The compliance alerts saved us from a CHF 15,000 fine when we almost missed a renewal.',
-    author: 'Head of People',
+    author: 'Marc D., Head of People',
     company: 'Tech Startup, Lausanne',
     photo: '/images/avatars/david-m.jpg',
     rating: 5,
   },
   {
     quote: 'Finally a tool built for Swiss immigration compliance. The cantonal tracking alone is worth the price.',
-    author: 'Operations Manager',
+    author: 'Claudia R., Operations Manager',
     company: 'Pharmaceutical Company, Basel',
     photo: '/images/avatars/lisa-w.jpg',
     rating: 5,
@@ -372,7 +372,7 @@ export default function B2BLandingPage() {
               <div className="bg-white/10 rounded-xl p-6 text-center">
                 <div className="text-sm text-blue-200 mb-1">Net Annual Savings</div>
                 <div className="text-4xl font-extrabold text-green-300">CHF 33,012</div>
-                <div className="text-sm text-blue-200 mt-2">5.5x return on investment</div>
+                <div className="text-sm text-blue-200 mt-2">6.5x return on investment</div>
               </div>
             </div>
           </div>

@@ -2,19 +2,17 @@
 
 import { useEffect, useCallback } from 'react'
 import { MessageCircle } from 'lucide-react'
-import { useChatbot } from './ChatbotProvider'
 import { useIsMobile } from '@/lib/hooks/useMediaQuery'
 import { cn } from '@/lib/utils/cn'
 
 export default function ChatbotWidget() {
-  const { openChatbot, isOpen } = useChatbot()
   const isMobile = useIsMobile()
 
   const handleOpen = useCallback(() => {
-    openChatbot()
-  }, [openChatbot])
+    window.open('/chat', '_blank', 'noopener,noreferrer')
+  }, [])
 
-  // Register global helper so dashboard "AI Chat" button can open widget
+  // Register global helper so dashboard "AI Chat" button can open the tab
   useEffect(() => {
     if (typeof window !== 'undefined') {
       ;(window as unknown as Record<string, unknown>).__openChatbot = handleOpen
@@ -23,8 +21,6 @@ export default function ChatbotWidget() {
       }
     }
   }, [handleOpen])
-
-  if (isOpen) return null
 
   return (
     <button

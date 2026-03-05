@@ -6,10 +6,11 @@ import { useT } from '@/lib/i18n/useTranslation'
 
 const PATHWAYS = [
   {
-    type: 'EU/EFTA',
+    type: 'EU/EFTA Citizens',
     name: 'Freedom of Movement',
     duration: 'No Quotas',
-    desc: 'Simplified residency through bilateral agreements. Fast-tracked processing for EU/EFTA nationals.',
+    desc: 'EU/EFTA nationals skip the permit quota lottery entirely. Your only risk is the paperwork — we eliminate it.',
+    cta: 'See EU pathway',
     icon: Users,
     link: '/eu',
     accent: 'text-emerald-600 dark:text-emerald-400',
@@ -21,7 +22,8 @@ const PATHWAYS = [
     type: 'US & Canada',
     name: 'North American',
     duration: '8,500 Quota',
-    desc: 'Specialized guidance for American and Canadian professionals relocating to Switzerland.',
+    desc: 'Only 8,500 non-EU permits are issued per year. Cantonal strategy is the difference between approval and a year-long wait.',
+    cta: 'See US/CA pathway',
     icon: MapPin,
     link: '/us',
     accent: 'text-blue-600 dark:text-blue-400',
@@ -33,7 +35,8 @@ const PATHWAYS = [
     type: 'International',
     name: 'Global Citizens',
     duration: 'Strategic',
-    desc: 'Comprehensive support for all nationalities navigating Swiss immigration requirements.',
+    desc: 'Non-quota pathways exist — but require proving economic value. We build that case: employer letters, salary benchmarks, cantonal fit.',
+    cta: 'See all pathways',
     icon: Globe,
     link: '/other',
     accent: 'text-violet-600 dark:text-violet-400',
@@ -94,8 +97,8 @@ export default function PathwayGrid() {
 
                 <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800 text-sm">
                   <span className="text-slate-400 dark:text-slate-500">From CHF 9/mo</span>
-                  <span className="text-blue-600 dark:text-blue-400 font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
-                    Explore <ChevronRight className="w-4 h-4" />
+                  <span className={`font-semibold flex items-center gap-1 group-hover:gap-2 transition-all ${pathway.accent}`}>
+                    {pathway.cta} <ChevronRight className="w-4 h-4" />
                   </span>
                 </div>
               </div>

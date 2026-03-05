@@ -92,20 +92,31 @@ function saveMessages(key: string, messages: ChatMessage[]): void {
 // Welcome message
 // ---------------------------------------------------------------------------
 
-const WELCOME_MESSAGE: ChatMessage = {
-  id: 'welcome',
-  role: 'assistant',
-  content:
-    "Grüezi! I'm **SIP-AI**, your Swiss immigration expert.\n\n" +
-    'I have access to official Swiss legal documents and know every feature on this platform. Ask me about:\n\n' +
-    '- **Permits & Visas** — L, B, C, G permits and applications\n' +
-    '- **Work in Switzerland** — employment, quotas, CV help\n' +
-    '- **Citizenship** — naturalization, language tests, integration\n' +
-    '- **Living Here** — cantons, taxes, insurance, housing\n' +
-    '- **Our Tools** — permit calculator, CV builder, timeline planner\n' +
-    '- **Plans & Pricing** — find the right subscription\n\n' +
-    'Select a topic below or ask your question!',
-  timestamp: new Date(),
+const GREETING_BY_LANG: Record<string, string> = {
+  fr: "Bonjour ! Je suis **SIP-AI**, votre expert en immigration suisse.",
+  de: "Grüezi! Ich bin **SIP-AI**, Ihr Schweizer Einwanderungsexperte.",
+  it: "Buongiorno! Sono **SIP-AI**, il vostro esperto di immigrazione svizzera.",
+}
+
+const WELCOME_BODY =
+  '\n\nI have access to official Swiss legal documents and know every feature on this platform. Ask me about:\n\n' +
+  '- **Permits & Visas** — L, B, C, G permits and applications\n' +
+  '- **Work in Switzerland** — employment, quotas, CV help\n' +
+  '- **Citizenship** — naturalization, language tests, integration\n' +
+  '- **Living Here** — cantons, taxes, insurance, housing\n' +
+  '- **Our Tools** — permit calculator, CV builder, timeline planner\n' +
+  '- **Plans & Pricing** — find the right subscription\n\n' +
+  'Select a topic below or ask your question!'
+
+function getWelcomeMessage(lang: string): ChatMessage {
+  const greeting =
+    GREETING_BY_LANG[lang] ?? "Hello! I'm **SIP-AI**, your Swiss immigration expert."
+  return {
+    id: 'welcome',
+    role: 'assistant',
+    content: greeting + WELCOME_BODY,
+    timestamp: new Date(),
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -118,7 +129,7 @@ export function useChatStream(options: UseChatStreamOptions = {}): UseChatStream
 
   const [messages, setMessages] = useState<ChatMessage[]>(() => {
     const stored = loadMessages(storageKey)
-    return stored.length > 0 ? stored : [WELCOME_MESSAGE]
+    return stored.length > 0 ? stored : [getWelcomeMessage(currentLanguage)]
   })
   const [isLoading, setIsLoading] = useState(false)
   const [followUps, setFollowUps] = useState<string[]>([])
@@ -350,7 +361,7 @@ export function useChatStream(options: UseChatStreamOptions = {}): UseChatStream
 
   const clearChat = useCallback(() => {
     abortRef.current?.abort()
-    setMessages([{ ...WELCOME_MESSAGE, timestamp: new Date() }])
+    setMessages([getWelcomeMessage(currentLanguage)])
     setFollowUps([])
     setPageCards([])
     setLimitReached(false)

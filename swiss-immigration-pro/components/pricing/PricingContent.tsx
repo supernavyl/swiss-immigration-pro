@@ -270,18 +270,18 @@ export default function PricingContent({
               <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-900 dark:text-gray-100 mb-6 sm:mb-8 px-2">
                 <div className="flex items-center gap-1.5 sm:gap-2">
                   <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 shrink-0" />
-                  <span>{SITE_STATS.successRate} Success Rate</span>
+                  <span>{SITE_STATS.modules} Immigration Modules</span>
                 </div>
                 <div className="flex items-center gap-1.5 sm:gap-2">
                   <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 shrink-0" />
                   <span className="whitespace-nowrap">
-                    {SITE_STATS.contentWords} Words
+                    {SITE_STATS.cantons} Cantons Covered
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5 sm:gap-2">
                   <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 shrink-0" />
                   <span className="whitespace-nowrap">
-                    Save {SITE_STATS.savingsRange}
+                    {SITE_STATS.cvTemplates} CV Templates
                   </span>
                 </div>
               </div>
@@ -431,14 +431,14 @@ export default function PricingContent({
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mt-8 sm:mt-12">
                 {[
                   {
-                    stat: SITE_STATS.successRate,
-                    title: "Average Success Rate",
-                    desc: "Across all permit types",
+                    stat: SITE_STATS.modules,
+                    title: "Immigration Modules",
+                    desc: "Covering every permit and visa type",
                   },
                   {
-                    stat: SITE_STATS.contentWords,
-                    title: "Words of Content",
-                    desc: "Comprehensive guides & modules",
+                    stat: SITE_STATS.cantons,
+                    title: "Cantons Covered",
+                    desc: "Canton-specific guidance included",
                   },
                   {
                     stat: SITE_STATS.cvTemplates,

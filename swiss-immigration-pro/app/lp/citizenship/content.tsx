@@ -114,10 +114,10 @@ const TESTIMONIALS = [
 ]
 
 const HERO_STATS = [
-  { value: SITE_STATS.successRate, label: 'Success rate' },
-  { value: SITE_STATS.totalUsers, label: 'Users helped' },
+  { value: SITE_STATS.modules, label: 'Immigration modules' },
+  { value: SITE_STATS.languages, label: 'Languages supported' },
   { value: '10+', label: 'Modules on citizenship' },
-  { value: '26', label: 'Cantons covered' },
+  { value: SITE_STATS.cantons, label: 'Cantons covered' },
 ]
 
 export default function CitizenshipContent({ faqItems }: { faqItems: FAQItem[] }) {

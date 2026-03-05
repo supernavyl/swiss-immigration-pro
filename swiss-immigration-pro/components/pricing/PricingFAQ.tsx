@@ -6,8 +6,8 @@ const FAQ_ITEMS = [
   },
   {
     id: 'citizenship-one-time',
-    q: 'Is the Citizenship Pro pack a one-time fee?',
-    a: 'Yes! The Citizenship Pro Pack is a one-time payment that gives you lifetime access to all current and future citizenship resources, including updates and new content as we add it.',
+    q: 'Do you offer any one-time payment options?',
+    a: 'Yes! Our Masterclass (CHF 497) and Citizenship Roadmap PDF (CHF 97) are one-time purchases with lifetime access. All subscription plans (Immigration, Advanced, Citizenship Pro) are billed monthly or annually and can be cancelled at any time with no penalties.',
   },
   {
     id: 'cancellation-policy',

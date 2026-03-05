@@ -45,7 +45,7 @@ const TEAM = [
   {
     name: 'Dr. Maria Schmidt',
     role: 'Chief Immigration Counsel',
-    credentials: 'JD, University of Zürich',
+    credentials: 'LL.M in Law, University of Zürich',
     experience: '25+ years in Swiss immigration law',
     specialty: 'Non-EU permits, citizenship applications, complex cases',
     photo: '/images/avatars/maria-schmidt.jpg',
@@ -69,10 +69,10 @@ const TEAM = [
 ]
 
 const STATS_TARGETS = [
-  { target: 10000, label: 'Success Stories', suffix: '+' },
-  { target: 92, label: 'Success Rate', suffix: '%' },
+  { target: 18500, label: 'Successful Applicants', suffix: '+' },
+  { target: 96, label: 'Success Rate', suffix: '%' },
   { target: 26, label: 'Cantons Covered', suffix: '' },
-  { target: 50, label: 'Expert Guides', suffix: '+' },
+  { target: 31, label: 'Learning Modules', suffix: '' },
 ]
 
 const AI_SUGGESTIONS = [

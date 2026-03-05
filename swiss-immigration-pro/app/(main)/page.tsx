@@ -6,7 +6,6 @@ import TestimonialsSection from "@/components/home/TestimonialsSection";
 import FeaturesGrid from "@/components/home/FeaturesGrid";
 import ProcessTimeline from "@/components/home/ProcessTimeline";
 import CTASection from "@/components/home/CTASection";
-import ReferralSection from "@/components/home/ReferralSection";
 
 export default function Home() {
   return (
@@ -19,7 +18,6 @@ export default function Home() {
       <FeaturesGrid />
       <ProcessTimeline />
       <CTASection />
-      <ReferralSection />
     </div>
   );
 }

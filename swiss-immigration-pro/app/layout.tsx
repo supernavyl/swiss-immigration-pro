@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import Script from "next/script";
-import { Inter } from "next/font/google";
+import { Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import ClientErrorBoundary from "@/components/ui/ClientErrorBoundary";
 
@@ -30,11 +29,18 @@ import ClientErrorBoundary from "@/components/ui/ClientErrorBoundary";
  *   - /app/(main)/visas/[slug]/page.tsx - Visa guides with Article schema
  */
 
-const inter = Inter({
+const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap", // Optimize font loading
+  variable: "--font-jakarta",
+  display: "swap",
   preload: true,
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+  display: "swap",
+  preload: false,
 });
 
 export const viewport: Viewport = {
@@ -188,17 +194,15 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} antialiased bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 touch-pan-y`}
+        className={`${jakarta.variable} ${playfair.variable} antialiased bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 touch-pan-y`}
         suppressHydrationWarning
       >
         {/* Skip to main content for accessibility */}
         <a href="#main-content" className="skip-to-main">
           Skip to main content
         </a>
-        {/* Structured Data for SEO */}
-        <Script
-          id="structured-data"
-          strategy="afterInteractive"
+        {/* Structured Data for SEO — plain script renders server-side */}
+        <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
@@ -212,14 +216,7 @@ export default function RootLayout({
                 "https://swissimmigrationpro.com",
               logo: `${process.env.NEXT_PUBLIC_SITE_URL || "https://swissimmigrationpro.com"}/images/logo.png`,
               image: `${process.env.NEXT_PUBLIC_SITE_URL || "https://swissimmigrationpro.com"}/og-image.jpg`,
-              priceRange: "CHF 29 - CHF 199",
-              aggregateRating: {
-                "@type": "AggregateRating",
-                ratingValue: "4.8",
-                reviewCount: "2340",
-                bestRating: "5",
-                worstRating: "1",
-              },
+              priceRange: "CHF 9 - CHF 999",
               serviceArea: {
                 "@type": "Place",
                 name: "Switzerland",
@@ -254,9 +251,7 @@ export default function RootLayout({
             }),
           }}
         />
-        <Script
-          id="organization-schema"
-          strategy="afterInteractive"
+        <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({

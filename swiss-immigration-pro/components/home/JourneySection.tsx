@@ -1,10 +1,9 @@
 'use client'
 
-import { ArrowRight, CheckCircle, Star, Building } from 'lucide-react'
+import { ArrowRight, CheckCircle, Building } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useT } from '@/lib/i18n/useTranslation'
-import { SITE_STATS } from '@/lib/pricing'
 
 const FEATURES = [
   { title: 'AI-Powered Guidance', desc: '24/7 access to expert immigration knowledge.' },
@@ -29,15 +28,7 @@ export default function JourneySection() {
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-              <div className="absolute bottom-5 left-5 text-white">
-                <div className="flex items-center gap-2 mb-1">
-                  <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                  <span className="text-sm font-medium">Success Story</span>
-                </div>
-                <p className="font-bold text-lg">Join {SITE_STATS.totalUsers} Successful Applicants</p>
               </div>
-            </div>
 
             {/* Floating card */}
             <div className="absolute -bottom-5 -right-3 bg-white dark:bg-slate-800 p-5 rounded-xl shadow-lg border border-slate-100 dark:border-slate-700 max-w-[220px] hidden md:block">

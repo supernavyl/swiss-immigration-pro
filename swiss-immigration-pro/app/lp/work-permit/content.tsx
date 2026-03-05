@@ -80,7 +80,7 @@ const FEATURES = [
   {
     icon: BookOpen,
     title: 'Learning Modules',
-    description: '66,000+ words of expert guides covering every aspect of Swiss work permits and employment.',
+    description: '31 expert modules covering every aspect of Swiss work permits and employment.',
   },
   {
     icon: Users,
@@ -114,10 +114,10 @@ const TESTIMONIALS = [
 ]
 
 const HERO_STATS = [
-  { value: SITE_STATS.successRate, label: 'Success rate' },
-  { value: SITE_STATS.totalUsers, label: 'Users helped' },
+  { value: SITE_STATS.modules, label: 'Immigration modules' },
+  { value: SITE_STATS.cantons, label: 'Cantons covered' },
   { value: SITE_STATS.cvTemplates, label: 'CV templates' },
-  { value: SITE_STATS.avgProcessingWeeks, label: 'Avg. processing' },
+  { value: SITE_STATS.languages, label: 'Languages supported' },
 ]
 
 export default function WorkPermitContent({ faqItems }: { faqItems: FAQItem[] }) {
@@ -527,7 +527,7 @@ export default function WorkPermitContent({ faqItems }: { faqItems: FAQItem[] })
               Start Your Swiss Journey Today
             </h2>
             <p className="text-lg text-red-100/80 font-light mb-8 max-w-2xl mx-auto">
-              Join {SITE_STATS.totalUsers} people who navigated Swiss immigration successfully.
+              Navigate Swiss immigration with {SITE_STATS.modules} expert modules across all {SITE_STATS.cantons} cantons.
               Free tier available — no credit card required.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

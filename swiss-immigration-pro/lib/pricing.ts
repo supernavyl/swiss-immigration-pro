@@ -1,15 +1,12 @@
 // Pricing constants used by frontend components.
 // Stripe server-side logic is handled by the Python backend.
 
-// Canonical stats — use these everywhere to avoid inconsistencies
+// Verifiable product facts only — no marketing estimates
 export const SITE_STATS = {
-  successRate: '96%',
-  successRateNum: 96,
-  totalUsers: '18,500+',
-  contentWords: '66,000+',
-  avgProcessingWeeks: '6–8 Weeks',
-  cvTemplates: '25+',
-  savingsRange: 'CHF 5,000–15,000',
+  modules: '31',
+  languages: '4',
+  cvTemplates: '15',
+  cantons: '26',
 } as const
 
 export const PRICING_PACKS = {

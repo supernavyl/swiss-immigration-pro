@@ -31,7 +31,7 @@ export default function TrustBar({ className }: { className?: string }) {
         ))}
       </div>
       <span className="text-sm text-slate-600 dark:text-gray-400">
-        Trusted by <span className="font-semibold text-slate-900 dark:text-white">{SITE_STATS.totalUsers}</span> users
+        Covering <span className="font-semibold text-slate-900 dark:text-white">{SITE_STATS.cantons}</span> Swiss cantons
       </span>
     </div>
   )
