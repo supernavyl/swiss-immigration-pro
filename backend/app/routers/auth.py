@@ -101,6 +101,7 @@ async def register(request: Request, body: RegisterRequest, db: DbSession):
     # Track referral
     if referred_by:
         from app.models.user import Referral
+
         referral = Referral(referrer_id=referred_by, referred_id=user.id, status="pending")
         db.add(referral)
 
@@ -112,6 +113,7 @@ async def register(request: Request, body: RegisterRequest, db: DbSession):
         logger.warning("Failed to send welcome email to %s", body.email, exc_info=True)
 
     from app.services.drip_emails import schedule_drip_sequence
+
     schedule_drip_sequence(str(user.id), body.email)
 
     token = create_access_token(str(user.id), user.email, "free", False)

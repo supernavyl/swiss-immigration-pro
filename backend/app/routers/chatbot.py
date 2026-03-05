@@ -63,6 +63,7 @@ class ChatRequest(CamelModel):
 # Helpers -- limit checking & message persistence
 # -------------------------------------------------------------------
 
+
 async def _check_and_increment_limit(
     user: CurrentUser | None,
     db: AsyncSession,
@@ -114,9 +115,7 @@ async def _check_and_increment_limit(
 
     # Atomic increment to prevent TOCTOU race under concurrent requests
     await db.execute(
-        update(UserLimit)
-        .where(UserLimit.user_id == user_uuid)
-        .values(messages_today=UserLimit.messages_today + 1)
+        update(UserLimit).where(UserLimit.user_id == user_uuid).values(messages_today=UserLimit.messages_today + 1)
     )
     return None
 
@@ -146,6 +145,7 @@ async def _save_message(
 # -------------------------------------------------------------------
 # POST /api/chatbot  (non-streaming, backward-compatible)
 # -------------------------------------------------------------------
+
 
 @router.post("")
 async def chat(
@@ -194,6 +194,7 @@ async def chat(
 # POST /api/chatbot/stream  (SSE streaming)
 # -------------------------------------------------------------------
 
+
 @router.post("/stream")
 async def chat_stream(
     body: ChatRequest,
@@ -216,6 +217,7 @@ async def chat_stream(
 
     async def event_generator():
         import json as _json
+
         full_response = ""
         async for event in stream_chatbot_response(
             message=body.message,
@@ -233,6 +235,7 @@ async def chat_stream(
 
         if full_response and user:
             from app.database import async_session
+
             async with async_session() as session:
                 try:
                     await _save_message(user, body.message, full_response, session)

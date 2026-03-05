@@ -64,7 +64,9 @@ async def compliance_summary_report(
     for label, days in windows:
         count = (
             await db.execute(
-                select(func.count()).select_from(Employee).where(
+                select(func.count())
+                .select_from(Employee)
+                .where(
                     Employee.company_id == cid,
                     Employee.status == "active",
                     Employee.permit_expiry.isnot(None),
@@ -78,7 +80,9 @@ async def compliance_summary_report(
     # Alert history (last 30 days)
     recent_alerts = (
         await db.execute(
-            select(func.count()).select_from(ComplianceAlert).where(
+            select(func.count())
+            .select_from(ComplianceAlert)
+            .where(
                 ComplianceAlert.company_id == cid,
                 ComplianceAlert.created_at >= now - timedelta(days=30),
             )
@@ -87,7 +91,9 @@ async def compliance_summary_report(
 
     resolved_alerts = (
         await db.execute(
-            select(func.count()).select_from(ComplianceAlert).where(
+            select(func.count())
+            .select_from(ComplianceAlert)
+            .where(
                 ComplianceAlert.company_id == cid,
                 ComplianceAlert.created_at >= now - timedelta(days=30),
                 ComplianceAlert.resolved_at.isnot(None),
@@ -116,17 +122,14 @@ async def export_employees_csv(
     cid = uuid.UUID(company_id)
 
     result = await db.execute(
-        select(Employee)
-        .where(Employee.company_id == cid)
-        .order_by(Employee.last_name, Employee.first_name)
+        select(Employee).where(Employee.company_id == cid).order_by(Employee.last_name, Employee.first_name)
     )
     employees = result.scalars().all()
 
     # Build CSV
     output = io.StringIO()
     output.write(
-        "First Name,Last Name,Email,Nationality,Permit Type,"
-        "Permit Number,Permit Expiry,Department,Position,Status\n"
+        "First Name,Last Name,Email,Nationality,Permit Type,Permit Number,Permit Expiry,Department,Position,Status\n"
     )
     for e in employees:
         row = [

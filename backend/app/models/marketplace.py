@@ -26,7 +26,7 @@ class LawyerProfile(Base):
     specializations: Mapped[list] = mapped_column(JSONB, default=list)
     cantons_served: Mapped[list] = mapped_column(JSONB, default=list)
     languages: Mapped[list] = mapped_column(JSONB, default=list)
-    hourly_rate: Mapped[int | None] = mapped_column(Integer)            # in CHF
+    hourly_rate: Mapped[int | None] = mapped_column(Integer)  # in CHF
     bio: Mapped[str | None] = mapped_column(Text)
     photo_url: Mapped[str | None] = mapped_column(Text)
     website: Mapped[str | None] = mapped_column(Text)
@@ -44,11 +44,11 @@ class LawyerProfile(Base):
     )
 
     listings: Mapped[list["ServiceListing"]] = relationship(
-        back_populates="lawyer", foreign_keys="ServiceListing.provider_id",
+        back_populates="lawyer",
+        foreign_keys="ServiceListing.provider_id",
         primaryjoin=(
-            "and_(LawyerProfile.id == foreign(ServiceListing.provider_id),"
-            " ServiceListing.provider_type == 'lawyer')"
-        )
+            "and_(LawyerProfile.id == foreign(ServiceListing.provider_id), ServiceListing.provider_type == 'lawyer')"
+        ),
     )
 
 
@@ -62,8 +62,8 @@ class AgencyProfile(Base):
     )
     agency_name: Mapped[str] = mapped_column(Text, nullable=False)
     slug: Mapped[str] = mapped_column(Text, unique=True, nullable=False)
-    services: Mapped[dict] = mapped_column(JSONB, default=list)     # ["relocation", "housing", "school"]
-    regions: Mapped[dict] = mapped_column(JSONB, default=list)      # ["ZH", "GE"]
+    services: Mapped[dict] = mapped_column(JSONB, default=list)  # ["relocation", "housing", "school"]
+    regions: Mapped[dict] = mapped_column(JSONB, default=list)  # ["ZH", "GE"]
     languages: Mapped[dict] = mapped_column(JSONB, default=list)
     bio: Mapped[str | None] = mapped_column(Text)
     photo_url: Mapped[str | None] = mapped_column(Text)

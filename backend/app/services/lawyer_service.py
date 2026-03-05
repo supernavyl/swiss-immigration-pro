@@ -34,6 +34,7 @@ settings = get_settings()
 # Message building with conversation summarization
 # ---------------------------------------------------------------------------
 
+
 def _build_messages(
     message: str,
     conversation_history: list[dict],
@@ -86,6 +87,7 @@ async def _summarize_history(
 # ---------------------------------------------------------------------------
 # Metadata extraction (enhanced)
 # ---------------------------------------------------------------------------
+
 
 def _extract_legal_metadata(response_text: str) -> dict[str, Any]:
     """Extract legal citations, next steps, deadlines, costs, and complexity."""
@@ -154,10 +156,7 @@ def _extract_legal_metadata(response_text: str) -> dict[str, Any]:
         "criminal|pénal|Straf|penale",
         "hardship|rigueur|Härtefall",
     ]
-    complexity_score = sum(
-        1 for pat in complex_indicators
-        if re.search(pat, response_text, re.IGNORECASE)
-    )
+    complexity_score = sum(1 for pat in complex_indicators if re.search(pat, response_text, re.IGNORECASE))
     if complexity_score >= 3:
         complexity = "requires-lawyer"
     elif complexity_score >= 2:
@@ -177,6 +176,7 @@ def _extract_legal_metadata(response_text: str) -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 # Follow-up generation
 # ---------------------------------------------------------------------------
+
 
 def _generate_follow_ups(
     query: str,
@@ -254,6 +254,7 @@ def _fallback_follow_ups(query: str) -> list[str]:
 # Main streaming entry-point
 # ---------------------------------------------------------------------------
 
+
 async def stream_lawyer_response(
     message: str,
     conversation_history: list[dict] | None = None,
@@ -267,9 +268,7 @@ async def stream_lawyer_response(
 
     knowledge_entries = find_relevant_knowledge(message)
     if not rag_context:
-        knowledge_context = "\n\n".join(
-            f"**{e['topic']}**:\n{e['content']}" for e in knowledge_entries
-        )
+        knowledge_context = "\n\n".join(f"**{e['topic']}**:\n{e['content']}" for e in knowledge_entries)
         rag_context = knowledge_context
 
     history = await _summarize_history(conversation_history)
@@ -303,17 +302,21 @@ async def stream_lawyer_response(
     metadata = _extract_legal_metadata(full_response)
     follow_ups = _generate_follow_ups(message, full_response)
 
-    yield f"data: {json.dumps({
-        'done': True,
-        'legalBasis': metadata['legalBasis'],
-        'nextSteps': metadata['nextSteps'],
-        'deadlines': metadata['deadlines'],
-        'costs': metadata['costs'],
-        'complexity': metadata['complexity'],
-        'sources': sources,
-        'followUps': follow_ups,
-        'fullResponse': full_response,
-    })}\n\n"
+    yield f"data: {
+        json.dumps(
+            {
+                'done': True,
+                'legalBasis': metadata['legalBasis'],
+                'nextSteps': metadata['nextSteps'],
+                'deadlines': metadata['deadlines'],
+                'costs': metadata['costs'],
+                'complexity': metadata['complexity'],
+                'sources': sources,
+                'followUps': follow_ups,
+                'fullResponse': full_response,
+            }
+        )
+    }\n\n"
 
 
 async def get_lawyer_response(
@@ -328,9 +331,7 @@ async def get_lawyer_response(
     rag_context, sources = await rag.search_with_context(message, max_chars=12000)
     knowledge_entries = find_relevant_knowledge(message)
     if not rag_context:
-        knowledge_context = "\n\n".join(
-            f"**{e['topic']}**:\n{e['content']}" for e in knowledge_entries
-        )
+        knowledge_context = "\n\n".join(f"**{e['topic']}**:\n{e['content']}" for e in knowledge_entries)
         rag_context = knowledge_context
 
     history = await _summarize_history(conversation_history)

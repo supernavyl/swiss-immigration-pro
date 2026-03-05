@@ -45,6 +45,7 @@ def _get_groq_client():
     global _groq_client
     if _groq_client is None and settings.groq_api_key:
         from groq import AsyncGroq
+
         _groq_client = AsyncGroq(api_key=settings.groq_api_key)
     return _groq_client
 
@@ -53,6 +54,7 @@ def _get_openai_client():
     global _openai_client
     if _openai_client is None and settings.openai_api_key:
         from openai import AsyncOpenAI
+
         _openai_client = AsyncOpenAI(api_key=settings.openai_api_key)
     return _openai_client
 
@@ -61,6 +63,7 @@ def _get_xai_client():
     global _xai_client
     if _xai_client is None and settings.xai_api_key:
         from openai import AsyncOpenAI
+
         _xai_client = AsyncOpenAI(api_key=settings.xai_api_key, base_url="https://api.x.ai/v1")
     return _xai_client
 
@@ -69,6 +72,7 @@ def _get_deepseek_client():
     global _deepseek_client
     if _deepseek_client is None and settings.deepseek_api_key:
         from openai import AsyncOpenAI
+
         _deepseek_client = AsyncOpenAI(
             api_key=settings.deepseek_api_key,
             base_url="https://api.deepseek.com",
@@ -81,6 +85,7 @@ def _get_gemini_model():
     global _gemini_model
     if _gemini_model is None and settings.google_gemini_api_key:
         import google.generativeai as genai
+
         genai.configure(api_key=settings.google_gemini_api_key)
         _gemini_model = genai.GenerativeModel("gemini-2.0-flash")
     return _gemini_model
@@ -89,6 +94,7 @@ def _get_gemini_model():
 # ===================================================================
 # Build the message array for the LLM
 # ===================================================================
+
 
 def _build_messages(
     message: str,
@@ -108,6 +114,7 @@ def _build_messages(
 # ===================================================================
 # Non-streaming response (kept for backward compat / fallback)
 # ===================================================================
+
 
 async def get_chatbot_response(
     message: str,
@@ -154,6 +161,7 @@ async def get_chatbot_response(
 # ===================================================================
 # Streaming response (SSE)
 # ===================================================================
+
 
 async def stream_chatbot_response(
     message: str,
@@ -214,6 +222,7 @@ async def stream_chatbot_response(
 # ===================================================================
 # AI providers -- non-streaming
 # ===================================================================
+
 
 async def _try_ai_providers(
     messages: list[dict],
@@ -325,6 +334,7 @@ async def _try_ai_providers(
 # ===================================================================
 # AI providers -- streaming
 # ===================================================================
+
 
 async def _try_ai_providers_streaming(
     messages: list[dict],

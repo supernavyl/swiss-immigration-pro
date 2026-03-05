@@ -30,9 +30,7 @@ async def get_stats(
 ):
     total_users = (await db.execute(select(func.count()).select_from(Profile))).scalar() or 0
 
-    pack_counts_result = await db.execute(
-        select(Profile.pack_id, func.count()).group_by(Profile.pack_id)
-    )
+    pack_counts_result = await db.execute(select(Profile.pack_id, func.count()).group_by(Profile.pack_id))
     users_by_pack = {row[0]: row[1] for row in pack_counts_result.all()}
 
     total_revenue_result = await db.execute(
@@ -65,9 +63,7 @@ async def get_users(
     total_result = await db.execute(select(func.count()).select_from(Profile))
     total = total_result.scalar() or 0
 
-    result = await db.execute(
-        select(Profile).order_by(Profile.created_at.desc()).offset(offset).limit(per_page)
-    )
+    result = await db.execute(select(Profile).order_by(Profile.created_at.desc()).offset(offset).limit(per_page))
     profiles = result.scalars().all()
 
     return {
@@ -204,9 +200,7 @@ async def get_subscribers(
     total_result = await db.execute(select(func.count()).select_from(EmailLead))
     total = total_result.scalar() or 0
 
-    result = await db.execute(
-        select(EmailLead).order_by(EmailLead.created_at.desc()).offset(offset).limit(per_page)
-    )
+    result = await db.execute(select(EmailLead).order_by(EmailLead.created_at.desc()).offset(offset).limit(per_page))
     leads = result.scalars().all()
 
     return {
@@ -239,9 +233,7 @@ async def get_payments(
     total_result = await db.execute(select(func.count()).select_from(Payment))
     total = total_result.scalar() or 0
 
-    result = await db.execute(
-        select(Payment).order_by(Payment.created_at.desc()).offset(offset).limit(per_page)
-    )
+    result = await db.execute(select(Payment).order_by(Payment.created_at.desc()).offset(offset).limit(per_page))
     payments = result.scalars().all()
 
     return {
@@ -270,9 +262,7 @@ async def get_activity_logs(
     db: DbDep,
 ):
     # Recent signups
-    signups_result = await db.execute(
-        select(Profile).order_by(Profile.created_at.desc()).limit(20)
-    )
+    signups_result = await db.execute(select(Profile).order_by(Profile.created_at.desc()).limit(20))
     signups = [
         {
             "type": "signup",
@@ -284,9 +274,7 @@ async def get_activity_logs(
     ]
 
     # Recent payments
-    payments_result = await db.execute(
-        select(Payment).order_by(Payment.created_at.desc()).limit(20)
-    )
+    payments_result = await db.execute(select(Payment).order_by(Payment.created_at.desc()).limit(20))
     payments = [
         {
             "type": "payment",
@@ -313,9 +301,7 @@ async def get_analytics(
 ):
     # Revenue by pack
     rev_result = await db.execute(
-        select(Payment.pack_id, func.sum(Payment.amount))
-        .where(Payment.status == "succeeded")
-        .group_by(Payment.pack_id)
+        select(Payment.pack_id, func.sum(Payment.amount)).where(Payment.status == "succeeded").group_by(Payment.pack_id)
     )
     revenue_by_pack = {row[0]: row[1] for row in rev_result.all()}
 
@@ -329,10 +315,7 @@ async def get_analytics(
             LIMIT 12
         """)
     )
-    user_growth = [
-        {"month": row[0].isoformat() if row[0] else None, "count": row[1]}
-        for row in growth_result.all()
-    ]
+    user_growth = [{"month": row[0].isoformat() if row[0] else None, "count": row[1]} for row in growth_result.all()]
 
     return {
         "revenueByPack": revenue_by_pack,
@@ -346,15 +329,11 @@ async def get_pack_stats(
     admin: AdminDep,
     db: DbDep,
 ):
-    pack_result = await db.execute(
-        select(Profile.pack_id, func.count()).group_by(Profile.pack_id)
-    )
+    pack_result = await db.execute(select(Profile.pack_id, func.count()).group_by(Profile.pack_id))
     pack_stats = {row[0]: row[1] for row in pack_result.all()}
 
     rev_result = await db.execute(
-        select(Payment.pack_id, func.sum(Payment.amount))
-        .where(Payment.status == "succeeded")
-        .group_by(Payment.pack_id)
+        select(Payment.pack_id, func.sum(Payment.amount)).where(Payment.status == "succeeded").group_by(Payment.pack_id)
     )
     revenue_by_pack = {row[0]: row[1] for row in rev_result.all()}
 
@@ -397,33 +376,20 @@ async def get_lawyer_analytics(
     admin: AdminDep,
     db: DbDep,
 ):
-    total_conversations = (
-        await db.execute(select(func.count()).select_from(LawyerConversation))
-    ).scalar() or 0
+    total_conversations = (await db.execute(select(func.count()).select_from(LawyerConversation))).scalar() or 0
 
-    total_messages = (
-        await db.execute(select(func.count()).select_from(LawyerMessage))
-    ).scalar() or 0
+    total_messages = (await db.execute(select(func.count()).select_from(LawyerMessage))).scalar() or 0
 
     assistant_messages = (
-        await db.execute(
-            select(func.count())
-            .select_from(LawyerMessage)
-            .where(LawyerMessage.role == "assistant")
-        )
+        await db.execute(select(func.count()).select_from(LawyerMessage).where(LawyerMessage.role == "assistant"))
     ).scalar() or 0
 
     avg_length_result = await db.execute(
-        select(func.avg(func.length(LawyerMessage.content)))
-        .where(LawyerMessage.role == "assistant")
+        select(func.avg(func.length(LawyerMessage.content))).where(LawyerMessage.role == "assistant")
     )
     avg_response_length = round(avg_length_result.scalar() or 0)
 
-    unique_users = (
-        await db.execute(
-            select(func.count(func.distinct(LawyerConversation.user_id)))
-        )
-    ).scalar() or 0
+    unique_users = (await db.execute(select(func.count(func.distinct(LawyerConversation.user_id))))).scalar() or 0
 
     complexity_result = await db.execute(
         select(LawyerMessage.complexity, func.count())
@@ -441,8 +407,7 @@ async def get_lawyer_analytics(
         .limit(10)
     )
     recent = [
-        {"title": row[0], "created_at": row[1].isoformat() if row[1] else None}
-        for row in recent_conversations.all()
+        {"title": row[0], "created_at": row[1].isoformat() if row[1] else None} for row in recent_conversations.all()
     ]
 
     return {

@@ -19,7 +19,9 @@ async def calculate_compliance_score(company_id, db: AsyncSession) -> int:
 
     total_active = (
         await db.execute(
-            select(func.count()).select_from(Employee).where(
+            select(func.count())
+            .select_from(Employee)
+            .where(
                 Employee.company_id == company_id,
                 Employee.status == "active",
             )
@@ -32,7 +34,9 @@ async def calculate_compliance_score(company_id, db: AsyncSession) -> int:
     # Count expired permits
     expired = (
         await db.execute(
-            select(func.count()).select_from(Employee).where(
+            select(func.count())
+            .select_from(Employee)
+            .where(
                 Employee.company_id == company_id,
                 Employee.status == "active",
                 Employee.permit_expiry.isnot(None),
@@ -44,7 +48,9 @@ async def calculate_compliance_score(company_id, db: AsyncSession) -> int:
     # Count expiring within 30 days
     expiring_30 = (
         await db.execute(
-            select(func.count()).select_from(Employee).where(
+            select(func.count())
+            .select_from(Employee)
+            .where(
                 Employee.company_id == company_id,
                 Employee.status == "active",
                 Employee.permit_expiry.isnot(None),
@@ -57,7 +63,9 @@ async def calculate_compliance_score(company_id, db: AsyncSession) -> int:
     # Count unresolved critical alerts
     critical_alerts = (
         await db.execute(
-            select(func.count()).select_from(ComplianceAlert).where(
+            select(func.count())
+            .select_from(ComplianceAlert)
+            .where(
                 ComplianceAlert.company_id == company_id,
                 ComplianceAlert.severity == "critical",
                 ComplianceAlert.resolved_at.is_(None),
@@ -135,15 +143,17 @@ async def get_ai_compliance_summary(company_id, db: AsyncSession) -> str:
     # Gather stats
     total = (
         await db.execute(
-            select(func.count()).select_from(Employee).where(
-                Employee.company_id == company_id, Employee.status == "active"
-            )
+            select(func.count())
+            .select_from(Employee)
+            .where(Employee.company_id == company_id, Employee.status == "active")
         )
     ).scalar() or 0
 
     expiring = (
         await db.execute(
-            select(func.count()).select_from(Employee).where(
+            select(func.count())
+            .select_from(Employee)
+            .where(
                 Employee.company_id == company_id,
                 Employee.status == "active",
                 Employee.permit_expiry.isnot(None),
@@ -155,7 +165,9 @@ async def get_ai_compliance_summary(company_id, db: AsyncSession) -> str:
 
     open_alerts = (
         await db.execute(
-            select(func.count()).select_from(ComplianceAlert).where(
+            select(func.count())
+            .select_from(ComplianceAlert)
+            .where(
                 ComplianceAlert.company_id == company_id,
                 ComplianceAlert.resolved_at.is_(None),
             )

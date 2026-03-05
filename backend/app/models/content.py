@@ -10,9 +10,7 @@ from app.database import Base
 
 class ChatMessage(Base):
     __tablename__ = "chat_messages"
-    __table_args__ = (
-        {"schema": "public"},
-    )
+    __table_args__ = ({"schema": "public"},)
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id: Mapped[uuid.UUID] = mapped_column(
@@ -62,9 +60,7 @@ class MasterclassProgress(Base):
 
 class QuizResult(Base):
     __tablename__ = "quiz_results"
-    __table_args__ = (
-        {"schema": "public"},
-    )
+    __table_args__ = ({"schema": "public"},)
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id: Mapped[uuid.UUID] = mapped_column(

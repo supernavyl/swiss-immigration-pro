@@ -28,6 +28,7 @@ settings = get_settings()
 # Data structures
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class DocumentChunk:
     text: str
@@ -125,25 +126,29 @@ def _chunk_document(text: str, source_file: str) -> list[DocumentChunk]:
 
         if len(current_text) + len(section) > CHUNK_SIZE * 4:
             if current_text:
-                chunks.append(DocumentChunk(
-                    text=current_text.strip(),
-                    source_file=source_file,
-                    article_ref=_extract_article_ref(current_text),
-                    chunk_index=chunk_idx,
-                ))
+                chunks.append(
+                    DocumentChunk(
+                        text=current_text.strip(),
+                        source_file=source_file,
+                        article_ref=_extract_article_ref(current_text),
+                        chunk_index=chunk_idx,
+                    )
+                )
                 chunk_idx += 1
-                overlap = current_text[-(CHUNK_OVERLAP * 4):] if len(current_text) > CHUNK_OVERLAP * 4 else ""
+                overlap = current_text[-(CHUNK_OVERLAP * 4) :] if len(current_text) > CHUNK_OVERLAP * 4 else ""
                 current_text = overlap + "\n\n" + section
             else:
                 paragraphs = section.split("\n\n")
                 for para in paragraphs:
                     if len(current_text) + len(para) > CHUNK_SIZE * 4 and current_text:
-                        chunks.append(DocumentChunk(
-                            text=current_text.strip(),
-                            source_file=source_file,
-                            article_ref=_extract_article_ref(current_text),
-                            chunk_index=chunk_idx,
-                        ))
+                        chunks.append(
+                            DocumentChunk(
+                                text=current_text.strip(),
+                                source_file=source_file,
+                                article_ref=_extract_article_ref(current_text),
+                                chunk_index=chunk_idx,
+                            )
+                        )
                         chunk_idx += 1
                         current_text = ""
                     current_text += "\n\n" + para
@@ -151,12 +156,14 @@ def _chunk_document(text: str, source_file: str) -> list[DocumentChunk]:
             current_text += "\n\n" + section
 
     if current_text.strip():
-        chunks.append(DocumentChunk(
-            text=current_text.strip(),
-            source_file=source_file,
-            article_ref=_extract_article_ref(current_text),
-            chunk_index=chunk_idx,
-        ))
+        chunks.append(
+            DocumentChunk(
+                text=current_text.strip(),
+                source_file=source_file,
+                article_ref=_extract_article_ref(current_text),
+                chunk_index=chunk_idx,
+            )
+        )
 
     return chunks
 
@@ -164,6 +171,7 @@ def _chunk_document(text: str, source_file: str) -> list[DocumentChunk]:
 # ---------------------------------------------------------------------------
 # Embedding
 # ---------------------------------------------------------------------------
+
 
 def _load_model():
     """Load the sentence-transformers model (lazy, once)."""
@@ -173,6 +181,7 @@ def _load_model():
 
     try:
         from sentence_transformers import SentenceTransformer
+
         model_name = os.environ.get(
             "RAG_EMBEDDING_MODEL",
             "sentence-transformers/all-MiniLM-L6-v2",
@@ -180,9 +189,7 @@ def _load_model():
         _model = SentenceTransformer(model_name)
         logger.info("Loaded embedding model: %s", model_name)
     except ImportError:
-        logger.warning(
-            "sentence-transformers not installed; RAG will fall back to keyword search"
-        )
+        logger.warning("sentence-transformers not installed; RAG will fall back to keyword search")
         _model = None
     return _model
 
@@ -232,9 +239,7 @@ async def initialize() -> None:
         model = await asyncio.to_thread(_load_model)
         if model is not None and _chunks:
             texts = [c.text for c in _chunks]
-            embeddings = await asyncio.to_thread(
-                model.encode, texts, show_progress_bar=False, batch_size=64
-            )
+            embeddings = await asyncio.to_thread(model.encode, texts, show_progress_bar=False, batch_size=64)
             emb_array = np.array(embeddings, dtype=np.float32)
             norms = np.linalg.norm(emb_array, axis=1, keepdims=True)
             norms[norms == 0] = 1
@@ -254,6 +259,7 @@ async def initialize() -> None:
 # ---------------------------------------------------------------------------
 # Search
 # ---------------------------------------------------------------------------
+
 
 def _bm25_score(query_tokens: list[str], text: str) -> float:
     """Simple BM25-inspired keyword relevance score."""
@@ -299,9 +305,7 @@ async def search(
 
     model = _model
     if model is not None and _embeddings_matrix is not None:
-        query_emb = await asyncio.to_thread(
-            model.encode, [query], show_progress_bar=False
-        )
+        query_emb = await asyncio.to_thread(model.encode, [query], show_progress_bar=False)
         q = np.array(query_emb[0], dtype=np.float32)
         q /= np.linalg.norm(q) or 1
         semantic_scores = _embeddings_matrix @ q
@@ -319,12 +323,14 @@ async def search(
         if combined[idx] <= 0:
             break
         chunk = _chunks[idx]
-        results.append(SearchResult(
-            text=chunk.text,
-            source_file=chunk.source_file,
-            article_ref=chunk.article_ref,
-            score=float(combined[idx]),
-        ))
+        results.append(
+            SearchResult(
+                text=chunk.text,
+                source_file=chunk.source_file,
+                article_ref=chunk.article_ref,
+                score=float(combined[idx]),
+            )
+        )
 
     return results
 
@@ -346,18 +352,22 @@ async def search_with_context(
             remaining = max_chars - total_chars
             if remaining > 200:
                 context_parts.append(r.text[:remaining])
-                sources.append({
-                    "file": r.source_file,
-                    "article": r.article_ref,
-                    "score": round(r.score, 3),
-                })
+                sources.append(
+                    {
+                        "file": r.source_file,
+                        "article": r.article_ref,
+                        "score": round(r.score, 3),
+                    }
+                )
             break
         context_parts.append(r.text)
-        sources.append({
-            "file": r.source_file,
-            "article": r.article_ref,
-            "score": round(r.score, 3),
-        })
+        sources.append(
+            {
+                "file": r.source_file,
+                "article": r.article_ref,
+                "score": round(r.score, 3),
+            }
+        )
         total_chars += len(r.text)
 
     context = "\n\n---\n\n".join(context_parts)

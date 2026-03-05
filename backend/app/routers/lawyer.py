@@ -92,9 +92,7 @@ async def _check_lawyer_limit(
 
     limit = _PLAN_LIMITS.get(user.pack_id, settings.lawyer_free_daily_limit)
 
-    result = await db.execute(
-        select(UserLimit).where(UserLimit.user_id == uuid.UUID(user.user_id))
-    )
+    result = await db.execute(select(UserLimit).where(UserLimit.user_id == uuid.UUID(user.user_id)))
     user_limit = result.scalar_one_or_none()
 
     if user_limit is None:
@@ -137,6 +135,7 @@ async def _increment_lawyer_count(user_id: str, db: AsyncSession) -> None:
 # Request / Response schemas
 # ---------------------------------------------------------------------------
 
+
 class LawyerChatRequest(CamelModel):
     message: str = Field(..., min_length=1, max_length=4000)
     conversation_id: str | None = None
@@ -169,6 +168,7 @@ class ConversationUpdate(BaseModel):
 # ---------------------------------------------------------------------------
 # Streaming endpoint (enhanced)
 # ---------------------------------------------------------------------------
+
 
 @router.post("/stream")
 async def lawyer_stream(
@@ -217,6 +217,7 @@ async def lawyer_stream(
         ):
             if event.startswith("data: "):
                 import json
+
                 try:
                     data = json.loads(event[6:].strip())
                     if data.get("done"):
@@ -262,6 +263,7 @@ async def lawyer_stream(
 # ---------------------------------------------------------------------------
 # Conversations CRUD
 # ---------------------------------------------------------------------------
+
 
 @router.get("/conversations")
 async def list_conversations(
@@ -314,8 +316,7 @@ async def get_conversation(
         raise HTTPException(status_code=400, detail="Invalid conversation ID") from None
 
     result = await db.execute(
-        select(LawyerConversation)
-        .where(
+        select(LawyerConversation).where(
             LawyerConversation.id == cid,
             LawyerConversation.user_id == uuid.UUID(user.user_id),
         )
@@ -325,9 +326,7 @@ async def get_conversation(
         raise HTTPException(status_code=404, detail="Conversation not found")
 
     msgs_result = await db.execute(
-        select(LawyerMessage)
-        .where(LawyerMessage.conversation_id == cid)
-        .order_by(LawyerMessage.created_at)
+        select(LawyerMessage).where(LawyerMessage.conversation_id == cid).order_by(LawyerMessage.created_at)
     )
     messages = msgs_result.scalars().all()
 
@@ -430,8 +429,7 @@ async def delete_conversation(
         raise HTTPException(status_code=400, detail="Invalid conversation ID") from None
 
     await db.execute(
-        delete(LawyerConversation)
-        .where(
+        delete(LawyerConversation).where(
             LawyerConversation.id == cid,
             LawyerConversation.user_id == uuid.UUID(user.user_id),
         )
@@ -443,15 +441,14 @@ async def delete_conversation(
 # Cases CRUD
 # ---------------------------------------------------------------------------
 
+
 @router.get("/cases")
 async def list_cases(
     user: CurrentUser = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
     result = await db.execute(
-        select(LawyerCase)
-        .where(LawyerCase.user_id == uuid.UUID(user.user_id))
-        .order_by(desc(LawyerCase.updated_at))
+        select(LawyerCase).where(LawyerCase.user_id == uuid.UUID(user.user_id)).order_by(desc(LawyerCase.updated_at))
     )
     cases = result.scalars().all()
 
@@ -540,8 +537,7 @@ async def delete_case(
         raise HTTPException(status_code=400, detail="Invalid case ID") from None
 
     await db.execute(
-        delete(LawyerCase)
-        .where(
+        delete(LawyerCase).where(
             LawyerCase.id == cid,
             LawyerCase.user_id == uuid.UUID(user.user_id),
         )
@@ -552,6 +548,7 @@ async def delete_case(
 # ---------------------------------------------------------------------------
 # Document upload
 # ---------------------------------------------------------------------------
+
 
 @router.post("/upload")
 async def upload_document(
@@ -599,9 +596,7 @@ async def upload_document(
 
     upload_dir = Path("/app/uploads/lawyer") / user.user_id / str(conv_uuid)
     if not upload_dir.exists():
-        upload_dir = (
-            Path(__file__).parent.parent.parent / "uploads" / "lawyer" / user.user_id / str(conv_uuid)
-        )
+        upload_dir = Path(__file__).parent.parent.parent / "uploads" / "lawyer" / user.user_id / str(conv_uuid)
     await asyncio.to_thread(upload_dir.mkdir, parents=True, exist_ok=True)
 
     file_id = str(uuid.uuid4())
@@ -637,6 +632,7 @@ async def upload_document(
 # PDF export
 # ---------------------------------------------------------------------------
 
+
 @router.post("/conversations/{conversation_id}/export")
 async def export_conversation_pdf(
     conversation_id: str,
@@ -649,8 +645,7 @@ async def export_conversation_pdf(
         raise HTTPException(status_code=400, detail="Invalid conversation ID") from None
 
     result = await db.execute(
-        select(LawyerConversation)
-        .where(
+        select(LawyerConversation).where(
             LawyerConversation.id == cid,
             LawyerConversation.user_id == uuid.UUID(user.user_id),
         )
@@ -660,9 +655,7 @@ async def export_conversation_pdf(
         raise HTTPException(status_code=404, detail="Conversation not found")
 
     msgs_result = await db.execute(
-        select(LawyerMessage)
-        .where(LawyerMessage.conversation_id == cid)
-        .order_by(LawyerMessage.created_at)
+        select(LawyerMessage).where(LawyerMessage.conversation_id == cid).order_by(LawyerMessage.created_at)
     )
     messages = msgs_result.scalars().all()
 
@@ -671,9 +664,7 @@ async def export_conversation_pdf(
     return StreamingResponse(
         io.BytesIO(pdf_bytes),
         media_type="application/pdf",
-        headers={
-            "Content-Disposition": f'attachment; filename="legal-consultation-{date.today().isoformat()}.pdf"'
-        },
+        headers={"Content-Disposition": f'attachment; filename="legal-consultation-{date.today().isoformat()}.pdf"'},
     )
 
 
@@ -747,10 +738,12 @@ def _generate_pdf(
 
     elements.append(Paragraph("SIP-AI Legal — Consultation Record", title_style))
     created = convo.created_at.strftime("%B %d, %Y") if convo.created_at else "N/A"
-    elements.append(Paragraph(
-        f"Case: {convo.title}<br/>Date: {created}<br/>Generated: {datetime.now().strftime('%B %d, %Y %H:%M')}",
-        header_style,
-    ))
+    elements.append(
+        Paragraph(
+            f"Case: {convo.title}<br/>Date: {created}<br/>Generated: {datetime.now().strftime('%B %d, %Y %H:%M')}",
+            header_style,
+        )
+    )
     elements.append(Spacer(1, 12))
 
     for msg in messages:
@@ -759,7 +752,7 @@ def _generate_pdf(
         elements.append(Paragraph(f"<b>{role_label}</b> — {ts}", role_style))
 
         content = msg.content.replace("\n", "<br/>")
-        content = re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', content)
+        content = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", content)
         style = user_style if msg.role == "user" else assistant_style
         elements.append(Paragraph(content[:5000], style))
 
@@ -778,13 +771,15 @@ def _generate_pdf(
                     elements.append(Paragraph(f"{i}. {step}", assistant_style))
 
     elements.append(Spacer(1, 30))
-    elements.append(Paragraph(
-        "DISCLAIMER: This consultation record is generated by SIP-AI Legal, an AI legal assistant. "
-        "It does not constitute formal legal advice. For binding legal opinions, consult a "
-        "licensed Swiss immigration attorney. Swiss Immigration Pro accepts no liability for "
-        "decisions made based on this AI-generated analysis.",
-        disclaimer_style,
-    ))
+    elements.append(
+        Paragraph(
+            "DISCLAIMER: This consultation record is generated by SIP-AI Legal, an AI legal assistant. "
+            "It does not constitute formal legal advice. For binding legal opinions, consult a "
+            "licensed Swiss immigration attorney. Swiss Immigration Pro accepts no liability for "
+            "decisions made based on this AI-generated analysis.",
+            disclaimer_style,
+        )
+    )
 
     doc.build(elements)
     return buffer.getvalue()

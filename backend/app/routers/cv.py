@@ -44,9 +44,7 @@ async def save_cv(
 
     if body.cv_id:
         # Update existing
-        result = await db.execute(
-            select(UserCv).where(UserCv.id == uuid.UUID(body.cv_id), UserCv.user_id == user_uuid)
-        )
+        result = await db.execute(select(UserCv).where(UserCv.id == uuid.UUID(body.cv_id), UserCv.user_id == user_uuid))
         cv = result.scalar_one_or_none()
         if not cv:
             raise HTTPException(status_code=404, detail="CV not found")

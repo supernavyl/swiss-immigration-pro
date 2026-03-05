@@ -309,18 +309,11 @@ async def send_quiz_tips_email(email: str, name: str) -> dict:
         display: inline-block; font-weight: bold;">Explore Modules</a>
     </div>""",
     )
-    text = (
-        f"Hi {greeting}, here are the top 5 immigration mistakes to avoid. "
-        f"Learn more at {settings.app_url}/modules"
-    )
-    return await send_email(
-        email, "Top 5 Swiss Immigration Mistakes (Avoid These!)", html, text
-    )
+    text = f"Hi {greeting}, here are the top 5 immigration mistakes to avoid. Learn more at {settings.app_url}/modules"
+    return await send_email(email, "Top 5 Swiss Immigration Mistakes (Avoid These!)", html, text)
 
 
-async def send_quiz_offer_email(
-    email: str, name: str, code: str, is_final: bool = False
-) -> dict:
+async def send_quiz_offer_email(email: str, name: str, code: str, is_final: bool = False) -> dict:
     """Day 3 or Day 7: Discount offer with coupon code."""
     greeting = html_mod.escape(name) if name else "there"
     safe_code = html_mod.escape(code)

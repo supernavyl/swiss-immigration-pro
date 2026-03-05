@@ -10,9 +10,7 @@ from app.database import Base
 
 class Subscription(Base):
     __tablename__ = "subscriptions"
-    __table_args__ = (
-        {"schema": "public"},
-    )
+    __table_args__ = ({"schema": "public"},)
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id: Mapped[uuid.UUID] = mapped_column(
@@ -32,9 +30,7 @@ class Subscription(Base):
 
 class Payment(Base):
     __tablename__ = "payments"
-    __table_args__ = (
-        {"schema": "public"},
-    )
+    __table_args__ = ({"schema": "public"},)
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id: Mapped[uuid.UUID] = mapped_column(

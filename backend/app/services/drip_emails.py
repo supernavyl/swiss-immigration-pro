@@ -67,7 +67,9 @@ def _render_drip_email(template: str, name: str) -> tuple[str, str]:
     base_url = settings.app_url
 
     if template == "ai_chatbot":
-        html = _base_template("Your AI Immigration Assistant", f"""
+        html = _base_template(
+            "Your AI Immigration Assistant",
+            f"""
         <p style="font-size: 18px;">Hi {greeting},</p>
         <p>Did you know our AI assistant can answer almost any Swiss immigration question instantly?</p>
         <div style="background: white; padding: 20px; border-radius: 8px;
@@ -86,12 +88,15 @@ def _render_drip_email(template: str, name: str) -> tuple[str, str]:
             style="background: #0056B3; color: white; padding: 15px 30px;
             text-decoration: none; border-radius: 8px;
             display: inline-block; font-weight: bold;">Chat Now</a>
-        </div>""")
+        </div>""",
+        )
         text = f"Hi {greeting}, try our AI assistant at {base_url}/dashboard - ask any Swiss immigration question!"
         return html, text
 
     if template == "checklist":
-        html = _base_template("Your Immigration Checklist", f"""
+        html = _base_template(
+            "Your Immigration Checklist",
+            f"""
         <p style="font-size: 18px;">Hi {greeting},</p>
         <p>Here's a quick checklist to keep your immigration journey on track:</p>
         <div style="background: white; padding: 20px; border-radius: 8px;
@@ -111,12 +116,15 @@ def _render_drip_email(template: str, name: str) -> tuple[str, str]:
             style="background: #0056B3; color: white; padding: 15px 30px;
             text-decoration: none; border-radius: 8px;
             display: inline-block; font-weight: bold;">Explore Modules</a>
-        </div>""")
+        </div>""",
+        )
         text = f"Hi {greeting}, here's your immigration checklist. Start at {base_url}/dashboard"
         return html, text
 
     if template == "success_story":
-        html = _base_template("How Maria Got Her B Permit in 6 Weeks", f"""
+        html = _base_template(
+            "How Maria Got Her B Permit in 6 Weeks",
+            f"""
         <p style="font-size: 18px;">Hi {greeting},</p>
         <p>Meet Maria, a software engineer from Portugal who moved to Zurich:</p>
         <div style="background: #f0f9ff; padding: 20px; border-radius: 8px;
@@ -134,12 +142,15 @@ def _render_drip_email(template: str, name: str) -> tuple[str, str]:
             style="background: #0056B3; color: white; padding: 15px 30px;
             text-decoration: none; border-radius: 8px;
             display: inline-block; font-weight: bold;">See Our Plans</a>
-        </div>""")
+        </div>""",
+        )
         text = f"Hi {greeting}, see how Maria got her B permit in 6 weeks. More at {base_url}/pricing"
         return html, text
 
     if template == "trial_ending":
-        html = _base_template("Don't Lose Access", f"""
+        html = _base_template(
+            "Don't Lose Access",
+            f"""
         <p style="font-size: 18px;">Hi {greeting},</p>
         <p>Your free trial is coming to an end. Here's what you'll miss if you don't upgrade:</p>
         <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
@@ -157,12 +168,15 @@ def _render_drip_email(template: str, name: str) -> tuple[str, str]:
             style="background: #28a745; color: white; padding: 15px 30px;
             text-decoration: none; border-radius: 8px; display: inline-block;
             font-weight: bold; font-size: 18px;">Upgrade Now</a>
-        </div>""")
+        </div>""",
+        )
         text = f"Hi {greeting}, your trial is ending. Upgrade at {base_url}/pricing - plans from CHF 9/mo"
         return html, text
 
     if template == "cv_spotlight":
-        html = _base_template("Your Swiss CV Needs an Upgrade", f"""
+        html = _base_template(
+            "Your Swiss CV Needs an Upgrade",
+            f"""
         <p style="font-size: 18px;">Hi {greeting},</p>
         <p>Did you know that <strong>78% of Swiss employers</strong> use ATS
         (Applicant Tracking Systems) to filter CVs before a human ever sees them?</p>
@@ -183,7 +197,8 @@ def _render_drip_email(template: str, name: str) -> tuple[str, str]:
             style="background: #0056B3; color: white; padding: 15px 30px;
             text-decoration: none; border-radius: 8px;
             display: inline-block; font-weight: bold;">Get Swiss CV Templates</a>
-        </div>""")
+        </div>""",
+        )
         text = (
             f"Hi {greeting}, 78% of Swiss employers use ATS to filter CVs. "
             f"Get 25+ Swiss-optimized templates at {base_url}/pricing"
@@ -191,7 +206,9 @@ def _render_drip_email(template: str, name: str) -> tuple[str, str]:
         return html, text
 
     if template == "social_proof_roundup":
-        html = _base_template("3 Success Stories This Month", f"""
+        html = _base_template(
+            "3 Success Stories This Month",
+            f"""
         <p style="font-size: 18px;">Hi {greeting},</p>
         <p>Here's what happened on Swiss Immigration Pro this month:</p>
 
@@ -216,7 +233,8 @@ def _render_drip_email(template: str, name: str) -> tuple[str, str]:
             style="background: #0056B3; color: white; padding: 15px 30px;
             text-decoration: none; border-radius: 8px;
             display: inline-block; font-weight: bold;">Start Your Success Story</a>
-        </div>""")
+        </div>""",
+        )
         text = (
             f"Hi {greeting}, 3 people successfully moved to Switzerland this month "
             f"using our platform. See their stories and start yours at {base_url}/pricing"
@@ -224,7 +242,9 @@ def _render_drip_email(template: str, name: str) -> tuple[str, str]:
         return html, text
 
     if template == "re_engagement":
-        html = _base_template("Your Swiss Immigration Plan Is Waiting", f"""
+        html = _base_template(
+            "Your Swiss Immigration Plan Is Waiting",
+            f"""
         <p style="font-size: 18px;">Hi {greeting},</p>
         <p>We noticed you haven't started your application yet. That's completely normal
         — immigration is a big decision.</p>
@@ -245,15 +265,17 @@ def _render_drip_email(template: str, name: str) -> tuple[str, str]:
             style="background: #6366f1; color: white; padding: 15px 30px;
             text-decoration: none; border-radius: 8px;
             display: inline-block; font-weight: bold;">Pick Up Where You Left Off</a>
-        </div>""")
+        </div>""",
+        )
         text = (
-            f"Hi {greeting}, your Swiss immigration plan is waiting. "
-            f"Start with our free quiz at {base_url}/dashboard"
+            f"Hi {greeting}, your Swiss immigration plan is waiting. Start with our free quiz at {base_url}/dashboard"
         )
         return html, text
 
     if template == "winback_offer":
-        html = _base_template("Exclusive: 20% Off Your First 3 Months", f"""
+        html = _base_template(
+            "Exclusive: 20% Off Your First 3 Months",
+            f"""
         <p style="font-size: 18px;">Hi {greeting},</p>
         <p>We haven't seen you in a while, and we don't want you to miss out.</p>
         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -291,7 +313,8 @@ def _render_drip_email(template: str, name: str) -> tuple[str, str]:
             Claim 20% Off Now</a>
         </div>
         <p style="color: #666; font-size: 13px; text-align: center;">
-          30-day money-back guarantee · Cancel anytime · No commitment</p>""")
+          30-day money-back guarantee · Cancel anytime · No commitment</p>""",
+        )
         text = (
             f"Hi {greeting}, exclusive offer: 20% off your first 3 months "
             f"with code COMEBACK20. Claim at {base_url}/pricing?discount=COMEBACK20"
@@ -299,7 +322,9 @@ def _render_drip_email(template: str, name: str) -> tuple[str, str]:
         return html, text
 
     if template == "dunning_day1":
-        html = _base_template("Payment Issue — Action Required", f"""
+        html = _base_template(
+            "Payment Issue — Action Required",
+            f"""
         <p style="font-size: 18px;">Hi {greeting},</p>
         <p>We were unable to process your latest payment for your
         <strong>Swiss Immigration Pro</strong> subscription.</p>
@@ -316,7 +341,8 @@ def _render_drip_email(template: str, name: str) -> tuple[str, str]:
             display: inline-block; font-weight: bold;">Update Payment Method</a>
         </div>
         <p style="color: #666; font-size: 14px;">
-          If you believe this is an error, simply reply to this email.</p>""")
+          If you believe this is an error, simply reply to this email.</p>""",
+        )
         text = (
             f"Hi {greeting}, we couldn't process your payment. "
             f"Please update your payment method at {base_url}/dashboard"
@@ -324,7 +350,9 @@ def _render_drip_email(template: str, name: str) -> tuple[str, str]:
         return html, text
 
     if template == "dunning_day3":
-        html = _base_template("Your Access Is at Risk", f"""
+        html = _base_template(
+            "Your Access Is at Risk",
+            f"""
         <p style="font-size: 18px;">Hi {greeting},</p>
         <p>We still haven't been able to charge your payment method.
         <strong>Your subscription is currently past due.</strong></p>
@@ -346,7 +374,8 @@ def _render_drip_email(template: str, name: str) -> tuple[str, str]:
             Fix Payment Now</a>
         </div>
         <p style="color: #666; font-size: 14px;">
-          Need help? Reply to this email — we're happy to assist.</p>""")
+          Need help? Reply to this email — we're happy to assist.</p>""",
+        )
         text = (
             f"Hi {greeting}, your subscription is past due. "
             f"Update your payment at {base_url}/dashboard to avoid losing access."
@@ -354,7 +383,9 @@ def _render_drip_email(template: str, name: str) -> tuple[str, str]:
         return html, text
 
     if template == "dunning_day7":
-        html = _base_template("Last Chance to Keep Your Plan", f"""
+        html = _base_template(
+            "Last Chance to Keep Your Plan",
+            f"""
         <p style="font-size: 18px;">Hi {greeting},</p>
         <p>This is our final reminder. If we can't process your payment within
         <strong>48 hours</strong>, your account will be downgraded to the Free plan.</p>
@@ -371,7 +402,8 @@ def _render_drip_email(template: str, name: str) -> tuple[str, str]:
             text-decoration: none; border-radius: 8px;
             display: inline-block; font-weight: bold; font-size: 20px;">
             Save My Account</a>
-        </div>""")
+        </div>""",
+        )
         text = (
             f"Hi {greeting}, last chance — update your payment at "
             f"{base_url}/dashboard or your account will be downgraded to Free."
@@ -416,6 +448,7 @@ def schedule_drip_sequence(user_id: str, email: str) -> None:
     on the next Celery worker cycle rather than waiting up to 5 minutes."""
     try:
         from app.tasks.email import process_email_queue  # type: ignore[import]
+
         process_email_queue.delay()
     except Exception:  # noqa: S110
         pass  # Celery unavailable in tests / dev — beat will handle it

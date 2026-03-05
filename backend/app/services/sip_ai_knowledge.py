@@ -195,8 +195,14 @@ KNOWLEDGE_BASE: list[dict[str, Any]] = [
     {
         "topic": "visa_types",
         "keywords": [
-            "visa", "permit", "l permit", "b permit", "c permit",
-            "g permit", "aufenthaltsbewilligung", "niederlassungsbewilligung",
+            "visa",
+            "permit",
+            "l permit",
+            "b permit",
+            "c permit",
+            "g permit",
+            "aufenthaltsbewilligung",
+            "niederlassungsbewilligung",
         ],
         "content": (
             "Switzerland has several permit types:\n"
@@ -214,8 +220,14 @@ KNOWLEDGE_BASE: list[dict[str, Any]] = [
     {
         "topic": "work_permits",
         "keywords": [
-            "work", "employment", "job", "quota", "hiring",
-            "employer", "sponsorship", "arbeitserlaubnis",
+            "work",
+            "employment",
+            "job",
+            "quota",
+            "hiring",
+            "employer",
+            "sponsorship",
+            "arbeitserlaubnis",
         ],
         "content": (
             "Work permits require employer sponsorship for third-country nationals. "
@@ -231,8 +243,12 @@ KNOWLEDGE_BASE: list[dict[str, Any]] = [
     {
         "topic": "citizenship",
         "keywords": [
-            "citizenship", "naturalization", "passport", "swiss citizen",
-            "einbuergerung", "nationalite",
+            "citizenship",
+            "naturalization",
+            "passport",
+            "swiss citizen",
+            "einbuergerung",
+            "nationalite",
         ],
         "content": (
             "Swiss citizenship (ordinary naturalization) requires:\n"
@@ -252,8 +268,15 @@ KNOWLEDGE_BASE: list[dict[str, Any]] = [
     {
         "topic": "cantons",
         "keywords": [
-            "canton", "zurich", "geneva", "bern", "basel",
-            "vaud", "lucerne", "ticino", "kanton",
+            "canton",
+            "zurich",
+            "geneva",
+            "bern",
+            "basel",
+            "vaud",
+            "lucerne",
+            "ticino",
+            "kanton",
         ],
         "content": (
             "Switzerland has 26 cantons, each with its own immigration office, "
@@ -266,8 +289,14 @@ KNOWLEDGE_BASE: list[dict[str, Any]] = [
     {
         "topic": "pricing",
         "keywords": [
-            "price", "cost", "subscription", "plan", "pack",
-            "upgrade", "premium", "free",
+            "price",
+            "cost",
+            "subscription",
+            "plan",
+            "pack",
+            "upgrade",
+            "premium",
+            "free",
         ],
         "content": (
             "Swiss Immigration Pro offers four tiers:\n"
@@ -283,8 +312,12 @@ KNOWLEDGE_BASE: list[dict[str, Any]] = [
     {
         "topic": "family_reunification",
         "keywords": [
-            "family", "spouse", "children", "reunification",
-            "familiennachzug", "regroupement",
+            "family",
+            "spouse",
+            "children",
+            "reunification",
+            "familiennachzug",
+            "regroupement",
         ],
         "content": (
             "Family reunification allows permit holders to bring close family members to Switzerland:\n"
@@ -299,8 +332,12 @@ KNOWLEDGE_BASE: list[dict[str, Any]] = [
     {
         "topic": "health_insurance",
         "keywords": [
-            "health", "insurance", "krankenkasse", "lamal",
-            "assurance", "medical",
+            "health",
+            "insurance",
+            "krankenkasse",
+            "lamal",
+            "assurance",
+            "medical",
         ],
         "content": (
             "Health insurance (KVG/LAMal) is mandatory for all residents:\n"
@@ -315,8 +352,12 @@ KNOWLEDGE_BASE: list[dict[str, Any]] = [
     {
         "topic": "taxes",
         "keywords": [
-            "tax", "taxes", "steuern", "impot",
-            "quellensteuer", "withholding",
+            "tax",
+            "taxes",
+            "steuern",
+            "impot",
+            "quellensteuer",
+            "withholding",
         ],
         "content": (
             "Swiss taxation operates at three levels: federal, cantonal, and communal.\n"
@@ -331,8 +372,14 @@ KNOWLEDGE_BASE: list[dict[str, Any]] = [
     {
         "topic": "integration",
         "keywords": [
-            "integration", "language", "course", "german", "french",
-            "italian", "test", "fide",
+            "integration",
+            "language",
+            "course",
+            "german",
+            "french",
+            "italian",
+            "test",
+            "fide",
         ],
         "content": (
             "Integration is key for permit renewals and citizenship:\n"
@@ -347,8 +394,13 @@ KNOWLEDGE_BASE: list[dict[str, Any]] = [
     {
         "topic": "housing",
         "keywords": [
-            "apartment", "housing", "rent", "flat", "wohnung",
-            "logement", "accommodation",
+            "apartment",
+            "housing",
+            "rent",
+            "flat",
+            "wohnung",
+            "logement",
+            "accommodation",
         ],
         "content": (
             "Finding housing in Switzerland can be competitive, especially in Zurich and Geneva:\n"
@@ -365,8 +417,12 @@ KNOWLEDGE_BASE: list[dict[str, Any]] = [
     {
         "topic": "cv_resume",
         "keywords": [
-            "cv", "resume", "lebenslauf", "application",
-            "bewerbung", "job search",
+            "cv",
+            "resume",
+            "lebenslauf",
+            "application",
+            "bewerbung",
+            "job search",
         ],
         "content": (
             "Swiss CVs have specific conventions:\n"
@@ -385,8 +441,13 @@ KNOWLEDGE_BASE: list[dict[str, Any]] = [
     {
         "topic": "education",
         "keywords": [
-            "education", "school", "university", "student",
-            "study", "studium", "etudes",
+            "education",
+            "school",
+            "university",
+            "student",
+            "study",
+            "studium",
+            "etudes",
         ],
         "content": (
             "Education system:\n"
@@ -401,8 +462,12 @@ KNOWLEDGE_BASE: list[dict[str, Any]] = [
     {
         "topic": "banking",
         "keywords": [
-            "bank", "banking", "account", "konto",
-            "compte", "financial",
+            "bank",
+            "banking",
+            "account",
+            "konto",
+            "compte",
+            "financial",
         ],
         "content": (
             "Opening a bank account:\n"
@@ -416,8 +481,13 @@ KNOWLEDGE_BASE: list[dict[str, Any]] = [
     {
         "topic": "lawyers",
         "keywords": [
-            "lawyer", "attorney", "legal", "consultation",
-            "anwalt", "avocat", "advice",
+            "lawyer",
+            "attorney",
+            "legal",
+            "consultation",
+            "anwalt",
+            "avocat",
+            "advice",
         ],
         "content": (
             "For complex immigration cases, professional legal advice is recommended:\n"
@@ -435,8 +505,14 @@ KNOWLEDGE_BASE: list[dict[str, Any]] = [
     {
         "topic": "b2b_corporate",
         "keywords": [
-            "b2b", "corporate", "company", "employer", "relocation",
-            "hr", "human resources", "employee transfer",
+            "b2b",
+            "corporate",
+            "company",
+            "employer",
+            "relocation",
+            "hr",
+            "human resources",
+            "employee transfer",
         ],
         "content": (
             "Swiss Immigration Pro offers corporate immigration solutions:\n"
@@ -453,8 +529,13 @@ KNOWLEDGE_BASE: list[dict[str, Any]] = [
     {
         "topic": "marketplace_services",
         "keywords": [
-            "marketplace", "directory", "provider", "agency",
-            "referral", "rating", "review",
+            "marketplace",
+            "directory",
+            "provider",
+            "agency",
+            "referral",
+            "rating",
+            "review",
         ],
         "content": (
             "The SIP Marketplace connects you with verified immigration professionals:\n"
@@ -471,8 +552,12 @@ KNOWLEDGE_BASE: list[dict[str, Any]] = [
     {
         "topic": "consultation_booking",
         "keywords": [
-            "book", "booking", "appointment", "consult",
-            "schedule", "meeting",
+            "book",
+            "booking",
+            "appointment",
+            "consult",
+            "schedule",
+            "meeting",
         ],
         "content": (
             "Book a professional immigration consultation:\n"
@@ -488,8 +573,13 @@ KNOWLEDGE_BASE: list[dict[str, Any]] = [
     {
         "topic": "modules_learning",
         "keywords": [
-            "module", "course", "learn", "masterclass",
-            "lesson", "training", "education",
+            "module",
+            "course",
+            "learn",
+            "masterclass",
+            "lesson",
+            "training",
+            "education",
         ],
         "content": (
             "Swiss Immigration Pro offers 31 learning modules across 4 packs:\n"
@@ -507,8 +597,12 @@ KNOWLEDGE_BASE: list[dict[str, Any]] = [
     {
         "topic": "tools_overview",
         "keywords": [
-            "tool", "calculator", "planner", "generator",
-            "finder", "builder",
+            "tool",
+            "calculator",
+            "planner",
+            "generator",
+            "finder",
+            "builder",
         ],
         "content": (
             "Our immigration tools help you at every stage:\n"
@@ -528,8 +622,12 @@ KNOWLEDGE_BASE: list[dict[str, Any]] = [
     {
         "topic": "eu_efta_pathway",
         "keywords": [
-            "eu", "efta", "european", "free movement",
-            "bilateral", "schengen",
+            "eu",
+            "efta",
+            "european",
+            "free movement",
+            "bilateral",
+            "schengen",
         ],
         "content": (
             "EU/EFTA citizens benefit from the Agreement on Free Movement of Persons (AFMP):\n"
@@ -608,16 +706,27 @@ LINK_MAP: dict[str, dict[str, str]] = {
 # ---------------------------------------------------------------------------
 
 LANGUAGE_NAMES: dict[str, str] = {
-    "en": "English", "de": "German", "fr": "French", "it": "Italian",
-    "es": "Spanish", "pt": "Portuguese", "zh": "Chinese", "ar": "Arabic",
-    "hi": "Hindi", "ru": "Russian", "ja": "Japanese", "ko": "Korean",
-    "tr": "Turkish", "nl": "Dutch",
+    "en": "English",
+    "de": "German",
+    "fr": "French",
+    "it": "Italian",
+    "es": "Spanish",
+    "pt": "Portuguese",
+    "zh": "Chinese",
+    "ar": "Arabic",
+    "hi": "Hindi",
+    "ru": "Russian",
+    "ja": "Japanese",
+    "ko": "Korean",
+    "tr": "Turkish",
+    "nl": "Dutch",
 }
 
 
 # ===================================================================
 # Helper functions
 # ===================================================================
+
 
 def find_relevant_knowledge(query: str) -> list[dict[str, Any]]:
     """Return up to 3 knowledge-base entries that best match *query*."""
@@ -768,6 +877,7 @@ def generate_follow_ups(query: str, knowledge_entries: list[dict[str, Any]]) -> 
 # System prompt builders
 # ===================================================================
 
+
 def build_chat_system_prompt(
     language: str,
     rag_context: str,
@@ -833,6 +943,7 @@ Always respond in {lang_name}. Use formal legal language but explain technical t
 # Fallback response (when all AI providers fail)
 # ===================================================================
 
+
 def fallback_response(
     knowledge_entries: list[dict[str, Any]],
     doc_context: str,
@@ -849,9 +960,7 @@ def fallback_response(
             if lnk["url"] not in seen:
                 unique.append(lnk)
                 seen.add(lnk["url"])
-        resp += "\n\n---\nLearn more:\n" + "\n".join(
-            f"- [{link['label']}]({link['url']})" for link in unique[:5]
-        )
+        resp += "\n\n---\nLearn more:\n" + "\n".join(f"- [{link['label']}]({link['url']})" for link in unique[:5])
         return resp
     if doc_context:
         resp = f"Based on official Swiss immigration documents:\n\n{doc_context[:1200]}\n\n---\nUseful links:\n"
@@ -879,8 +988,7 @@ def lawyer_fallback_response(
     if knowledge_entries:
         entry = knowledge_entries[0]
         return (
-            entry["content"]
-            + "\n\n---\nFor detailed legal advice, please [book a consultation](/consultation) "
+            entry["content"] + "\n\n---\nFor detailed legal advice, please [book a consultation](/consultation) "
             "or [find a lawyer](/marketplace) on our platform."
         )
     if rag_context:

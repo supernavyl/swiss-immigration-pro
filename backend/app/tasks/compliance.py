@@ -15,6 +15,7 @@ def check_all_compliance():
     Runs synchronously in Celery worker context.
     """
     import asyncio
+
     asyncio.run(_check_compliance_async())
 
 
@@ -76,9 +77,9 @@ async def _check_compliance_async():
                         alert_type="permit_expiry",
                         severity=severity,
                         message=(
-                        f"Permit for {emp.first_name} {emp.last_name} "
-                        f"expires in {days_left} days ({emp.permit_type})"
-                    ),
+                            f"Permit for {emp.first_name} {emp.last_name} "
+                            f"expires in {days_left} days ({emp.permit_type})"
+                        ),
                         due_date=emp.permit_expiry,
                     )
                     db.add(alert)

@@ -63,9 +63,8 @@ def _determine_visa_path(answers: dict[str, str]) -> tuple[str, str, str, str]:
 
     # International pathway — recommend based on complexity signals
     pack = "advanced"
-    if (
-        intent == "Investment/Business"
-        or (education in ("PhD / Doctorate", "Master's Degree") and experience in ("5–10 years", "10+ years"))
+    if intent == "Investment/Business" or (
+        education in ("PhD / Doctorate", "Master's Degree") and experience in ("5–10 years", "10+ years")
     ):
         pack = "citizenship"
 

@@ -27,21 +27,21 @@ router = APIRouter(prefix="/billing", tags=["b2b-billing"])
 B2B_PLANS = {
     "b2b_starter": {
         "name": "Starter",
-        "price_monthly": 19900,   # CHF 199
-        "price_annual": 191000,   # CHF 1910 (20% discount)
+        "price_monthly": 19900,  # CHF 199
+        "price_annual": 191000,  # CHF 1910 (20% discount)
         "max_employees": 25,
     },
     "b2b_business": {
         "name": "Business",
-        "price_monthly": 49900,   # CHF 499
-        "price_annual": 479000,   # CHF 4790 (20% discount)
+        "price_monthly": 49900,  # CHF 499
+        "price_annual": 479000,  # CHF 4790 (20% discount)
         "max_employees": 100,
     },
     "b2b_enterprise": {
         "name": "Enterprise",
-        "price_monthly": 99900,   # CHF 999
-        "price_annual": 959000,   # CHF 9590 (20% discount)
-        "max_employees": 10000,   # Effectively unlimited
+        "price_monthly": 99900,  # CHF 999
+        "price_annual": 959000,  # CHF 9590 (20% discount)
+        "max_employees": 10000,  # Effectively unlimited
     },
 }
 
@@ -113,15 +113,17 @@ async def create_b2b_checkout(
         session = await asyncio.to_thread(
             stripe_lib.checkout.Session.create,
             mode=mode,
-            line_items=[{
-                "price_data": {
-                    "currency": "chf",
-                    "product_data": {"name": f"B2B {plan['name']} Plan"},
-                    "unit_amount": price,
-                    "recurring": {"interval": "year" if body.cycle == "annual" else "month"},
-                },
-                "quantity": 1,
-            }],
+            line_items=[
+                {
+                    "price_data": {
+                        "currency": "chf",
+                        "product_data": {"name": f"B2B {plan['name']} Plan"},
+                        "unit_amount": price,
+                        "recurring": {"interval": "year" if body.cycle == "annual" else "month"},
+                    },
+                    "quantity": 1,
+                }
+            ],
             success_url=f"{settings.app_url}/b2b/settings?payment=success",
             cancel_url=f"{settings.app_url}/b2b/settings?payment=cancelled",
             customer_email=company.billing_email,

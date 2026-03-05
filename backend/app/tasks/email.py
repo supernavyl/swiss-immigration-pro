@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 def process_email_queue():
     """Process pending onboarding drip emails."""
     import asyncio
+
     asyncio.run(_process_drip_emails())
 
 
@@ -54,9 +55,7 @@ async def _process_drip_emails():
                 result = await db.execute(
                     select(Profile)
                     .where(Profile.pack_id == "free")
-                    .where(
-                        func.extract("epoch", now - Profile.created_at) >= delay_days * 86400
-                    )
+                    .where(func.extract("epoch", now - Profile.created_at) >= delay_days * 86400)
                     .where(Profile.id.notin_(select(sent_subquery.c.user_id)))
                     .limit(50)
                 )
@@ -95,6 +94,7 @@ async def _process_drip_emails():
 def process_dunning_emails():
     """Process dunning emails for past-due subscriptions."""
     import asyncio
+
     asyncio.run(_process_dunning_emails())
 
 
@@ -119,16 +119,12 @@ async def _process_dunning_emails():
             now = datetime.now(UTC)
 
             # Find all past_due subscriptions
-            result = await db.execute(
-                select(Subscription).where(Subscription.status == "past_due")
-            )
+            result = await db.execute(select(Subscription).where(Subscription.status == "past_due"))
             past_due_subs = result.scalars().all()
 
             for sub in past_due_subs:
                 # Get user profile
-                profile_result = await db.execute(
-                    select(Profile).where(Profile.id == sub.user_id)
-                )
+                profile_result = await db.execute(select(Profile).where(Profile.id == sub.user_id))
                 profile = profile_result.scalar_one_or_none()
                 if not profile:
                     continue
@@ -168,13 +164,13 @@ async def _process_dunning_emails():
                             step_index=step_index,
                         )
                         db.add(record)
-                        logger.info(
-                            "Sent dunning email step %d to %s", step_index, profile.email
-                        )
+                        logger.info("Sent dunning email step %d to %s", step_index, profile.email)
                     except Exception as e:
                         logger.error(
                             "Failed to send dunning step %d to %s: %s",
-                            step_index, profile.email, e,
+                            step_index,
+                            profile.email,
+                            e,
                         )
 
                 # After step 3 + 2 extra grace days → downgrade
@@ -208,11 +204,13 @@ async def _process_dunning_emails():
 def send_compliance_alert_email(company_email: str, alert_message: str):
     """Send a compliance alert email to a company."""
     import asyncio
+
     asyncio.run(_send_alert_email(company_email, alert_message))
 
 
 async def _send_alert_email(email: str, message: str):
     from app.services.email_service import send_generic_email
+
     try:
         await send_generic_email(
             to=email,

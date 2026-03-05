@@ -41,8 +41,8 @@ class ApplyAgencyRequest(CamelModel):
 
 
 def make_slug(name: str) -> str:
-    slug = re.sub(r'[^a-z0-9]+', '-', name.lower()).strip('-')
-    return slug + '-' + uuid.uuid4().hex[:6]
+    slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+    return slug + "-" + uuid.uuid4().hex[:6]
 
 
 # --- Public endpoints ---
@@ -165,9 +165,7 @@ async def apply_as_lawyer(
 ):
     """Apply to be listed as a lawyer."""
     # Check if already a provider
-    existing = await db.execute(
-        select(LawyerProfile).where(LawyerProfile.user_id == uuid.UUID(user.user_id))
-    )
+    existing = await db.execute(select(LawyerProfile).where(LawyerProfile.user_id == uuid.UUID(user.user_id)))
     if existing.scalar_one_or_none():
         raise HTTPException(status_code=400, detail="You already have a lawyer profile")
 
@@ -197,9 +195,7 @@ async def apply_as_agency(
     db: AsyncSession = Depends(get_db),
 ):
     """Apply to be listed as an agency."""
-    existing = await db.execute(
-        select(AgencyProfile).where(AgencyProfile.user_id == uuid.UUID(user.user_id))
-    )
+    existing = await db.execute(select(AgencyProfile).where(AgencyProfile.user_id == uuid.UUID(user.user_id)))
     if existing.scalar_one_or_none():
         raise HTTPException(status_code=400, detail="You already have an agency profile")
 

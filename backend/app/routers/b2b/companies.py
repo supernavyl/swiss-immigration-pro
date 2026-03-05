@@ -94,14 +94,16 @@ async def create_company(
     db.add(member)
 
     # Audit log
-    db.add(AuditLog(
-        company_id=company.id,
-        actor_id=uuid.UUID(user.user_id),
-        action="created",
-        entity_type="company",
-        entity_id=str(company.id),
-        details={"name": body.name},
-    ))
+    db.add(
+        AuditLog(
+            company_id=company.id,
+            actor_id=uuid.UUID(user.user_id),
+            action="created",
+            entity_type="company",
+            entity_id=str(company.id),
+            details={"name": body.name},
+        )
+    )
 
     await db.flush()
     return {"success": True, "companyId": str(company.id)}
@@ -151,16 +153,12 @@ async def get_company(
 
     # Count employees
     emp_count = (
-        await db.execute(
-            select(func.count()).select_from(Employee).where(Employee.company_id == company.id)
-        )
+        await db.execute(select(func.count()).select_from(Employee).where(Employee.company_id == company.id))
     ).scalar() or 0
 
     # Count members
     member_count = (
-        await db.execute(
-            select(func.count()).select_from(CompanyMember).where(CompanyMember.company_id == company.id)
-        )
+        await db.execute(select(func.count()).select_from(CompanyMember).where(CompanyMember.company_id == company.id))
     ).scalar() or 0
 
     return {
@@ -205,13 +203,15 @@ async def update_company(
     if body.billing_email is not None:
         company.billing_email = body.billing_email
 
-    db.add(AuditLog(
-        company_id=company.id,
-        actor_id=uuid.UUID(user.user_id),
-        action="updated",
-        entity_type="company",
-        entity_id=str(company.id),
-    ))
+    db.add(
+        AuditLog(
+            company_id=company.id,
+            actor_id=uuid.UUID(user.user_id),
+            action="updated",
+            entity_type="company",
+            entity_id=str(company.id),
+        )
+    )
 
     await db.flush()
     return {"success": True}
@@ -226,9 +226,7 @@ async def list_members(
     """List company members."""
     await get_company_member(user, company_id, db)
 
-    result = await db.execute(
-        select(CompanyMember).where(CompanyMember.company_id == uuid.UUID(company_id))
-    )
+    result = await db.execute(select(CompanyMember).where(CompanyMember.company_id == uuid.UUID(company_id)))
     members = result.scalars().all()
 
     return [
@@ -259,6 +257,7 @@ async def invite_member(
 
     # Check if user exists
     from app.models.user import User
+
     result = await db.execute(select(User).where(User.email == body.email))
     existing_user = result.scalar_one_or_none()
 
@@ -291,13 +290,15 @@ async def invite_member(
 
     db.add(member)
 
-    db.add(AuditLog(
-        company_id=uuid.UUID(company_id),
-        actor_id=uuid.UUID(user.user_id),
-        action="invited",
-        entity_type="member",
-        details={"email": body.email, "role": body.role},
-    ))
+    db.add(
+        AuditLog(
+            company_id=uuid.UUID(company_id),
+            actor_id=uuid.UUID(user.user_id),
+            action="invited",
+            entity_type="member",
+            details={"email": body.email, "role": body.role},
+        )
+    )
 
     await db.flush()
     return {"success": True, "message": f"Invitation sent to {body.email}"}
