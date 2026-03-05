@@ -16,11 +16,24 @@ export function ErrorBoundary({ children }: Props) {
 
   useEffect(() => {
     const handleError = (error: ErrorEvent) => {
+      // React hydration mismatches (#418, #423, #425) are recoverable —
+      // React falls back to client rendering automatically. Don't kill the page.
+      const msg = error.error?.message ?? error.message ?? ''
+      if (msg.includes('Minified React error #418') ||
+          msg.includes('Minified React error #423') ||
+          msg.includes('Minified React error #425') ||
+          msg.includes('Hydration')) {
+        return
+      }
       console.error('Error caught by boundary:', error.error)
       setErrorInfo({ hasError: true, error: error.error })
     }
 
     const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      const msg = event.reason?.message ?? String(event.reason)
+      if (msg.includes('Minified React error #418') || msg.includes('Hydration')) {
+        return
+      }
       console.error('Unhandled promise rejection:', event.reason)
       setErrorInfo({
         hasError: true,
