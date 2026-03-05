@@ -15,7 +15,7 @@ export default function JourneySection() {
   const { t } = useT()
 
   return (
-    <section className="sip-section bg-slate-50/50 dark:bg-slate-900/30">
+    <section className="sip-section bg-slate-900">
       <div className="sip-container">
         <div className="grid md:grid-cols-2 gap-12 md:gap-14 lg:gap-16 items-center">
           {/* Image */}
@@ -52,20 +52,20 @@ export default function JourneySection() {
               <span className="w-8 h-[2px] bg-blue-600 dark:bg-blue-400" />
               Your Journey Starts Here
             </p>
-            <h2 className="text-fluid-2xl font-bold text-slate-900 dark:text-white mb-4 leading-tight">
+            <h2 className="text-fluid-2xl font-bold text-white mb-4 leading-tight">
               {t('home.startJourney')}
             </h2>
-            <p className="text-slate-500 dark:text-slate-400 text-lg mb-8 leading-relaxed">
+            <p className="text-slate-400 text-lg mb-8 leading-relaxed">
               {t('home.startJourneyDesc')}
             </p>
 
             <div className="space-y-4 mb-8">
               {FEATURES.map((item, i) => (
                 <div key={i} className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="font-semibold text-slate-900 dark:text-white text-sm">{item.title}</h4>
-                    <p className="text-slate-500 dark:text-slate-400 text-sm">{item.desc}</p>
+                    <h4 className="font-semibold text-white text-sm">{item.title}</h4>
+                    <p className="text-slate-400 text-sm">{item.desc}</p>
                   </div>
                 </div>
               ))}
