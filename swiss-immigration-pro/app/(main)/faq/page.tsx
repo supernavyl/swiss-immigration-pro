@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, Search, HelpCircle, Sparkles, Filter, X, ChevronUp, BookOpen, MessageCircle, Zap, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import MainHeader from '@/components/layout/MainHeader'
 
 const faqs = [
   {
@@ -413,7 +412,6 @@ export default function FAQPage() {
 
   return (
     <div className="min-h-screen page-with-fluid-bg dark:bg-gray-950">
-      <MainHeader />
       <div className="py-24">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Exit Button */}
@@ -435,13 +433,13 @@ export default function FAQPage() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl mb-6 shadow-lg">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-900/30 rounded-2xl mb-6 shadow-lg">
             <HelpCircle className="w-10 h-10 text-blue-600" />
           </div>
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
             Frequently Asked Questions
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
             Everything you need to know about Swiss immigration, citizenship, and our platform
           </p>
 

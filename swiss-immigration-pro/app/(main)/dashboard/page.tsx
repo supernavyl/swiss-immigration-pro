@@ -5,16 +5,24 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useSession } from '@/lib/auth-client'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { UserCircle, Download, BookOpen, TrendingUp, Crown, Home } from 'lucide-react'
+import { UserCircle, Download, BookOpen, TrendingUp, Crown, Home, ArrowRight } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { analytics } from '@/lib/analytics'
 import { getPackContent, getModulesForPack, getProgressPercentage, getAllModulesForAdmin, getModulePack } from '@/lib/content/pack-content'
-
 import type { DashboardUser, DashboardModule } from '@/components/dashboard/types'
 import OverviewTab from '@/components/dashboard/OverviewTab'
 import ContentTab from '@/components/dashboard/ContentTab'
 import ResourcesTab from '@/components/dashboard/ResourcesTab'
 import ProgressTab from '@/components/dashboard/ProgressTab'
+import PackStatusWidget from '@/components/dashboard/PackStatusWidget'
+import ReferralEarningsWidget from '@/components/dashboard/ReferralEarningsWidget'
+
+const LAST_MODULE_KEY = 'sip_last_module'
+
+interface LastModule {
+  id: string
+  title: string
+}
 
 const OnboardingWizard = dynamic(() => import('@/components/onboarding/OnboardingWizard'), { ssr: false })
 
@@ -36,7 +44,12 @@ export default function Dashboard() {
   const [modules, setModules] = useState<DashboardModule[]>([])
   const [previewModules, setPreviewModules] = useState<Array<{ module: DashboardModule; packId: string }>>([])
   const [progress, setProgress] = useState(0)
-  const [activeTab, setActiveTab] = useState<TabId>('overview')
+  const [lastModule, setLastModule] = useState<LastModule | null>(null)
+  const validTabs: TabId[] = ['overview', 'content', 'resources', 'progress']
+  const tabFromUrl = searchParams.get('tab') as TabId
+  const [activeTab, setActiveTab] = useState<TabId>(
+    validTabs.includes(tabFromUrl) ? tabFromUrl : 'overview'
+  )
   const paymentTracked = useRef(false)
 
   useEffect(() => {
@@ -45,6 +58,15 @@ export default function Dashboard() {
       analytics.paymentSuccess(searchParams.get('pack') ?? undefined)
     }
   }, [searchParams])
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(LAST_MODULE_KEY)
+      if (raw) setLastModule(JSON.parse(raw) as LastModule)
+    } catch {
+      // localStorage unavailable or corrupted — ignore
+    }
+  }, [])
 
   useEffect(() => {
     if (status === 'loading') return
@@ -137,13 +159,41 @@ export default function Dashboard() {
           </div>
         </motion.div>
 
+        {/* Status widgets */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+          <PackStatusWidget packId={user.packId} />
+          {!isFree && <ReferralEarningsWidget />}
+        </div>
+
+        {/* Continue learning banner */}
+        {lastModule && (
+          <div className="mb-6 flex items-center justify-between gap-4 px-4 py-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl">
+            <div className="flex items-center gap-3 min-w-0">
+              <BookOpen className="w-5 h-5 text-blue-600 flex-shrink-0" />
+              <div className="min-w-0">
+                <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wide">Continue Learning</p>
+                <p className="font-semibold text-gray-900 dark:text-white truncate">{lastModule.title}</p>
+              </div>
+            </div>
+            <Link
+              href={`/modules/${lastModule.id}`}
+              className="flex-shrink-0 inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors"
+            >
+              Continue <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        )}
+
         {/* Tabs */}
         <div className="mb-8 border-b border-gray-200 dark:border-gray-700">
           <div className="flex space-x-8">
             {TABS.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => {
+                  setActiveTab(tab.id)
+                  router.replace(`?tab=${tab.id}`, { scroll: false })
+                }}
                 className={`flex items-center space-x-2 pb-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === tab.id
                     ? 'border-blue-600 text-blue-600 dark:text-blue-400'

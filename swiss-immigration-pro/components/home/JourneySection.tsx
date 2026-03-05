@@ -16,9 +16,9 @@ export default function JourneySection() {
   const { t } = useT()
 
   return (
-    <section className="py-16 sm:py-20 bg-slate-50/50 dark:bg-slate-900/30">
-      <div className="max-w-6xl mx-auto px-5 sm:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+    <section className="sip-section bg-slate-50/50 dark:bg-slate-900/30">
+      <div className="sip-container">
+        <div className="grid md:grid-cols-2 gap-12 md:gap-14 lg:gap-16 items-center">
           {/* Image */}
           <div className="relative">
             <div className="relative rounded-2xl overflow-hidden shadow-xl aspect-[4/3]">
@@ -61,7 +61,7 @@ export default function JourneySection() {
               <span className="w-8 h-[2px] bg-blue-600 dark:bg-blue-400" />
               Your Journey Starts Here
             </p>
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-4 leading-tight">
+            <h2 className="text-fluid-2xl font-bold text-slate-900 dark:text-white mb-4 leading-tight">
               {t('home.startJourney')}
             </h2>
             <p className="text-slate-500 dark:text-slate-400 text-lg mb-8 leading-relaxed">

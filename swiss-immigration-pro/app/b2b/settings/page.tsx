@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { getAuthHeaderSync } from '@/lib/auth-client'
 import { useToast } from '@/components/providers/ToastProvider'
+import { api } from '@/lib/api'
 import { Building2, CreditCard, Users, Save } from 'lucide-react'
 
 export default function B2BSettingsPage() {
@@ -23,18 +23,21 @@ export default function B2BSettingsPage() {
   }, [companyId])
 
   async function fetchCompany() {
-    const res = await fetch(`/api/b2b/companies/${companyId}`, { headers: getAuthHeaderSync() })
-    if (res.ok) setCompany(await res.json())
+    try {
+      setCompany(await api.get(`/api/b2b/companies/${companyId}`))
+    } catch (err) { console.error('Failed to load company:', err) }
   }
 
   async function fetchMembers() {
-    const res = await fetch(`/api/b2b/companies/${companyId}/members`, { headers: getAuthHeaderSync() })
-    if (res.ok) setMembers(await res.json())
+    try {
+      setMembers(await api.get(`/api/b2b/companies/${companyId}/members`))
+    } catch (err) { console.error('Failed to load members:', err) }
   }
 
   async function fetchBilling() {
-    const res = await fetch(`/api/b2b/billing/${companyId}`, { headers: getAuthHeaderSync() })
-    if (res.ok) setBilling(await res.json())
+    try {
+      setBilling(await api.get(`/api/b2b/billing/${companyId}`))
+    } catch (err) { console.error('Failed to load billing:', err) }
   }
 
   async function handleUpdateCompany(e: React.FormEvent<HTMLFormElement>) {
@@ -47,40 +50,31 @@ export default function B2BSettingsPage() {
       industry: form.get('industry') || null,
       billingEmail: form.get('billingEmail'),
     }
-
-    const res = await fetch(`/api/b2b/companies/${companyId}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', ...getAuthHeaderSync() },
-      body: JSON.stringify(body),
-    })
-    if (res.ok) fetchCompany()
+    try {
+      await api.put(`/api/b2b/companies/${companyId}`, body)
+      await fetchCompany()
+    } catch (err) { console.error('Failed to update company:', err) }
   }
 
   async function handleInvite() {
     if (!inviteEmail) return
-    const res = await fetch(`/api/b2b/companies/${companyId}/members`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...getAuthHeaderSync() },
-      body: JSON.stringify({ email: inviteEmail, role: inviteRole }),
-    })
-    if (res.ok) {
+    try {
+      await api.post(`/api/b2b/companies/${companyId}/members`, { email: inviteEmail, role: inviteRole })
       setInviteEmail('')
-      fetchMembers()
-    } else {
-      const err = await res.json()
-      showToast(err.detail || 'Failed to invite', 'error')
+      await fetchMembers()
+    } catch (err) {
+      const detail = err instanceof Error ? err.message : 'Failed to invite'
+      showToast(detail, 'error')
     }
   }
 
   async function handleUpgrade(planId: string) {
-    const res = await fetch(`/api/b2b/billing/${companyId}/checkout`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...getAuthHeaderSync() },
-      body: JSON.stringify({ planId, cycle: 'monthly' }),
-    })
-    if (res.ok) {
-      const data = await res.json()
+    try {
+      const data = await api.post<{ checkoutUrl?: string }>(`/api/b2b/billing/${companyId}/checkout`, { planId, cycle: 'monthly' })
       if (data.checkoutUrl) window.location.href = data.checkoutUrl
+    } catch (err) {
+      showToast('Failed to start checkout. Please try again.', 'error')
+      console.error('Checkout failed:', err)
     }
   }
 

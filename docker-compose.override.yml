@@ -12,10 +12,9 @@ services:
 
   frontend:
     command: npm run dev
+    user: root
     volumes:
       - ./swiss-immigration-pro:/app
-      - /app/node_modules
-      - /app/.next
     environment:
       NODE_ENV: development
 

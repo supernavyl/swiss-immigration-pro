@@ -1,7 +1,7 @@
 import logging
-import os
 import threading
 import time
+import uuid
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
@@ -27,6 +27,7 @@ from app.routers import (
     modules,
     newsletter,
     payments,
+    quiz,
     referrals,
     search,
     stats,
@@ -43,6 +44,7 @@ from app.routers.marketplace import marketplace_router
 # Only activates when SENTRY_DSN is set — safe to leave unset in local dev.
 def _init_sentry() -> None:
     from app.config import get_settings as _get_settings
+
     _settings = _get_settings()
     if not _settings.sentry_dsn:
         return
@@ -133,22 +135,30 @@ app.add_middleware(
     allow_origins=settings.cors_origins,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allow_headers=["Authorization", "Content-Type", "Accept", "X-Requested-With"],
+    allow_headers=["Authorization", "Content-Type", "Accept", "X-Requested-With", "X-Request-ID"],
 )
 
 
-# --- Request Logging Middleware ---
+# --- Request Tracing + Logging Middleware ---
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
+    request_id = request.headers.get("X-Request-ID") or str(uuid.uuid4())
     start = time.time()
     response = await call_next(request)
     duration_ms = round((time.time() - start) * 1000, 2)
-    logger.info(
-        "%s %s %s %sms",
+    response.headers["X-Request-ID"] = request_id
+
+    status = response.status_code
+    client_ip = request.client.host if request.client else "-"
+    log_fn = logger.info if status < 400 else (logger.warning if status < 500 else logger.error)
+    log_fn(
+        "%s %s %s %sms client=%s req=%s",
         request.method,
         request.url.path,
-        response.status_code,
+        status,
         duration_ms,
+        client_ip,
+        request_id,
     )
     return response
 
@@ -172,6 +182,7 @@ app.include_router(user.router)
 app.include_router(admin.router)
 app.include_router(stats.router)
 app.include_router(webhooks.router)
+app.include_router(quiz.router)
 app.include_router(referrals.router)
 app.include_router(b2b_router)
 app.include_router(marketplace_router)
@@ -189,15 +200,14 @@ async def health_check():
             await conn.execute(text("SELECT 1"))
         checks["database"] = "ok"
     except Exception as e:
-        checks["database"] = f"error: {e}"
+        checks["database"] = "error"
     # Redis check (when available)
     try:
-        import redis.asyncio as aioredis
+        from app.redis_pool import get_redis
 
-        r = aioredis.from_url(os.environ.get("REDIS_URL", "redis://redis:6379"))
+        r = get_redis()
         await r.ping()
         checks["redis"] = "ok"
-        await r.aclose()
     except Exception:
         checks["redis"] = "unavailable"
 

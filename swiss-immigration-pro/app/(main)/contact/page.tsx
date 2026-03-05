@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Mail, Phone, MapPin, Send, Clock, CheckCircle, AlertCircle, MessageSquare, ArrowRight, Sparkles } from 'lucide-react'
 import Link from 'next/link'
-import MainHeader from '@/components/layout/MainHeader'
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -53,12 +52,10 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen page-with-fluid-bg">
-      <MainHeader />
-
       {/* Hero Section */}
       <section className="relative overflow-hidden pt-24 pb-16">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-purple-600/5 to-transparent" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="sip-container-wide relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -68,16 +65,16 @@ export default function ContactPage() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: 'spring' }}
-              className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold mb-6"
+              className="inline-flex items-center gap-2 bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-4 py-2 rounded-full text-sm font-semibold mb-6"
             >
               <Sparkles className="w-4 h-4" />
               We're here to help
             </motion.div>
 
-            <h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6 leading-tight">
+            <h1 className="text-5xl md:text-6xl font-bold text-slate-900 dark:text-white mb-6 leading-tight">
               Get in Touch
             </h1>
-            <p className="text-xl text-slate-600 leading-relaxed">
+            <p className="text-xl text-slate-600 dark:text-gray-300 leading-relaxed">
               Have questions about Swiss immigration? Our team is ready to help you succeed on your journey.
             </p>
           </motion.div>
@@ -85,7 +82,7 @@ export default function ContactPage() {
       </section>
 
       {/* Main Content */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+      <section className="sip-container-wide pb-24">
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Contact Form - Takes 2 columns on large screens */}
           <motion.div
@@ -94,7 +91,7 @@ export default function ContactPage() {
             transition={{ delay: 0.1 }}
             className="lg:col-span-2"
           >
-            <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 border border-slate-200/50">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 md:p-12 border border-slate-200/50 dark:border-slate-700/50">
               {submitted ? (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -104,8 +101,8 @@ export default function ContactPage() {
                   <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <CheckCircle className="w-12 h-12 text-green-600" />
                   </div>
-                  <h2 className="text-3xl font-bold text-slate-900 mb-4">Message Sent! 🎉</h2>
-                  <p className="text-slate-600 mb-8 max-w-md mx-auto">
+                  <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Message Sent! 🎉</h2>
+                  <p className="text-slate-600 dark:text-gray-300 mb-8 max-w-md mx-auto">
                     Thank you for reaching out. We'll get back to you within 24 hours.
                   </p>
                   <button
@@ -122,15 +119,15 @@ export default function ContactPage() {
                       <MessageSquare className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h2 className="text-3xl font-bold text-slate-900">Send us a Message</h2>
-                      <p className="text-slate-600 mt-1">We typically respond within 24 hours</p>
+                      <h2 className="text-3xl font-bold text-slate-900 dark:text-white">Send us a Message</h2>
+                      <p className="text-slate-600 dark:text-gray-400 mt-1">We typically respond within 24 hours</p>
                     </div>
                   </div>
 
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid md:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-semibold text-slate-700 mb-2">
+                        <label className="block text-sm font-semibold text-slate-700 dark:text-gray-300 mb-2">
                           Your Name *
                         </label>
                         <input
@@ -139,13 +136,13 @@ export default function ContactPage() {
                           required
                           value={formData.name}
                           onChange={handleChange}
-                          className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-slate-900 placeholder-slate-400"
+                          className="w-full px-4 py-3 bg-slate-50 dark:bg-gray-700 border border-slate-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-gray-500"
                           placeholder="John Doe"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-semibold text-slate-700 mb-2">
+                        <label className="block text-sm font-semibold text-slate-700 dark:text-gray-300 mb-2">
                           Email Address *
                         </label>
                         <input
@@ -154,14 +151,14 @@ export default function ContactPage() {
                           required
                           value={formData.email}
                           onChange={handleChange}
-                          className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-slate-900 placeholder-slate-400"
+                          className="w-full px-4 py-3 bg-slate-50 dark:bg-gray-700 border border-slate-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-gray-500"
                           placeholder="john@example.com"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold text-slate-700 mb-2">
+                      <label className="block text-sm font-semibold text-slate-700 dark:text-gray-300 mb-2">
                         Subject *
                       </label>
                       <input
@@ -170,13 +167,13 @@ export default function ContactPage() {
                         required
                         value={formData.subject}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-slate-900 placeholder-slate-400"
+                        className="w-full px-4 py-3 bg-slate-50 dark:bg-gray-700 border border-slate-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-gray-500"
                         placeholder="How can we help you?"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold text-slate-700 mb-2">
+                      <label className="block text-sm font-semibold text-slate-700 dark:text-gray-300 mb-2">
                         Message *
                       </label>
                       <textarea
@@ -185,7 +182,7 @@ export default function ContactPage() {
                         rows={6}
                         value={formData.message}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none text-slate-900 placeholder-slate-400"
+                        className="w-full px-4 py-3 bg-slate-50 dark:bg-gray-700 border border-slate-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-gray-500"
                         placeholder="Tell us about your situation or questions..."
                       />
                     </div>
@@ -234,8 +231,8 @@ export default function ContactPage() {
             className="space-y-6"
           >
             {/* Contact Information */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200/50">
-              <h3 className="text-2xl font-bold text-slate-900 mb-6">Contact Information</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-slate-200/50 dark:border-slate-700/50">
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Contact Information</h3>
               
               <div className="space-y-6">
                 <motion.div
@@ -246,7 +243,7 @@ export default function ContactPage() {
                     <Mail className="w-6 h-6 text-blue-600" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-slate-900 mb-1">Email</h4>
+                    <h4 className="font-semibold text-slate-900 dark:text-white mb-1">Email</h4>
                     <a
                       href="mailto:info@swissimmigrationpro.com"
                       className="text-blue-600 hover:text-blue-700 font-medium transition-colors"
@@ -264,10 +261,10 @@ export default function ContactPage() {
                     <Phone className="w-6 h-6 text-green-600" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-slate-900 mb-1">Phone</h4>
+                    <h4 className="font-semibold text-slate-900 dark:text-white mb-1">Phone</h4>
                     <a
                       href="mailto:contact@swissimmigrationpro.com"
-                      className="text-slate-700 hover:text-blue-600 font-medium transition-colors"
+                      className="text-slate-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors"
                     >
                       Use the contact form below
                     </a>
@@ -282,8 +279,8 @@ export default function ContactPage() {
                     <MapPin className="w-6 h-6 text-purple-600" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-slate-900 mb-1">Office</h4>
-                    <p className="text-slate-600 leading-relaxed">
+                    <h4 className="font-semibold text-slate-900 dark:text-white mb-1">Office</h4>
+                    <p className="text-slate-600 dark:text-gray-400 leading-relaxed">
                       Alpine Legal Partners<br />
                       Zurich, Switzerland
                     </p>
@@ -298,8 +295,8 @@ export default function ContactPage() {
                     <Clock className="w-6 h-6 text-orange-600" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-slate-900 mb-1">Response Time</h4>
-                    <p className="text-slate-600">
+                    <h4 className="font-semibold text-slate-900 dark:text-white mb-1">Response Time</h4>
+                    <p className="text-slate-600 dark:text-gray-400">
                       Usually within 24 hours
                     </p>
                   </div>
@@ -348,12 +345,12 @@ export default function ContactPage() {
             </div>
 
             {/* Important Notice */}
-            <div className="bg-amber-50 border-2 border-amber-200 rounded-2xl p-6">
+            <div className="bg-amber-50 dark:bg-amber-950/30 border-2 border-amber-200 dark:border-amber-800/50 rounded-2xl p-6">
               <div className="flex items-start gap-3">
-                <AlertCircle className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
+                <AlertCircle className="w-6 h-6 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="font-semibold text-amber-900 mb-2">Important Notice</h4>
-                  <p className="text-sm text-amber-800 leading-relaxed">
+                  <h4 className="font-semibold text-amber-900 dark:text-amber-300 mb-2">Important Notice</h4>
+                  <p className="text-sm text-amber-800 dark:text-amber-400 leading-relaxed">
                     This platform provides general information only. Not legal advice. For specific legal matters, please book a consultation.
                   </p>
                 </div>
@@ -363,14 +360,14 @@ export default function ContactPage() {
             {/* FAQ Link */}
             <Link
               href="/faq"
-              className="block bg-slate-100 hover:bg-slate-200 rounded-xl p-6 transition-colors group"
+              className="block bg-slate-100 dark:bg-gray-700 hover:bg-slate-200 dark:hover:bg-gray-600 rounded-xl p-6 transition-colors group"
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="font-semibold text-slate-900 mb-1">Frequently Asked Questions</div>
-                  <div className="text-sm text-slate-600">Find quick answers</div>
+                  <div className="font-semibold text-slate-900 dark:text-white mb-1">Frequently Asked Questions</div>
+                  <div className="text-sm text-slate-600 dark:text-gray-400">Find quick answers</div>
                 </div>
-                <ArrowRight className="w-5 h-5 text-slate-600 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-5 h-5 text-slate-600 dark:text-gray-400 group-hover:translate-x-1 transition-transform" />
               </div>
             </Link>
           </motion.div>
@@ -412,13 +409,13 @@ export default function ContactPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 + idx * 0.1 }}
               whileHover={{ y: -4 }}
-              className="bg-white rounded-xl p-6 border border-slate-200/50 shadow-lg hover:shadow-xl transition-all"
+              className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-slate-200/50 dark:border-slate-700/50 shadow-lg hover:shadow-xl transition-all"
             >
               <div className={`w-12 h-12 ${item.iconBg} rounded-xl flex items-center justify-center mb-4`}>
                 <item.icon className={`w-6 h-6 ${item.iconColor}`} />
               </div>
-              <h4 className="text-lg font-bold text-slate-900 mb-2">{item.title}</h4>
-              <p className="text-slate-600 text-sm leading-relaxed">{item.description}</p>
+              <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-2">{item.title}</h4>
+              <p className="text-slate-600 dark:text-gray-400 text-sm leading-relaxed">{item.description}</p>
             </motion.div>
           ))}
         </motion.div>

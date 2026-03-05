@@ -48,14 +48,14 @@ export default function AddOnsList({ onCheckout }: AddOnsListProps) {
   return (
     <section className="mt-12 sm:mt-16 md:mt-24" aria-label="Premium add-ons">
       <div className="text-center mb-8 sm:mb-12 px-2">
-        <div className="inline-flex items-center gap-2 bg-amber-50 text-amber-700 px-4 py-1.5 rounded-full text-xs font-semibold mb-4 border border-amber-200">
+        <div className="inline-flex items-center gap-2 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 px-4 py-1.5 rounded-full text-xs font-semibold mb-4 border border-amber-200 dark:border-amber-700/30">
           <Award className="w-3.5 h-3.5" />
           Premium Add-Ons &mdash; One-Time Purchase
         </div>
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">
           Need More? Go Premium
         </h2>
-        <p className="text-sm sm:text-base text-black max-w-2xl mx-auto opacity-80">
+        <p className="text-sm sm:text-base text-gray-700 dark:text-gray-400 max-w-2xl mx-auto opacity-80">
           Standalone products to complement any subscription plan. Pay once, keep forever.
         </p>
       </div>
@@ -64,36 +64,36 @@ export default function AddOnsList({ onCheckout }: AddOnsListProps) {
           <motion.div
             key={product.id}
             whileHover={{ y: -4 }}
-            className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-7 border border-gray-100 shadow-lg hover:shadow-xl transition-all relative"
+            className="bg-white dark:bg-gray-900 rounded-2xl sm:rounded-3xl p-5 sm:p-7 border border-gray-100 dark:border-gray-800 shadow-lg hover:shadow-xl dark:hover:shadow-gray-900/40 transition-all relative"
           >
             {product.badge && (
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow whitespace-nowrap">
                 {product.badge}
               </div>
             )}
-            <div className={`w-11 h-11 ${product.color} rounded-xl flex items-center justify-center mb-4`}>
+            <div className={`w-11 h-11 ${product.color} rounded-xl flex items-center justify-center mb-4 dark:bg-opacity-20`}>
               <product.icon className="w-5 h-5" />
             </div>
-            <div className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">
+            <div className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-1">
               {product.type}
             </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-1">{product.name}</h3>
-            <div className="text-2xl font-extrabold text-gray-900 mb-3">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">{product.name}</h3>
+            <div className="text-2xl font-extrabold text-gray-900 dark:text-white mb-3">
               {product.price}{' '}
-              <span className="text-sm font-normal text-gray-400">one-time</span>
+              <span className="text-sm font-normal text-gray-400 dark:text-gray-500">one-time</span>
             </div>
-            <p className="text-sm text-gray-600 mb-4 leading-relaxed">{product.description}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">{product.description}</p>
             <ul className="space-y-2 mb-6">
               {product.features.map((f, i) => (
-                <li key={i} className="flex items-start gap-2 text-xs text-gray-700">
-                  <CheckCircle className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
+                <li key={i} className="flex items-start gap-2 text-xs text-gray-700 dark:text-gray-400">
+                  <CheckCircle className="w-4 h-4 text-green-500 dark:text-green-400 shrink-0 mt-0.5" />
                   {f}
                 </li>
               ))}
             </ul>
             <button
               onClick={() => onCheckout(product.id)}
-              className="w-full py-3 rounded-xl font-bold text-sm bg-gray-900 hover:bg-gray-800 text-white transition-all shadow active:scale-[0.98] touch-manipulation"
+              className="w-full py-3 rounded-xl font-bold text-sm bg-gray-900 dark:bg-gray-700 hover:bg-gray-800 dark:hover:bg-gray-600 text-white transition-all shadow active:scale-[0.98] touch-manipulation min-h-[44px]"
               aria-label={`Purchase ${product.name}`}
             >
               Buy Now &mdash; {product.price}

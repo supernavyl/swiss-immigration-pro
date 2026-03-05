@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 
 from app.middleware.auth import CurrentUser, get_current_user
 from app.schemas import CamelModel
-from app.services.stripe_service import ONE_TIME_PRODUCTS, create_checkout_session
+from app.services.stripe_service import DISCOUNT_CODES, ONE_TIME_PRODUCTS, create_checkout_session
 
 router = APIRouter(prefix="/api", tags=["payments"])
 
@@ -60,4 +60,24 @@ async def product_checkout(
     return {
         "checkoutUrl": result.get("checkout_url"),
         "productId": body.product_id,
+    }
+
+
+@router.get("/payments/validate-coupon")
+async def validate_coupon(code: str = Query(..., min_length=1, max_length=30)) -> dict:
+    """Validate a discount code and return its details."""
+    config = DISCOUNT_CODES.get(code.upper().strip())
+    if not config:
+        return {
+            "valid": False,
+            "description": "Invalid coupon code",
+            "percentOff": 0,
+            "durationMonths": 0,
+        }
+
+    return {
+        "valid": True,
+        "description": config["name"],
+        "percentOff": config["percent_off"],
+        "durationMonths": config.get("duration_in_months", 0),
     }

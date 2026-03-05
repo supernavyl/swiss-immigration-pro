@@ -20,8 +20,6 @@ import {
   PinOff,
   ChevronDown,
   ChevronRight,
-  Mic,
-  MicOff,
   Download,
   FolderOpen,
   AlertTriangle,
@@ -44,6 +42,10 @@ import {
 } from "@/lib/useLawyerChat";
 import { TypewriterMarkdown } from "./TypewriterMarkdown";
 import { analytics } from "@/lib/analytics";
+import { useVoiceChat } from "@/lib/hooks/useVoiceChat";
+import { VoiceButton } from "@/components/voice/VoiceButton";
+import { VoiceModeOverlay } from "@/components/voice/VoiceModeOverlay";
+import ConsultationUpsellModal from "./ConsultationUpsellModal";
 
 // ---------------------------------------------------------------------------
 // Quick-start prompt tiles
@@ -242,11 +244,39 @@ export default function SwissVirtualLawyer() {
   const [newCaseCategory, setNewCaseCategory] = useState("other");
   const [showNewCase, setShowNewCase] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<string | null>(null);
+  const [voiceMode, setVoiceMode] = useState(false);
+  const [voiceResponseText, setVoiceResponseText] = useState("");
+  const [voiceError, setVoiceError] = useState<string | null>(null);
+  const [showUpsellModal, setShowUpsellModal] = useState(false);
+
+  const voice = useVoiceChat({
+    mode: "lawyer",
+    language: t("__lang") || "en",
+    onTranscription: (text) => {
+      // Add user's transcription to chat history as visible text
+      chat.sendMessage(text);
+    },
+    onSpeakingStart: (text) => {
+      setVoiceResponseText(text);
+    },
+    onSpeakingEnd: () => {
+      setVoiceResponseText("");
+    },
+    onMetadata: (_metadata) => {
+      // Metadata is already captured in the chat response from the backend
+    },
+    onError: (error) => {
+      setVoiceError(error);
+      if (error === "voice.upgradeRequired") {
+        // Could show upgrade modal here
+      }
+    },
+  });
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<unknown>(null);
 
   // Auto-scroll
   useEffect(() => {
@@ -336,41 +366,19 @@ export default function SwissVirtualLawyer() {
     [chat],
   );
 
-  // Voice input
-  const toggleVoice = useCallback(() => {
-    if (isRecording) {
-      recognitionRef.current?.stop();
-      setIsRecording(false);
-      return;
+  // Voice call toggle
+  const toggleVoiceCall = useCallback(async () => {
+    if (voice.isConnected) {
+      voice.disconnect();
+      setVoiceMode(false);
+      setVoiceResponseText("");
+      setVoiceError(null);
+    } else {
+      setVoiceError(null);
+      await voice.connect();
+      setVoiceMode(true);
     }
-
-    // Web Speech API — vendor-prefixed, no standard TS types
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const Win = window as any;
-    const Ctor = Win.SpeechRecognition || Win.webkitSpeechRecognition;
-    if (!Ctor) return;
-
-    const recognition = new Ctor();
-    recognition.continuous = false;
-    recognition.interimResults = true;
-    recognition.lang =
-      { en: "en-US", fr: "fr-FR", de: "de-CH", it: "it-CH" }[
-        t("__lang") || "en"
-      ] || "en-US";
-
-    recognition.onresult = (event: { results: ArrayLike<{ 0: { transcript: string } }> }) => {
-      const transcript = Array.from(event.results)
-        .map((r) => r[0].transcript)
-        .join("");
-      setInputValue(transcript);
-    };
-    recognition.onend = () => setIsRecording(false);
-    recognition.onerror = () => setIsRecording(false);
-
-    recognitionRef.current = recognition;
-    recognition.start();
-    setIsRecording(true);
-  }, [isRecording, t]);
+  }, [voice]);
 
   const handleCreateCase = useCallback(async () => {
     if (!newCaseTitle.trim()) return;
@@ -866,6 +874,40 @@ export default function SwissVirtualLawyer() {
             </motion.div>
           )}
 
+          {/* Rate limit upsell for authenticated free users */}
+          {chat.isAuthenticated && chat.limitReached && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="max-w-lg mx-auto mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl border border-amber-200 dark:border-amber-800"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <PhoneCall className="w-5 h-5 text-amber-600" />
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+                  Daily message limit reached
+                </h3>
+              </div>
+              <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">
+                Free plan includes 5 AI messages per day. Upgrade for unlimited access
+                or book a consultation for personalized expert advice.
+              </p>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setShowUpsellModal(true)}
+                  className="flex-1 py-2 text-center text-xs font-medium text-white bg-amber-600 hover:bg-amber-700 rounded-lg"
+                >
+                  Book Consultation
+                </button>
+                <a
+                  href="/pricing"
+                  className="flex-1 py-2 text-center text-xs font-medium text-amber-700 dark:text-amber-400 bg-white dark:bg-gray-800 border border-amber-200 dark:border-amber-800 hover:bg-amber-50 rounded-lg"
+                >
+                  Upgrade Plan
+                </a>
+              </div>
+            </motion.div>
+          )}
+
           {/* Quick prompts */}
           {showQuickPrompts && !chat.limitReached && (
             <div className="max-w-2xl mx-auto mb-6">
@@ -1012,25 +1054,12 @@ export default function SwissVirtualLawyer() {
                   aria-label={t("lawyer.placeholder")}
                 />
               </div>
-              <button
-                onClick={toggleVoice}
-                className={`p-2 rounded-lg shrink-0 transition-colors ${
-                  isRecording
-                    ? "text-red-500 bg-red-50 dark:bg-red-900/20 animate-pulse"
-                    : "text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-                }`}
-                aria-label={
-                  isRecording
-                    ? t("lawyer.voiceListening")
-                    : t("lawyer.voiceInput")
-                }
-              >
-                {isRecording ? (
-                  <MicOff className="w-5 h-5" />
-                ) : (
-                  <Mic className="w-5 h-5" />
-                )}
-              </button>
+              <VoiceButton
+                isActive={voice.isConnected}
+                isSpeaking={voice.isSpeaking}
+                onClick={toggleVoiceCall}
+                disabled={!voice.isSupported}
+              />
               <button
                 onClick={handleSend}
                 disabled={
@@ -1053,6 +1082,39 @@ export default function SwissVirtualLawyer() {
           </div>
         </div>
       </div>
+
+      {/* Voice mode overlay */}
+      <VoiceModeOverlay
+        isOpen={voiceMode && voice.isConnected}
+        isListening={voice.isListening}
+        isSpeaking={voice.isSpeaking}
+        isProcessing={voice.isProcessing}
+        isConnected={voice.isConnected}
+        transcript={voice.transcript}
+        responseText={voiceResponseText}
+        onEndCall={() => {
+          voice.disconnect();
+          setVoiceMode(false);
+          setVoiceResponseText("");
+        }}
+        onInterrupt={voice.interrupt}
+        mode="lawyer"
+      />
+
+      {/* Voice error toast */}
+      <AnimatePresence>
+        {voiceError && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg text-sm"
+            onClick={() => setVoiceError(null)}
+          >
+            {t(voiceError) || voiceError}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Keyboard shortcuts modal */}
       <AnimatePresence>
@@ -1108,6 +1170,12 @@ export default function SwissVirtualLawyer() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Consultation upsell modal for rate-limited users */}
+      <ConsultationUpsellModal
+        isOpen={showUpsellModal}
+        onClose={() => setShowUpsellModal(false)}
+      />
     </div>
   );
 }

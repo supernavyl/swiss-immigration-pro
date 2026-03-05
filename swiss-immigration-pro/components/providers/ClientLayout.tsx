@@ -6,6 +6,8 @@ import { SessionProvider } from './SessionProvider'
 import { ThemeProvider } from './ThemeProvider'
 import { InitialQuizGate } from '@/components/quiz/InitialQuizGate'
 import { TranslationLoader } from '@/components/layout/TranslationLoader'
+import MainHeader from '@/components/layout/MainHeader'
+import Breadcrumbs from '@/components/layout/Breadcrumbs'
 import ScrollToTop from '@/components/layout/ScrollToTop'
 import { ToastProvider } from '@/components/providers/ToastProvider'
 import { ChatbotProvider } from '@/components/chatbot/ChatbotProvider'
@@ -18,6 +20,7 @@ const Footer = dynamic(() => import('@/components/layout/Footer'), {
 })
 const ChatbotWidget = dynamic(() => import('@/components/chatbot/ChatbotWidget'), { ssr: false })
 const QuickActionFAB = dynamic(() => import('@/components/layout/QuickActionFAB'), { ssr: false })
+const SocialProofToast = dynamic(() => import('@/components/marketing/SocialProofToast'), { ssr: false })
 
 export function ClientLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -27,6 +30,8 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
           <ChatbotProvider>
             <TranslationLoader />
             <InitialQuizGate />
+            <MainHeader />
+            <Breadcrumbs />
             <main id="main-content" className="flex-1 transition-all duration-300 ease-out">
               {children}
             </main>
@@ -34,6 +39,7 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
             <ScrollToTop />
             <QuickActionFAB />
             <ChatbotWidget />
+            <SocialProofToast />
           </ChatbotProvider>
         </ToastProvider>
       </SessionProvider>

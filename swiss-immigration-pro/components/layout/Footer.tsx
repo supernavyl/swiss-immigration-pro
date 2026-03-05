@@ -9,6 +9,9 @@ import {
   CheckCircle,
   MessageCircle,
   Sparkles,
+  Shield,
+  CreditCard,
+  Scale,
 } from "lucide-react";
 import { CONFIG } from "@/lib/config";
 import { useT } from "@/lib/i18n/useTranslation";
@@ -71,6 +74,8 @@ export default function Footer() {
     { href: "/cv-templates", label: "CV Templates" },
     { href: "/contact", label: t("nav.contact") },
     { href: "/consultation", label: t("contact.bookConsultation") },
+    { href: "/security", label: "Security" },
+    { href: "/changelog", label: "Changelog" },
   ];
 
   const legalLinks = [
@@ -312,6 +317,21 @@ export default function Footer() {
               </Link>
             </>
           )}
+        </div>
+
+        {/* Trust badges */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 mb-8">
+          {[
+            { icon: Shield, label: "Swiss Data Protection" },
+            { icon: CreditCard, label: "Stripe Secured" },
+            { icon: MapPin, label: "Built in Switzerland" },
+            { icon: Scale, label: "Backed by Swiss Law Firms" },
+          ].map(({ icon: Icon, label }) => (
+            <div key={label} className="flex items-center justify-center gap-2 py-3 px-3 rounded-lg bg-slate-800/60 border border-slate-700/50">
+              <Icon className="w-4 h-4 text-slate-400 shrink-0" />
+              <span className="text-[11px] font-medium text-slate-400">{label}</span>
+            </div>
+          ))}
         </div>
 
         {/* Divider + Bottom */}

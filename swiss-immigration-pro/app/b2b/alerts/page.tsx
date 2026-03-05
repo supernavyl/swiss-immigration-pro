@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { getAuthHeaderSync } from '@/lib/auth-client'
 import { AlertTriangle, CheckCircle, Eye, Filter } from 'lucide-react'
+import { api } from '@/lib/api'
 
 interface Alert {
   id: string
@@ -34,15 +34,11 @@ export default function AlertsPage() {
     try {
       const params = new URLSearchParams({ resolved: String(showResolved) })
       if (severityFilter) params.set('severity', severityFilter)
-
-      const res = await fetch(`/api/b2b/compliance/${companyId}/alerts?${params}`, {
-        headers: getAuthHeaderSync(),
-      })
-      if (res.ok) {
-        const data = await res.json()
-        setAlerts(data.alerts)
-        setTotal(data.total)
-      }
+      const data = await api.get<{ alerts: Alert[]; total: number }>(
+        `/api/b2b/compliance/${companyId}/alerts?${params}`
+      )
+      setAlerts(data.alerts)
+      setTotal(data.total)
     } catch (err) {
       console.error(err)
     } finally {
@@ -51,19 +47,17 @@ export default function AlertsPage() {
   }
 
   async function acknowledgeAlert(alertId: string) {
-    const res = await fetch(`/api/b2b/compliance/${companyId}/alerts/${alertId}/acknowledge`, {
-      method: 'POST',
-      headers: getAuthHeaderSync(),
-    })
-    if (res.ok) fetchAlerts()
+    try {
+      await api.post(`/api/b2b/compliance/${companyId}/alerts/${alertId}/acknowledge`)
+      await fetchAlerts()
+    } catch (err) { console.error('Failed to acknowledge alert:', err) }
   }
 
   async function resolveAlert(alertId: string) {
-    const res = await fetch(`/api/b2b/compliance/${companyId}/alerts/${alertId}/resolve`, {
-      method: 'POST',
-      headers: getAuthHeaderSync(),
-    })
-    if (res.ok) fetchAlerts()
+    try {
+      await api.post(`/api/b2b/compliance/${companyId}/alerts/${alertId}/resolve`)
+      await fetchAlerts()
+    } catch (err) { console.error('Failed to resolve alert:', err) }
   }
 
   const severityColors: Record<string, string> = {

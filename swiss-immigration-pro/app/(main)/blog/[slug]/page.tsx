@@ -5,7 +5,6 @@ import { notFound } from 'next/navigation'
 import { Calendar, Clock, ChevronRight, ArrowRight, Tag } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import MainHeader from '@/components/layout/MainHeader'
 import { generateMetadata as generateMeta, generateFAQSchema, generateArticleSchema, generateBreadcrumbSchema, formatLastUpdated } from '@/lib/seo/meta-helpers'
 
 // Blog posts data - in production, this would come from a CMS or markdown files
@@ -2730,8 +2729,6 @@ export default async function BlogPostPage({
       >{breadcrumbJson}</script>
 
       <div className="min-h-screen bg-white dark:bg-slate-950">
-        <MainHeader />
-
         {/* Breadcrumbs */}
         <nav className="max-w-4xl mx-auto px-5 sm:px-8 pt-8" aria-label="Breadcrumb">
           <ol className="flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400">

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Lock, Check, Sparkles, X } from 'lucide-react'
+import { Lock, Check, Sparkles, X, BookOpen, Bot, FileText, ShieldCheck } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import { PRICING_PACKS } from '@/lib/pricing'
 import { trackEvent } from '@/lib/analytics'
@@ -131,6 +131,18 @@ export function PaywallGate({
                     <strong className="text-white">{primaryPack?.name}</strong>. Choose
                     the plan that fits your journey.
                   </p>
+                  <div className="flex flex-wrap gap-3 mt-3">
+                    {[
+                      { icon: BookOpen, label: '27+ expert modules' },
+                      { icon: Bot, label: 'AI immigration assistant' },
+                      { icon: FileText, label: '15 CV templates' },
+                    ].map(({ icon: Icon, label }) => (
+                      <span key={label} className="flex items-center gap-1.5 text-xs text-blue-100/80">
+                        <Icon className="h-3.5 w-3.5" />
+                        {label}
+                      </span>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Pricing cards */}
@@ -169,6 +181,11 @@ export function PaywallGate({
                                 )}>
                                   {pack.name}
                                 </h3>
+                                {isPrimary && (
+                                  <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-emerald-500 text-white">
+                                    7-day free trial
+                                  </span>
+                                )}
                                 {'badge' in pack && pack.badge && (
                                   <span className={cn(
                                     'text-[10px] font-semibold px-1.5 py-0.5 rounded-full',
@@ -234,7 +251,11 @@ export function PaywallGate({
                     })}
                   </div>
 
-                  <p className="mt-4 text-center text-xs text-gray-400 dark:text-gray-500">
+                  <div className="mt-4 flex items-center justify-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+                    <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
+                    <span>30-day money-back guarantee</span>
+                  </div>
+                  <p className="mt-1.5 text-center text-xs text-gray-400 dark:text-gray-500">
                     Cancel anytime · Secure payment via Stripe · CHF pricing
                   </p>
                 </div>

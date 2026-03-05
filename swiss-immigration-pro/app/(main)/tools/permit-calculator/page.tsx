@@ -5,8 +5,6 @@ import { Calculator, ArrowRight, CheckCircle, AlertCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useToast } from '@/components/providers/ToastProvider'
-import MainHeader from '@/components/layout/MainHeader'
-
 export default function PermitCalculator() {
   const { showToast } = useToast()
   const [nationality, setNationality] = useState<'eu' | 'us' | 'other'>('other')
@@ -76,7 +74,6 @@ export default function PermitCalculator() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <MainHeader />
       <div className="py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div

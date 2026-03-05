@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Award } from 'lucide-react'
+import { useToast } from '@/components/providers/ToastProvider'
 
 interface QuizQuestion {
   question: string
@@ -18,6 +19,7 @@ export function ModuleQuiz({ questions, moduleId }: ModuleQuizProps) {
   const [quizAnswers, setQuizAnswers] = useState<Record<number, number>>({})
   const [quizScore, setQuizScore] = useState<number | null>(null)
   const [quizSubmitted, setQuizSubmitted] = useState(false)
+  const { showToast } = useToast()
 
   const handleSubmit = () => {
     const score = questions.filter((q, i) => quizAnswers[i] === q.correct).length
@@ -31,7 +33,17 @@ export function ModuleQuiz({ questions, moduleId }: ModuleQuizProps) {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
           body: JSON.stringify({ moduleId, completed: true }),
-        }).catch(() => {})
+        })
+          .then(r => {
+            if (r.ok) {
+              showToast('Progress saved!', 'success')
+            } else {
+              showToast('Failed to save progress. Try refreshing the page.', 'error')
+            }
+          })
+          .catch(() => {
+            showToast('Failed to save progress. Try refreshing the page.', 'error')
+          })
       }
     }
   }

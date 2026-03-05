@@ -77,14 +77,14 @@ export default function TestimonialsSection() {
   const { t } = useT()
 
   return (
-    <section className="py-16 sm:py-20 bg-slate-50/50 dark:bg-slate-900/30">
-      <div className="max-w-6xl mx-auto px-5 sm:px-8">
+    <section className="sip-section bg-slate-50/50 dark:bg-slate-900/30">
+      <div className="sip-container">
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-4 py-1.5 rounded-full text-xs font-semibold mb-4">
             <Heart className="w-3.5 h-3.5" />
             <span>Real Success Stories</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-3">
+          <h2 className="text-fluid-2xl font-bold text-slate-900 dark:text-white mb-3">
             {t('home.testimonials')}
           </h2>
           <p className="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">

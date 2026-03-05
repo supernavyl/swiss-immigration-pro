@@ -15,7 +15,7 @@ import type {
   PersonalInfo,
 } from '@/types/cv-builder'
 import { createEmptyCVData, cvDataToAPI } from '@/types/cv-builder'
-import { getAuthHeaderSync } from '@/lib/auth-client'
+import { api } from '@/lib/api'
 
 interface CVBuilderState {
   cvData: CVData
@@ -255,20 +255,15 @@ export const useCVBuilderStore = create<CVBuilderState>((set, get) => ({
     const { cvData, activeTemplate, currentCVId } = get()
     set({ isSaving: true })
     try {
-      const res = await fetch('/api/cv/save', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...getAuthHeaderSync() },
-        body: JSON.stringify({
-          cv_data: cvDataToAPI(cvData),
-          template_id: activeTemplate,
-          name: name || `${cvData.personalInfo.firstName} ${cvData.personalInfo.lastName} CV`.trim() || 'Untitled CV',
-          cv_id: currentCVId,
-        }),
+      const data = await api.post<{ cv?: { id?: string } }>('/api/cv/save', {
+        cv_data: cvDataToAPI(cvData),
+        template_id: activeTemplate,
+        name: name || `${cvData.personalInfo.firstName} ${cvData.personalInfo.lastName} CV`.trim() || 'Untitled CV',
+        cv_id: currentCVId,
       })
-      if (res.ok) {
-        const data = await res.json()
-        set({ isDirty: false, currentCVId: data.cv?.id || currentCVId })
-      }
+      set({ isDirty: false, currentCVId: data.cv?.id || currentCVId })
+    } catch (err) {
+      console.error('Failed to save CV:', err)
     } finally {
       set({ isSaving: false })
     }
@@ -276,50 +271,46 @@ export const useCVBuilderStore = create<CVBuilderState>((set, get) => ({
 
   loadCVFromBackend: async (cvId) => {
     try {
-      const res = await fetch(`/api/cv/${cvId}`, {
-        headers: getAuthHeaderSync(),
-      })
-      if (res.ok) {
-        const { cv } = await res.json()
-        if (cv?.cv_data) {
-          const { apiToCVData } = await import('@/types/cv-builder')
-          set({
-            cvData: apiToCVData(cv.cv_data),
-            activeTemplate: cv.template_id || 'swiss-classic',
-            currentCVId: cvId,
-            isDirty: false,
-          })
-        }
+      const data = await api.get<{ cv?: { cv_data?: unknown; template_id?: string } }>(`/api/cv/${cvId}`)
+      const cvData = data.cv?.cv_data
+      if (cvData && typeof cvData === 'object') {
+        const { apiToCVData } = await import('@/types/cv-builder')
+        set({
+          cvData: apiToCVData(cvData as Record<string, unknown>),
+          activeTemplate: data.cv?.template_id || 'swiss-classic',
+          currentCVId: cvId,
+          isDirty: false,
+        })
       }
-    } catch { /* network error */ }
+    } catch (err) {
+      console.error('Failed to load CV:', err)
+    }
   },
 
   loadSavedCVs: async () => {
     try {
-      const res = await fetch('/api/cv/list', { headers: getAuthHeaderSync() })
-      if (res.ok) {
-        const { cvs } = await res.json()
-        set({
-          savedCVs: (cvs || []).map((c: Record<string, string>) => ({
-            id: c.id,
-            name: c.name,
-            templateId: c.template_id,
-            updatedAt: c.updated_at,
-            createdAt: c.created_at,
-          })),
-        })
-      }
-    } catch { /* network error */ }
+      const data = await api.get<{ cvs?: Record<string, string>[] }>('/api/cv/list')
+      set({
+        savedCVs: (data.cvs || []).map((c) => ({
+          id: c.id,
+          name: c.name,
+          templateId: c.template_id,
+          updatedAt: c.updated_at,
+          createdAt: c.created_at,
+        })),
+      })
+    } catch (err) {
+      console.error('Failed to load saved CVs:', err)
+    }
   },
 
   deleteSavedCV: async (cvId) => {
     try {
-      await fetch(`/api/cv/${cvId}`, {
-        method: 'DELETE',
-        headers: getAuthHeaderSync(),
-      })
+      await api.delete(`/api/cv/${cvId}`)
       set((s) => ({ savedCVs: s.savedCVs.filter((c) => c.id !== cvId) }))
-    } catch { /* network error */ }
+    } catch (err) {
+      console.error('Failed to delete CV:', err)
+    }
   },
 
   exportPDF: async () => {
@@ -344,33 +335,34 @@ export const useCVBuilderStore = create<CVBuilderState>((set, get) => ({
   runATSAnalysis: async (jobDescription) => {
     const { cvData } = get()
     try {
-      const res = await fetch('/api/cv/ai/ats/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          cv_data: cvDataToAPI(cvData),
-          job_description: jobDescription || null,
-        }),
+      const data = await api.post<{
+        score: number
+        issues?: Array<Record<string, string>>
+        keywords_found?: string[]
+        keywords_missing?: string[]
+        suggestions?: string[]
+      }>('/api/cv/ai/ats/analyze', {
+        cv_data: cvDataToAPI(cvData),
+        job_description: jobDescription || null,
       })
-      if (res.ok) {
-        const data = await res.json()
-        const { apiToCVData } = await import('@/types/cv-builder')
-        set({
-          atsResult: {
-            score: data.score,
-            issues: (data.issues || []).map((i: Record<string, string>) => ({
-              severity: i.severity,
-              field: i.field,
-              message: i.message,
-              suggestion: i.suggestion,
-            })),
-            keywordsFound: data.keywords_found || [],
-            keywordsMissing: data.keywords_missing || [],
-            suggestions: data.suggestions || [],
-          },
-        })
-      }
-    } catch { /* network error */ }
+      set({
+        atsResult: {
+          score: data.score,
+          issues: (data.issues || []).map((i) => ({
+            // SAFETY: backend guarantees severity is one of these values
+            severity: i.severity as 'critical' | 'warning' | 'info',
+            field: i.field,
+            message: i.message,
+            suggestion: i.suggestion,
+          })),
+          keywordsFound: data.keywords_found || [],
+          keywordsMissing: data.keywords_missing || [],
+          suggestions: data.suggestions || [],
+        },
+      })
+    } catch (err) {
+      console.error('Failed to run ATS analysis:', err)
+    }
   },
 
   resetCV: () =>

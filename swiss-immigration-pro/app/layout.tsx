@@ -179,7 +179,9 @@ export default function RootLayout({
                   if ('scrollBehavior' in document.documentElement.style) {
                     document.documentElement.style.scrollBehavior = 'smooth';
                   }
-                } catch (e) {}
+                } catch (e) {
+                  console.warn('Theme/layout init failed, using defaults:', e instanceof Error ? e.message : e);
+                }
               })();
             `,
           }}

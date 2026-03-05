@@ -17,6 +17,7 @@ from app.models.subscription import Payment, Subscription
 from app.models.user import Profile
 from app.services.email_service import (
     send_abandoned_checkout_email,
+    send_churn_recovery_email,
     send_consultation_confirmation_email,
     send_subscription_confirmation_email,
 )
@@ -80,7 +81,9 @@ async def stripe_webhook(request: Request, db: AsyncSession = Depends(get_db)):
         await db.flush()
     except Exception as e:
         logger.error("Error handling %s: %s", event_type, e, exc_info=True)
-        raise HTTPException(status_code=500, detail="Webhook processing failed") from None
+        # Return 200 to prevent Stripe from retrying indefinitely.
+        # The error is logged + sent to Sentry for investigation.
+        return {"received": True, "error": "processing_failed"}
 
     # Send confirmation emails after successful commit (best-effort)
     if email_task:
@@ -142,9 +145,7 @@ async def handle_checkout_completed(session: dict, db: AsyncSession):
         profile = result.scalar_one_or_none()
 
     if not profile and customer_id:
-        result = await db.execute(
-            select(Subscription).where(Subscription.stripe_customer_id == customer_id)
-        )
+        result = await db.execute(select(Subscription).where(Subscription.stripe_customer_id == customer_id))
         sub = result.scalar_one_or_none()
         if sub:
             result = await db.execute(select(Profile).where(Profile.id == sub.user_id))
@@ -153,7 +154,9 @@ async def handle_checkout_completed(session: dict, db: AsyncSession):
     if not profile:
         logger.warning(
             "Checkout completed but no profile found: email=%s customer=%s type=%s",
-            customer_email, customer_id, session_type,
+            customer_email,
+            customer_id,
+            session_type,
         )
 
     if session_type == "subscription":
@@ -301,6 +304,15 @@ async def handle_subscription_deleted(subscription: dict, db: AsyncSession):
             profile.pack_expires_at = None
 
         await db.flush()
+
+        # Send churn recovery email (best-effort)
+        if profile and profile.email:
+            previous_pack = PACK_DISPLAY_NAMES.get(existing.pack_id, existing.pack_id.title())
+            try:
+                await send_churn_recovery_email(profile.email, previous_pack)
+            except Exception as exc:
+                logger.error("Failed to send churn recovery email: %s", exc)
+
     logger.info("Subscription deleted: %s, user downgraded to free", sub_id)
 
 
@@ -321,6 +333,7 @@ async def handle_payment_failed(invoice: dict, db: AsyncSession):
     # Trigger dunning immediately so step 1 fires within minutes
     try:
         from app.tasks.email import process_dunning_emails
+
         process_dunning_emails.delay()
     except Exception:
         pass  # Celery unavailable — daily beat will catch it
@@ -337,9 +350,7 @@ async def handle_charge_refunded(charge: dict, db: AsyncSession):
         return
 
     # Find payment record
-    result = await db.execute(
-        select(Payment).where(Payment.stripe_payment_intent_id == payment_intent_id)
-    )
+    result = await db.execute(select(Payment).where(Payment.stripe_payment_intent_id == payment_intent_id))
     payment = result.scalar_one_or_none()
 
     if payment and refunded:

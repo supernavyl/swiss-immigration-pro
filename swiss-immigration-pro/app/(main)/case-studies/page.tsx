@@ -4,7 +4,6 @@ import { motion } from 'framer-motion'
 import { CheckCircle, Clock, MapPin, TrendingUp, Users, Award, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
-import MainHeader from '@/components/layout/MainHeader'
 import VisualTimeline from '@/components/ui/VisualTimeline'
 
 const caseStudies = [
@@ -333,20 +332,18 @@ const caseStudies = [
 
 export default function CaseStudiesPage() {
   return (
-    <div className="min-h-screen bg-white">
-      <MainHeader />
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
+      <div className="sip-container-wide py-16">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
             Real Case Studies
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
             Detailed success stories from real applicants. Learn from their challenges, strategies, and outcomes.
           </p>
         </motion.div>
@@ -421,14 +418,14 @@ export default function CaseStudiesPage() {
 
                 {/* Challenge */}
                 <section className="mb-8">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                     <TrendingUp className="w-5 h-5 text-orange-600" />
                     Challenge
                   </h3>
-                  <p className="text-gray-700 mb-4 font-medium">{study.challenge}</p>
+                  <p className="text-gray-700 dark:text-gray-300 mb-4 font-medium">{study.challenge}</p>
                   <ul className="space-y-2">
                     {study.challenges.map((challenge, i) => (
-                      <li key={i} className="flex items-start gap-2 text-gray-600">
+                      <li key={i} className="flex items-start gap-2 text-gray-600 dark:text-gray-400">
                         <span className="text-orange-500 mt-1">•</span>
                         <span>{challenge}</span>
                       </li>
@@ -438,13 +435,13 @@ export default function CaseStudiesPage() {
 
                 {/* Solution */}
                 <section className="mb-8">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                     <CheckCircle className="w-5 h-5 text-green-600" />
                     Solution & Strategy
                   </h3>
                   <ul className="space-y-2">
                     {study.solution.map((step, i) => (
-                      <li key={i} className="flex items-start gap-2 text-gray-700">
+                      <li key={i} className="flex items-start gap-2 text-gray-700 dark:text-gray-300">
                         <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                         <span>{step}</span>
                       </li>
@@ -454,7 +451,7 @@ export default function CaseStudiesPage() {
 
                 {/* Timeline */}
                 <section className="mb-8">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                     <Clock className="w-5 h-5 text-blue-600" />
                     Timeline
                   </h3>
@@ -462,19 +459,19 @@ export default function CaseStudiesPage() {
                 </section>
 
                 {/* Outcome */}
-                <section className="mb-8 bg-green-50 rounded-lg p-6 border border-green-200">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <section className="mb-8 bg-green-50 dark:bg-green-950/20 rounded-lg p-6 border border-green-200 dark:border-green-900/50">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                     <Award className="w-5 h-5 text-green-600" />
                     Outcome
                   </h3>
-                  <p className="text-gray-700 mb-4 font-semibold text-lg">{study.outcome.result}</p>
-                  <p className="text-gray-600 mb-4">{study.outcome.currentStatus}</p>
-                  
+                  <p className="text-gray-700 dark:text-gray-200 mb-4 font-semibold text-lg">{study.outcome.result}</p>
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">{study.outcome.currentStatus}</p>
+
                   <div className="mb-4">
-                    <h4 className="font-semibold text-gray-900 mb-2">Key Lessons:</h4>
+                    <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Key Lessons:</h4>
                     <ul className="space-y-1">
                       {study.outcome.lessons.map((lesson, i) => (
-                        <li key={i} className="flex items-start gap-2 text-gray-700 text-sm">
+                        <li key={i} className="flex items-start gap-2 text-gray-700 dark:text-gray-300 text-sm">
                           <span className="text-green-600 mt-1">✓</span>
                           <span>{lesson}</span>
                         </li>
@@ -483,9 +480,9 @@ export default function CaseStudiesPage() {
                   </div>
 
                   {study.outcome.savings && (
-                    <div className="bg-white rounded-lg p-4 border border-green-300">
-                      <div className="text-sm text-gray-600">Cost Savings</div>
-                      <div className="text-lg font-bold text-green-700">{study.outcome.savings}</div>
+                    <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-green-300 dark:border-green-800/50">
+                      <div className="text-sm text-gray-600 dark:text-gray-400">Cost Savings</div>
+                      <div className="text-lg font-bold text-green-700 dark:text-green-400">{study.outcome.savings}</div>
                     </div>
                   )}
                 </section>

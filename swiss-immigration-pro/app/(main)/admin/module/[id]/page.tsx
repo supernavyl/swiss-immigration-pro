@@ -21,14 +21,11 @@ import { useToast } from '@/components/providers/ToastProvider'
 export default function AdminModuleView({ 
   params 
 }: { 
-  params: Promise<{ id: string }> | { id: string } 
+  params: Promise<{ id: string }> 
 }) {
   const router = useRouter()
-  // Unwrap params if it's a Promise (Next.js 15+)
-  const resolvedParams = typeof params === 'object' && params !== null && 'then' in params 
-    ? use(params) 
-    : params
-  const moduleId = resolvedParams?.id as string
+  const resolvedParams = use(params)
+  const moduleId = resolvedParams.id
   const { showToast } = useToast()
   const { data: session, status } = useSession()
   const [loading, setLoading] = useState(true)
@@ -62,7 +59,7 @@ export default function AdminModuleView({
     lines.forEach((line) => {
       if (line.startsWith('#')) {
         const level = (line.match(/^#+/)?.[0] || '').length
-        let title = line.replace(/^#+\s*/, '').trim()
+        const title = line.replace(/^#+\s*/, '').trim()
         // Strip HTML tags from title for display
         const cleanTitle = stripHtml(title)
         const id = cleanTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-')
@@ -253,12 +250,12 @@ export default function AdminModuleView({
   }, [module?.id, sections.length, showTableOfContents])
 
   const handleQuizSubmit = () => {
-    // Mock quiz scoring - in real app, compare with correct answers
-    const totalQuestions = module?.quiz?.questions?.length || 0
-    if (totalQuestions > 0) {
-      const correct = Object.keys(quizAnswers).length
-      setQuizScore(Math.round((correct / totalQuestions) * 100))
-    }
+    const questions = module?.quiz?.questions
+    if (!questions?.length) return
+    const correct = questions.reduce((count, q, idx) => {
+      return quizAnswers[idx] === q.options[q.correct] ? count + 1 : count
+    }, 0)
+    setQuizScore(Math.round((correct / questions.length) * 100))
   }
 
   if (loading) {
@@ -519,57 +516,54 @@ export default function AdminModuleView({
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="prose prose-sm lg:prose-base max-w-none mb-8"
-                  style={{ color: '#111827' }}
+                  className="prose prose-sm lg:prose-base max-w-none mb-8 dark:prose-invert"
                 >
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
                     rehypePlugins={[rehypeRaw, rehypeSanitize]}
                     components={{
                       h1: ({ node, ...props }) => (
-                        <h1 id={props.children?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-')} className="scroll-mt-20 text-gray-900 font-bold" style={{ color: '#111827', fontSize: showTableOfContents ? '2rem' : '1.75rem' }} {...props} />
+                        <h1 id={props.children?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-')} className="scroll-mt-20 font-bold" style={{ fontSize: showTableOfContents ? '2rem' : '1.75rem' }} {...props} />
                       ),
                       h2: ({ node, ...props }) => (
-                        <h2 id={props.children?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-')} className="scroll-mt-20 text-gray-900 font-bold" style={{ color: '#111827', fontSize: showTableOfContents ? '1.5rem' : '1.25rem' }} {...props} />
+                        <h2 id={props.children?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-')} className="scroll-mt-20 font-bold" style={{ fontSize: showTableOfContents ? '1.5rem' : '1.25rem' }} {...props} />
                       ),
                       h3: ({ node, ...props }) => (
-                        <h3 id={props.children?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-')} className="scroll-mt-20 text-gray-900 font-semibold" style={{ color: '#111827', fontSize: showTableOfContents ? '1.25rem' : '1.125rem' }} {...props} />
+                        <h3 id={props.children?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-')} className="scroll-mt-20 font-semibold" style={{ fontSize: showTableOfContents ? '1.25rem' : '1.125rem' }} {...props} />
                       ),
                       h4: ({ node, ...props }) => (
-                        <h4 id={props.children?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-')} className="scroll-mt-20 text-gray-900 font-semibold mt-6 mb-3" style={{ color: '#111827', fontSize: showTableOfContents ? '1.125rem' : '1rem' }} {...props} />
+                        <h4 id={props.children?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-')} className="scroll-mt-20 font-semibold mt-6 mb-3" style={{ fontSize: showTableOfContents ? '1.125rem' : '1rem' }} {...props} />
                       ),
                       h5: ({ node, ...props }) => (
-                        <h5 id={props.children?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-')} className="scroll-mt-20 text-gray-900 font-medium mt-4 mb-2" style={{ color: '#111827', fontSize: showTableOfContents ? '1rem' : '0.875rem' }} {...props} />
+                        <h5 id={props.children?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-')} className="scroll-mt-20 font-medium mt-4 mb-2" style={{ fontSize: showTableOfContents ? '1rem' : '0.875rem' }} {...props} />
                       ),
                       h6: ({ node, ...props }) => (
-                        <h6 id={props.children?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-')} className="scroll-mt-20 text-gray-900 font-medium mt-4 mb-2" style={{ color: '#111827', fontSize: showTableOfContents ? '0.875rem' : '0.75rem' }} {...props} />
+                        <h6 id={props.children?.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-')} className="scroll-mt-20 font-medium mt-4 mb-2" style={{ fontSize: showTableOfContents ? '0.875rem' : '0.75rem' }} {...props} />
                       ),
                       p: ({ node, ...props }) => (
-                        <p className="text-gray-900 mb-4 leading-relaxed" style={{ color: '#111827', fontSize: showTableOfContents ? '1rem' : '0.875rem' }} {...props} />
+                        <p className="mb-4 leading-relaxed" style={{ fontSize: showTableOfContents ? '1rem' : '0.875rem' }} {...props} />
                       ),
                       ul: ({ node, ...props }) => (
-                        <ul className="text-gray-900 mb-4 ml-6 list-disc space-y-2" style={{ color: '#111827' }} {...props} />
+                        <ul className="mb-4 ml-6 list-disc space-y-2" {...props} />
                       ),
                       ol: ({ node, ...props }) => (
-                        <ol className="text-gray-900 mb-4 ml-6 list-decimal space-y-2" style={{ color: '#111827' }} {...props} />
+                        <ol className="mb-4 ml-6 list-decimal space-y-2" {...props} />
                       ),
                       li: ({ node, ...props }) => (
-                        <li className="text-gray-900 leading-relaxed" style={{ color: '#111827' }} {...props} />
+                        <li className="leading-relaxed" {...props} />
                       ),
                       strong: ({ node, ...props }) => (
-                        <strong className="text-gray-900 font-semibold" style={{ color: '#111827' }} {...props} />
+                        <strong className="font-semibold" {...props} />
                       ),
                       em: ({ node, ...props }) => (
-                        <em className="text-gray-900 italic" style={{ color: '#111827' }} {...props} />
+                        <em className="italic" {...props} />
                       ),
                       span: ({ node, className, ...props }) => {
-                        // Preserve notranslate spans for translation prevention
                         const isNotranslate = className?.includes('notranslate')
                         return (
                           <span
                             className={className || ''}
                             translate={isNotranslate ? 'no' : undefined}
-                            style={{ color: '#111827' }}
                             {...props}
                           />
                         )
@@ -577,23 +571,23 @@ export default function AdminModuleView({
                       code: ({ node, className, children, ...props }) => {
                         const isBlock = typeof className === 'string' && /language-/.test(className)
                         if (!isBlock) {
-                          return <code className="text-gray-900 bg-gray-100 px-1.5 py-0.5 rounded text-sm font-mono" style={{ color: '#111827' }} {...props}>{children}</code>
+                          return <code className="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded text-sm font-mono" {...props}>{children}</code>
                         }
-                        return <code className="text-gray-900 bg-gray-100 block p-4 rounded-lg text-sm font-mono overflow-x-auto mb-4" style={{ color: '#111827' }} {...props}>{children}</code>
+                        return <code className="bg-gray-100 dark:bg-gray-700 block p-4 rounded-lg text-sm font-mono overflow-x-auto mb-4" {...props}>{children}</code>
                       },
                       blockquote: ({ node, ...props }) => (
-                        <blockquote className="text-gray-900 border-l-4 border-blue-500 pl-4 italic my-4" style={{ color: '#111827' }} {...props} />
+                        <blockquote className="border-l-4 border-blue-500 pl-4 italic my-4" {...props} />
                       ),
                       table: ({ node, ...props }) => (
                         <div className="overflow-x-auto my-6">
-                          <table className="min-w-full border-collapse border border-gray-300 text-gray-900" style={{ color: '#111827' }} {...props} />
+                          <table className="min-w-full border-collapse border border-gray-300 dark:border-gray-600" {...props} />
                         </div>
                       ),
                       th: ({ node, ...props }) => (
-                        <th className="border border-gray-300 px-4 py-2 bg-gray-100 font-semibold text-left text-gray-900" style={{ color: '#111827' }} {...props} />
+                        <th className="border border-gray-300 dark:border-gray-600 px-4 py-2 bg-gray-100 dark:bg-gray-700 font-semibold text-left" {...props} />
                       ),
                       td: ({ node, ...props }) => (
-                        <td className="border border-gray-300 px-4 py-2 text-gray-900" style={{ color: '#111827' }} {...props} />
+                        <td className="border border-gray-300 dark:border-gray-600 px-4 py-2" {...props} />
                       ),
                     }}
                   >

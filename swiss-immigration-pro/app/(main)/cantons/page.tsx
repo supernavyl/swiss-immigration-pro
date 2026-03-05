@@ -12,8 +12,6 @@ import {
   PolarAngleAxis, PolarRadiusAxis, Radar, LineChart, Line 
 } from 'recharts'
 import { CANTONS } from '@/lib/constants'
-import MainHeader from '@/components/layout/MainHeader'
-
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6']
 
 // Canton Success Rate Data
@@ -205,9 +203,8 @@ const cantonRadarData = [
 export default function CantonsPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
-      <MainHeader />
       <div className="py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="sip-container-wide">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -359,26 +356,26 @@ export default function CantonsPage() {
               </LineChart>
             </ResponsiveContainer>
             <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-900/50 rounded-lg p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <CheckCircle className="w-5 h-5 text-green-600" />
-                  <span className="font-semibold text-green-900">Best Time: January-March</span>
+                  <span className="font-semibold text-green-900 dark:text-green-300">Best Time: January-March</span>
                 </div>
-                <p className="text-sm text-green-800">Fresh quotas, lowest competition, 30-50% higher approval rates</p>
+                <p className="text-sm text-green-800 dark:text-green-400">Fresh quotas, lowest competition, 30-50% higher approval rates</p>
               </div>
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+              <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 rounded-lg p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <AlertCircle className="w-5 h-5 text-amber-600" />
-                  <span className="font-semibold text-amber-900">Risky: July-September</span>
+                  <span className="font-semibold text-amber-900 dark:text-amber-300">Risky: July-September</span>
                 </div>
-                <p className="text-sm text-amber-800">Quotas filling fast, higher competition, selective approvals</p>
+                <p className="text-sm text-amber-800 dark:text-amber-400">Quotas filling fast, higher competition, selective approvals</p>
               </div>
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+              <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-lg p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <AlertCircle className="w-5 h-5 text-red-600" />
-                  <span className="font-semibold text-red-900">Avoid: October-December</span>
+                  <span className="font-semibold text-red-900 dark:text-red-300">Avoid: October-December</span>
                 </div>
-                <p className="text-sm text-red-800">Quotas exhausted, &lt;10% approval rates, wait for next year</p>
+                <p className="text-sm text-red-800 dark:text-red-400">Quotas exhausted, &lt;10% approval rates, wait for next year</p>
               </div>
             </div>
           </motion.div>
@@ -409,7 +406,7 @@ export default function CantonsPage() {
                 transition={{ delay: idx * 0.1 }}
                 className="card p-8"
               >
-                <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                   <Briefcase className="w-6 h-6 text-purple-600" />
                   {industry}
                 </h3>
@@ -417,11 +414,11 @@ export default function CantonsPage() {
                   {cantons.map((canton, cIdx) => (
                     <div
                       key={cIdx}
-                      className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg p-5 border border-purple-100"
+                      className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-950/30 dark:to-indigo-950/30 rounded-lg p-5 border border-purple-100 dark:border-purple-900/40"
                     >
                       <div className="flex items-start justify-between mb-3">
                         <div>
-                          <h4 className="text-lg font-bold text-gray-900">{canton.canton}</h4>
+                          <h4 className="text-lg font-bold text-gray-900 dark:text-white">{canton.canton}</h4>
                           <div className="flex items-center gap-4 mt-2">
                             <span className="text-sm text-gray-600 dark:text-gray-400">
                               Match: <span className="font-semibold text-purple-600">{canton.match}%</span>
@@ -431,14 +428,14 @@ export default function CantonsPage() {
                             </span>
                           </div>
                         </div>
-                        <span className="text-sm font-semibold text-gray-900 bg-white px-3 py-1 rounded-full">
+                        <span className="text-sm font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-700 px-3 py-1 rounded-full">
                           CHF {canton.salary}k+
                         </span>
                       </div>
-                      <div className="bg-white/80 rounded-lg p-3 border border-purple-200">
+                      <div className="bg-white/80 dark:bg-gray-700/50 rounded-lg p-3 border border-purple-200 dark:border-purple-900/40">
                         <div className="flex items-start gap-2">
                           <Lightbulb className="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" />
-                          <p className="text-sm text-gray-700">{canton.tip}</p>
+                          <p className="text-sm text-gray-700 dark:text-gray-300">{canton.tip}</p>
                         </div>
                       </div>
                     </div>
@@ -476,7 +473,7 @@ export default function CantonsPage() {
                   transition={{ delay: catIdx * 0.1 }}
                   className="card p-8"
                 >
-                  <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
                     <IconComponent className="w-7 h-7 text-amber-600" />
                     {category.category}
                   </h3>
@@ -487,13 +484,13 @@ export default function CantonsPage() {
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: (catIdx * 0.1) + (hackIdx * 0.05) }}
-                        className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-6 border border-amber-200 hover:shadow-lg transition-all"
+                        className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 rounded-xl p-6 border border-amber-200 dark:border-amber-900/40 hover:shadow-lg transition-all"
                       >
                         <div className="flex items-start justify-between mb-3">
-                          <h4 className="text-lg font-bold text-gray-900 flex-1">{hack.title}</h4>
+                          <h4 className="text-lg font-bold text-gray-900 dark:text-white flex-1">{hack.title}</h4>
                           <Sparkles className="w-5 h-5 text-amber-600 flex-shrink-0 ml-2" />
                         </div>
-                        <p className="text-gray-700 text-sm mb-4">{hack.description}</p>
+                        <p className="text-gray-700 dark:text-gray-300 text-sm mb-4">{hack.description}</p>
                         <div className="flex items-center gap-3">
                           <span className={`text-xs font-semibold px-2 py-1 rounded ${
                             hack.impact === 'High' || hack.impact === 'Critical' 
@@ -582,29 +579,29 @@ export default function CantonsPage() {
               </RadarChart>
             </ResponsiveContainer>
             <div className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-              <div className="bg-gray-50 rounded-lg p-3">
-                <span className="font-semibold text-gray-900">Success Rate:</span>
-                <span className="text-gray-600 ml-2">Approval percentage</span>
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
+                <span className="font-semibold text-gray-900 dark:text-white">Success Rate:</span>
+                <span className="text-gray-600 dark:text-gray-400 ml-2">Approval percentage</span>
               </div>
-              <div className="bg-gray-50 rounded-lg p-3">
-                <span className="font-semibold text-gray-900">Processing Speed:</span>
-                <span className="text-gray-600 ml-2">Faster is better</span>
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
+                <span className="font-semibold text-gray-900 dark:text-white">Processing Speed:</span>
+                <span className="text-gray-600 dark:text-gray-400 ml-2">Faster is better</span>
               </div>
-              <div className="bg-gray-50 rounded-lg p-3">
-                <span className="font-semibold text-gray-900">Salary Level:</span>
-                <span className="text-gray-600 ml-2">Typical compensation</span>
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
+                <span className="font-semibold text-gray-900 dark:text-white">Salary Level:</span>
+                <span className="text-gray-600 dark:text-gray-400 ml-2">Typical compensation</span>
               </div>
-              <div className="bg-gray-50 rounded-lg p-3">
-                <span className="font-semibold text-gray-900">Cost of Living:</span>
-                <span className="text-gray-600 ml-2">Lower is better</span>
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
+                <span className="font-semibold text-gray-900 dark:text-white">Cost of Living:</span>
+                <span className="text-gray-600 dark:text-gray-400 ml-2">Lower is better</span>
               </div>
-              <div className="bg-gray-50 rounded-lg p-3">
-                <span className="font-semibold text-gray-900">Opportunities:</span>
-                <span className="text-gray-600 ml-2">Job market size</span>
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
+                <span className="font-semibold text-gray-900 dark:text-white">Opportunities:</span>
+                <span className="text-gray-600 dark:text-gray-400 ml-2">Job market size</span>
               </div>
-              <div className="bg-gray-50 rounded-lg p-3">
-                <span className="font-semibold text-gray-900">Language Req:</span>
-                <span className="text-gray-600 ml-2">Lower is easier</span>
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
+                <span className="font-semibold text-gray-900 dark:text-white">Language Req:</span>
+                <span className="text-gray-600 dark:text-gray-400 ml-2">Lower is easier</span>
               </div>
             </div>
           </motion.div>
@@ -632,28 +629,28 @@ export default function CantonsPage() {
             >
               <div className="flex items-center gap-3 mb-4">
                 <CheckCircle className="w-8 h-8 text-green-600" />
-                <h3 className="text-2xl font-bold text-gray-900">Best Strategies</h3>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Best Strategies</h3>
               </div>
               <ul className="space-y-3">
                 <li className="flex items-start gap-2">
                   <ArrowRight className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                  <span className="text-gray-700">Choose Basel over Zurich: 42% vs 22% success rate (2x better)</span>
+                  <span className="text-gray-700 dark:text-gray-200">Choose Basel over Zurich: 42% vs 22% success rate (2x better)</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <ArrowRight className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                  <span className="text-gray-700">Apply Q1-Q2: 30-50% higher approval rates with fresh quotas</span>
+                  <span className="text-gray-700 dark:text-gray-200">Apply Q1-Q2: 30-50% higher approval rates with fresh quotas</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <ArrowRight className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                  <span className="text-gray-700">Negotiate 120% of minimum salary: 45% approval boost</span>
+                  <span className="text-gray-700 dark:text-gray-200">Negotiate 120% of minimum salary: 45% approval boost</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <ArrowRight className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                  <span className="text-gray-700">Match industry to canton: Pharma → Basel, Finance → Zurich/Geneva</span>
+                  <span className="text-gray-700 dark:text-gray-200">Match industry to canton: Pharma → Basel, Finance → Zurich/Geneva</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <ArrowRight className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                  <span className="text-gray-700">Get language certificates 6+ months early to prevent delays</span>
+                  <span className="text-gray-700 dark:text-gray-200">Get language certificates 6+ months early to prevent delays</span>
                 </li>
               </ul>
             </motion.div>

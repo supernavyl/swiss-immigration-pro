@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { getAuthHeaderSync } from '@/lib/auth-client'
 import { useT } from '@/lib/i18n/useTranslation'
+import { api } from '@/lib/api'
 import { AlertTriangle, CheckCircle, Clock, Shield, Users, TrendingUp } from 'lucide-react'
 
 interface DashboardData {
@@ -33,8 +33,7 @@ export default function B2BDashboard() {
 
   async function fetchCompanies() {
     try {
-      const res = await fetch('/api/b2b/companies', { headers: getAuthHeaderSync() })
-      const data = await res.json()
+      const data = await api.get<Array<{ id: string }>>('/api/b2b/companies')
       if (data.length > 0) {
         const cid = data[0].id
         localStorage.setItem('sip_company_id', cid)
@@ -50,13 +49,8 @@ export default function B2BDashboard() {
 
   async function fetchDashboard(cid: string) {
     try {
-      const res = await fetch(`/api/b2b/compliance/${cid}/dashboard`, {
-        headers: getAuthHeaderSync(),
-      })
-      if (res.ok) {
-        const d = await res.json()
-        setData(d)
-      }
+      const d = await api.get<DashboardData>(`/api/b2b/compliance/${cid}/dashboard`)
+      setData(d)
     } catch (err) {
       console.error('Failed to load dashboard:', err)
     } finally {

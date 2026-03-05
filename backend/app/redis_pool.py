@@ -14,5 +14,10 @@ def get_redis() -> aioredis.Redis:
     global _pool
     if _pool is None:
         settings = get_settings()
-        _pool = aioredis.from_url(settings.redis_url, decode_responses=True)
+        _pool = aioredis.from_url(
+            settings.redis_url,
+            decode_responses=True,
+            socket_connect_timeout=5,
+            health_check_interval=30,
+        )
     return _pool

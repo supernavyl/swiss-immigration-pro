@@ -110,7 +110,9 @@ export default function InitialQuizModal({ isOpen, onClose, onComplete }: Initia
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: completeAnswers.email, source: 'quiz' }),
-        }).catch(() => {}),
+        }).catch((err: unknown) => {
+          console.error('Failed to subscribe to newsletter:', err)
+        }),
         fetch('/api/quiz/save', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -119,7 +121,9 @@ export default function InitialQuizModal({ isOpen, onClose, onComplete }: Initia
             layer,
             completedAt: new Date().toISOString(),
           }),
-        }).catch(() => {}),
+        }).catch((err: unknown) => {
+          console.error('Failed to save quiz answers:', err)
+        }),
       ]
       await Promise.allSettled(savePromises)
     }

@@ -47,14 +47,14 @@ export default function PathwayGrid() {
   const { t } = useT()
 
   return (
-    <section className="py-16 sm:py-20 bg-white dark:bg-slate-950">
-      <div className="max-w-6xl mx-auto px-5 sm:px-8">
+    <section className="sip-section bg-white dark:bg-slate-950">
+      <div className="sip-container">
         <div className="flex justify-between items-end mb-10">
           <div>
             <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 tracking-wide uppercase mb-3">
               Immigration Pathways
             </p>
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-2">
+            <h2 className="text-fluid-2xl font-bold text-slate-900 dark:text-white mb-2">
               {t('home.choosePathway')}
             </h2>
             <p className="text-slate-500 dark:text-slate-400">

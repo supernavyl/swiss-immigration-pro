@@ -85,8 +85,16 @@ function ModuleCard({ module, idx, isFree }: { module: DashboardModule; idx: num
   const hasExercises = module.exercises && module.exercises.length > 0
   const sectionCount = module.enhancedModule?.sections?.length ?? 0
 
+  const saveLastModule = () => {
+    try {
+      localStorage.setItem('sip_last_module', JSON.stringify({ id: module.id, title: module.title }))
+    } catch {
+      // localStorage unavailable — ignore
+    }
+  }
+
   return (
-    <Link href={`/modules/${module.id}`}>
+    <Link href={`/modules/${module.id}`} onClick={saveLastModule}>
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}

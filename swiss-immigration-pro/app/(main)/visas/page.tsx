@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Clock, CheckCircle, TrendingUp, Shield, Badge, Award, FileCheck, ArrowRight, AlertTriangle, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
-import MainHeader from '@/components/layout/MainHeader'
 
 export const metadata: Metadata = {
   title: 'Swiss Visa Types & Permit Requirements — Complete Guide',
@@ -39,8 +38,6 @@ const ACCENT = {
 export default function VisasPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950">
-      <MainHeader />
-
       {/* ── Hero ── */}
       <section className="pt-16 pb-10 px-5 sm:px-8">
         <div className="max-w-6xl mx-auto text-center">

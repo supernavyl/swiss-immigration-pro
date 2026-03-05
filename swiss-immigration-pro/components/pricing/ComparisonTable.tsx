@@ -27,18 +27,18 @@ export default function ComparisonTable() {
   return (
     <section className="mt-12 sm:mt-16 md:mt-24" aria-label="Feature comparison">
       <div className="text-center mb-8 sm:mb-12 px-2">
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4 transition-colors">
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 transition-colors">
           Compare Plans Side-by-Side
         </h2>
-        <p className="text-sm sm:text-base text-black max-w-2xl mx-auto transition-colors opacity-80">
+        <p className="text-sm sm:text-base text-gray-700 dark:text-gray-400 max-w-2xl mx-auto transition-colors opacity-80">
           See exactly what&apos;s included in each plan to choose the perfect fit for your Swiss
           immigration journey.
         </p>
       </div>
 
-      <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-200 overflow-hidden shadow-xl">
+      <div className="bg-white dark:bg-gray-900 rounded-xl sm:rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-xl">
         <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
-          <div className="text-xs text-gray-500 mb-2 sm:hidden text-center">
+          <div className="text-xs text-gray-500 dark:text-gray-400 mb-2 sm:hidden text-center">
             &larr; Scroll to see all plans &rarr;
           </div>
           <table className="w-full min-w-[600px]">
@@ -60,10 +60,10 @@ export default function ComparisonTable() {
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
               {COMPARISON_ROWS.map((row, idx) => (
-                <tr key={idx} className={idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                  <td className="px-3 sm:px-6 py-3 sm:py-4 font-medium text-gray-900 text-xs sm:text-sm sticky left-0 bg-inherit z-10 whitespace-nowrap">
+                <tr key={idx} className={idx % 2 === 0 ? 'bg-gray-50 dark:bg-gray-800/40' : 'bg-white dark:bg-gray-900'}>
+                  <td className="px-3 sm:px-6 py-3 sm:py-4 font-medium text-gray-900 dark:text-gray-100 text-xs sm:text-sm sticky left-0 bg-inherit z-10 whitespace-nowrap">
                     {row.feature}
                   </td>
                   {packs.map((pack, pidx) => {
@@ -76,12 +76,12 @@ export default function ComparisonTable() {
                         <div className="flex items-center justify-center">
                           {isCheckmark ? (
                             <CheckCircle
-                              className={`w-4 h-4 sm:w-5 sm:h-5 ${pidx === 1 ? 'text-green-600' : pidx === 2 ? 'text-blue-600' : 'text-purple-600'}`}
+                              className={`w-4 h-4 sm:w-5 sm:h-5 ${pidx === 1 ? 'text-green-600 dark:text-green-400' : pidx === 2 ? 'text-blue-600 dark:text-blue-400' : 'text-purple-600 dark:text-purple-400'}`}
                             />
                           ) : isEmpty ? (
-                            <span className="text-gray-400 text-xs sm:text-sm">&mdash;</span>
+                            <span className="text-gray-400 dark:text-gray-600 text-xs sm:text-sm">&mdash;</span>
                           ) : (
-                            <span className="text-xs sm:text-sm text-black whitespace-nowrap">
+                            <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 whitespace-nowrap">
                               {value}
                             </span>
                           )}

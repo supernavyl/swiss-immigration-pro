@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { getAuthHeaderSync } from '@/lib/auth-client'
 import { Download, FileText, BarChart3 } from 'lucide-react'
+import { api } from '@/lib/api'
 
 interface ReportData {
   generatedAt: string
@@ -25,10 +25,7 @@ export default function ReportsPage() {
 
   async function fetchReport() {
     try {
-      const res = await fetch(`/api/b2b/reports/${companyId}/compliance-summary`, {
-        headers: getAuthHeaderSync(),
-      })
-      if (res.ok) setData(await res.json())
+      setData(await api.get<ReportData>(`/api/b2b/reports/${companyId}/compliance-summary`))
     } catch (err) {
       console.error(err)
     } finally {
@@ -36,7 +33,9 @@ export default function ReportsPage() {
     }
   }
 
+  // CSV export returns a blob — use raw fetch with auth header (api client doesn't support blob responses)
   async function downloadCSV() {
+    const { getAuthHeaderSync } = await import('@/lib/auth-client')
     const res = await fetch(`/api/b2b/reports/${companyId}/export-csv`, {
       headers: getAuthHeaderSync(),
     })

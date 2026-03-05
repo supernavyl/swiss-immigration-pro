@@ -454,3 +454,70 @@ async def get_lawyer_analytics(
         "complexityDistribution": complexity_distribution,
         "recentConversations": recent,
     }
+
+
+# --- Admin Settings ---
+
+SETTINGS_KEY = "admin_settings"
+
+
+class AdminSettings(BaseModel):
+    """Site-wide admin configuration stored in the admin profile's metadata JSONB field."""
+
+    site_name: str = "Swiss Immigration Pro"
+    site_description: str = ""
+    maintenance_mode: bool = False
+    max_users: int = 10000
+    email_notifications: bool = True
+    new_user_alerts: bool = True
+    payment_alerts: bool = True
+    system_alerts: bool = True
+    two_factor_enabled: bool = False
+    session_timeout: int = 30
+    ip_whitelist: str = ""
+    stripe_webhook_url: str = ""
+    api_rate_limit: int = 100
+    enable_analytics: bool = True
+    enable_ai_chat: bool = True
+    enable_email_marketing: bool = True
+    enable_advanced_reports: bool = True
+    enable_custom_branding: bool = False
+    enable_api_access: bool = False
+    enable_webhooks: bool = False
+    enable_beta_features: bool = False
+    cache_strategy: str = "redis"
+    log_level: str = "info"
+
+
+@router.get("/settings", response_model=AdminSettings)
+async def get_admin_settings(
+    admin: AdminDep,
+    db: DbDep,
+) -> AdminSettings:
+    """Return the current admin settings, falling back to defaults if not yet configured."""
+    profile = await db.get(Profile, admin.id)
+    if profile is None:
+        raise HTTPException(status_code=404, detail="Admin profile not found")
+    stored: dict = (profile.metadata_ or {}).get(SETTINGS_KEY, {})
+    return AdminSettings(**stored)
+
+
+@router.put("/settings", response_model=AdminSettings)
+async def update_admin_settings(
+    settings: AdminSettings,
+    admin: AdminDep,
+    db: DbDep,
+) -> AdminSettings:
+    """Persist admin settings into the admin profile's JSONB metadata column."""
+    profile = await db.get(Profile, admin.id)
+    if profile is None:
+        raise HTTPException(status_code=404, detail="Admin profile not found")
+
+    # Merge into existing metadata so other keys (e.g. drip_email state) are preserved
+    current_metadata: dict = dict(profile.metadata_ or {})
+    current_metadata[SETTINGS_KEY] = settings.model_dump()
+    profile.metadata_ = current_metadata
+
+    await db.flush()
+    await db.commit()
+    return settings

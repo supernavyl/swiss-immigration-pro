@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { User, LogOut, Shield, Settings, ArrowRight, X } from 'lucide-react'
+import { User, LogOut, Shield, Settings, ArrowRight, X, Bell, Gift, CreditCard } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useT } from '@/lib/i18n/useTranslation'
 import { cn } from '@/lib/utils/cn'
@@ -156,6 +156,9 @@ export default function MobileDrawer({
                 <>
                   <MobileLink href="/dashboard" icon={User} label={t('nav.dashboard')} onClose={onClose} />
                   <MobileLink href="/profile" icon={Settings} label={t('auth.profile')} onClose={onClose} />
+                  <MobileLink href="/account/notifications" icon={Bell} label="Notifications" onClose={onClose} />
+                  <MobileLink href="/account/billing" icon={CreditCard} label="Billing" onClose={onClose} />
+                  <MobileLink href="/account/referrals" icon={Gift} label="Referrals" onClose={onClose} />
                 </>
               )}
             </div>

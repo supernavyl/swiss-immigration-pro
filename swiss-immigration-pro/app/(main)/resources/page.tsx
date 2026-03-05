@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Download, FileText, BookOpen, CheckCircle, ArrowRight, Search, X, Sparkles, Filter, Zap, Briefcase, Star, Globe, TrendingUp, Users, MapPin, Grid3x3, List, SortAsc, SortDesc, Settings, Heart, Bookmark, Share2, Eye, Clock, TrendingDown, Award, Lightbulb, Target, BarChart3, Calendar, AlertTriangle, DollarSign, Scale, Shield, Building2, Languages, MessageCircle, type LucideIcon } from 'lucide-react'
 import Link from 'next/link'
-import MainHeader from '@/components/layout/MainHeader'
+import ExitIntentPopup from '@/components/marketing/ExitIntentPopup'
 
 // Define all resources for search - Enhanced with comprehensive content
 const FREE_DOWNLOADS = [
@@ -787,9 +787,8 @@ export default function ResourcesPage() {
 
   return (
     <div className="min-h-screen page-with-fluid-bg">
-      <MainHeader />
       <div className="py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="sip-container-wide relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -1669,13 +1668,42 @@ export default function ResourcesPage() {
                 className="block text-center bg-white hover:bg-blue-100 p-6 rounded-lg transition-colors"
               >
                 <span className="font-semibold text-gray-900">
-                  {item.title} →
+                  {item.title} &rarr;
                 </span>
               </Link>
             ))}
           </div>
         </motion.div>
+
+        {/* Consultation CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-16 bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-8 md:p-12 text-white text-center"
+        >
+          <h2 className="text-2xl md:text-3xl font-bold mb-3">
+            Need expert review of your documents?
+          </h2>
+          <p className="text-blue-100 text-lg mb-6 max-w-2xl mx-auto">
+            Book a CHF 80 consultation with our immigration specialists.
+            Get personalized feedback on your application, timeline review, and document check.
+          </p>
+          <Link
+            href="/consultation"
+            className="inline-flex items-center gap-2 bg-white text-blue-700 font-semibold px-8 py-3.5 rounded-lg hover:bg-blue-50 transition-colors shadow-lg"
+          >
+            Book a Consultation
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </motion.div>
       </div>
+
+      {/* Exit-intent popup */}
+      <ExitIntentPopup
+        discountCode="SAVE15"
+        discountPercent={15}
+      />
     </div>
     </div>
   )

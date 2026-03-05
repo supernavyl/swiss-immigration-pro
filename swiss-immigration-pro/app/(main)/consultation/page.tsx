@@ -5,8 +5,6 @@ import { motion } from 'framer-motion'
 import { Calendar, Clock, CheckCircle, AlertCircle, CreditCard } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
-import MainHeader from '@/components/layout/MainHeader'
-
 const CONSULTATION_TYPES = [
   {
     id: 'quick',
@@ -118,8 +116,6 @@ export default function ConsultationPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-gray-900">
-      <MainHeader />
-
       {/* Hero Section with Image */}
       <div className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white overflow-hidden">
         <div className="absolute inset-0 opacity-10">
@@ -131,7 +127,7 @@ export default function ConsultationPage() {
             sizes="100vw"
           />
         </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
+        <div className="relative sip-container-wide py-20 md:py-28">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -147,7 +143,7 @@ export default function ConsultationPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="sip-container-wide py-16">
 
         {/* Guidance Options */}
         <div className="grid md:grid-cols-3 gap-8 mb-12">
@@ -192,7 +188,7 @@ export default function ConsultationPage() {
                 {type.features.map((feature, idx) => (
                   <li key={idx} className="flex items-start gap-2">
                     <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                    <span className="text-slate-700 text-sm">{feature}</span>
+                    <span className="text-slate-700 dark:text-gray-300 text-sm">{feature}</span>
                   </li>
                 ))}
               </ul>
@@ -322,9 +318,9 @@ export default function ConsultationPage() {
               </div>
 
               {error && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
-                  <AlertCircle className="w-5 h-5 text-red-600" />
-                  <p className="text-red-600">{error}</p>
+                <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-lg p-4 flex items-center gap-3">
+                  <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
+                  <p className="text-red-600 dark:text-red-400">{error}</p>
                 </div>
               )}
 

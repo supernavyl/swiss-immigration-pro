@@ -19,7 +19,6 @@ import {
   Calendar,
   ChevronRight,
 } from 'lucide-react'
-import MainHeader from '@/components/layout/MainHeader'
 import { useSession } from '@/lib/auth-client'
 import { api, ApiError } from '@/lib/api'
 import { cn } from '@/lib/utils/cn'
@@ -601,8 +600,6 @@ export default function BillingPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950">
-      <MainHeader />
-
       {/* ── Hero ── */}
       <section className="pt-16 pb-8 px-5 sm:px-8">
         <div className="max-w-6xl mx-auto">

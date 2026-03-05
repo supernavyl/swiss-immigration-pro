@@ -2,15 +2,11 @@
 
 import { motion } from 'framer-motion'
 import { Calendar, Globe, BookOpen, CheckCircle } from 'lucide-react'
-import MainHeader from '@/components/layout/MainHeader'
-
-
 export default function CitizenshipPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
-      <MainHeader />
       <div className="py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="sip-container-wide">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -143,13 +139,13 @@ export default function CitizenshipPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 + idx * 0.1 }}
-                className={`bg-gradient-to-br ${path.bgColor} p-8 rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 group`}
+                className={`bg-gradient-to-br ${path.bgColor} dark:from-gray-800 dark:to-gray-900 p-8 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-lg dark:shadow-none transition-all duration-300 group`}
               >
                 <div className="text-center mb-6">
                   <div className={`w-16 h-16 bg-gradient-to-br ${path.color} rounded-2xl flex items-center justify-center text-2xl mb-4 mx-auto shadow-lg`}>
                     {path.icon}
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{path.type}</h3>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{path.type}</h3>
                   <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${path.color} text-white`}>
                     {path.difficulty}
                   </span>
@@ -157,18 +153,18 @@ export default function CitizenshipPage() {
 
                 <div className="space-y-4">
                   <div>
-                    <div className="text-sm font-semibold text-gray-700 mb-1">Residency Required</div>
-                    <div className="text-gray-900 font-medium">{path.residency}</div>
+                    <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Residency Required</div>
+                    <div className="text-gray-900 dark:text-white font-medium">{path.residency}</div>
                   </div>
 
                   <div>
-                    <div className="text-sm font-semibold text-gray-700 mb-1">Language Level</div>
-                    <div className="text-gray-900 font-medium">{path.language}</div>
+                    <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Language Level</div>
+                    <div className="text-gray-900 dark:text-white font-medium">{path.language}</div>
                   </div>
 
                   <div>
-                    <div className="text-sm font-semibold text-gray-700 mb-1">Timeline</div>
-                    <div className="text-gray-900 font-medium">{path.timeline}</div>
+                    <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Timeline</div>
+                    <div className="text-gray-900 dark:text-white font-medium">{path.timeline}</div>
                   </div>
 
                   <div>

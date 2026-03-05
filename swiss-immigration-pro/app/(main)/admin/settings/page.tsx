@@ -15,6 +15,7 @@ import {
   Sparkles, Rocket, Cpu, TrendingUp, Code, Layers, Home
 } from 'lucide-react'
 import AdminHeader from '@/components/layout/AdminHeader'
+import { api, ApiError } from '@/lib/api'
 
 export default function AdminSettings() {
   const router = useRouter()
@@ -79,15 +80,45 @@ export default function AdminSettings() {
       return
     }
 
-    // Load admin data
+    // Load admin profile data from session
     setFullName(session.user.name || '')
     setEmail(session.user.email || '')
-    
-    // Load saved settings from localStorage
+
+    // Theme is a UI preference — stays in localStorage
     const savedTheme = localStorage.getItem('adminTheme') || 'auto'
-    setTheme(savedTheme as any)
-    
-    setLoading(false)
+    setTheme(savedTheme as 'light' | 'dark' | 'auto')
+
+    // Load system settings from backend
+    api.get<Record<string, unknown>>('/api/admin/settings')
+      .then((s) => {
+        if (typeof s.site_name === 'string') setSiteName(s.site_name)
+        if (typeof s.site_description === 'string') setSiteDescription(s.site_description)
+        if (typeof s.maintenance_mode === 'boolean') setMaintenanceMode(s.maintenance_mode)
+        if (typeof s.max_users === 'number') setMaxUsers(s.max_users)
+        if (typeof s.email_notifications === 'boolean') setEmailNotifications(s.email_notifications)
+        if (typeof s.new_user_alerts === 'boolean') setNewUserAlerts(s.new_user_alerts)
+        if (typeof s.payment_alerts === 'boolean') setPaymentAlerts(s.payment_alerts)
+        if (typeof s.system_alerts === 'boolean') setSystemAlerts(s.system_alerts)
+        if (typeof s.two_factor_enabled === 'boolean') setTwoFactorEnabled(s.two_factor_enabled)
+        if (typeof s.session_timeout === 'number') setSessionTimeout(s.session_timeout)
+        if (typeof s.ip_whitelist === 'string') setIpWhitelist(s.ip_whitelist)
+        if (typeof s.stripe_webhook_url === 'string') setStripeWebhookUrl(s.stripe_webhook_url)
+        if (typeof s.api_rate_limit === 'number') setApiRateLimit(s.api_rate_limit)
+        if (typeof s.enable_analytics === 'boolean') setEnableAnalytics(s.enable_analytics)
+        if (typeof s.enable_ai_chat === 'boolean') setEnableAIChat(s.enable_ai_chat)
+        if (typeof s.enable_email_marketing === 'boolean') setEnableEmailMarketing(s.enable_email_marketing)
+        if (typeof s.enable_advanced_reports === 'boolean') setEnableAdvancedReports(s.enable_advanced_reports)
+        if (typeof s.enable_custom_branding === 'boolean') setEnableCustomBranding(s.enable_custom_branding)
+        if (typeof s.enable_api_access === 'boolean') setEnableAPIAccess(s.enable_api_access)
+        if (typeof s.enable_webhooks === 'boolean') setEnableWebhooks(s.enable_webhooks)
+        if (typeof s.enable_beta_features === 'boolean') setEnableBetaFeatures(s.enable_beta_features)
+        if (typeof s.cache_strategy === 'string') setCacheStrategy(s.cache_strategy as typeof cacheStrategy)
+        if (typeof s.log_level === 'string') setLogLevel(s.log_level as typeof logLevel)
+      })
+      .catch((err: unknown) => {
+        console.error('Failed to load admin settings:', err instanceof ApiError ? err.detail : err)
+      })
+      .finally(() => setLoading(false))
   }, [session, status, router])
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
@@ -127,41 +158,38 @@ export default function AdminSettings() {
     setSuccess('')
 
     try {
-      // Save to localStorage for now (can be moved to database later)
-      if (category === 'system') {
-        localStorage.setItem('admin_siteName', siteName)
-        localStorage.setItem('admin_siteDescription', siteDescription)
-        localStorage.setItem('admin_maintenanceMode', String(maintenanceMode))
-        localStorage.setItem('admin_maxUsers', String(maxUsers))
-      } else if (category === 'notifications') {
-        localStorage.setItem('admin_emailNotifications', String(emailNotifications))
-        localStorage.setItem('admin_newUserAlerts', String(newUserAlerts))
-        localStorage.setItem('admin_paymentAlerts', String(paymentAlerts))
-        localStorage.setItem('admin_systemAlerts', String(systemAlerts))
-      } else if (category === 'security') {
-        localStorage.setItem('admin_twoFactorEnabled', String(twoFactorEnabled))
-        localStorage.setItem('admin_sessionTimeout', String(sessionTimeout))
-        localStorage.setItem('admin_ipWhitelist', ipWhitelist)
-      } else if (category === 'api') {
-        localStorage.setItem('admin_stripeWebhookUrl', stripeWebhookUrl)
-        localStorage.setItem('admin_apiRateLimit', String(apiRateLimit))
-      } else if (category === 'advanced') {
-        localStorage.setItem('admin_enableAnalytics', String(enableAnalytics))
-        localStorage.setItem('admin_enableAIChat', String(enableAIChat))
-        localStorage.setItem('admin_enableEmailMarketing', String(enableEmailMarketing))
-        localStorage.setItem('admin_enableAdvancedReports', String(enableAdvancedReports))
-        localStorage.setItem('admin_enableCustomBranding', String(enableCustomBranding))
-        localStorage.setItem('admin_enableAPIAccess', String(enableAPIAccess))
-        localStorage.setItem('admin_enableWebhooks', String(enableWebhooks))
-        localStorage.setItem('admin_enableBetaFeatures', String(enableBetaFeatures))
-        localStorage.setItem('admin_cacheStrategy', cacheStrategy)
-        localStorage.setItem('admin_logLevel', logLevel)
-      }
+      // Persist the full settings object to the backend (stored in profile.metadata_ JSONB)
+      await api.put('/api/admin/settings', {
+        site_name: siteName,
+        site_description: siteDescription,
+        maintenance_mode: maintenanceMode,
+        max_users: maxUsers,
+        email_notifications: emailNotifications,
+        new_user_alerts: newUserAlerts,
+        payment_alerts: paymentAlerts,
+        system_alerts: systemAlerts,
+        two_factor_enabled: twoFactorEnabled,
+        session_timeout: sessionTimeout,
+        ip_whitelist: ipWhitelist,
+        stripe_webhook_url: stripeWebhookUrl,
+        api_rate_limit: apiRateLimit,
+        enable_analytics: enableAnalytics,
+        enable_ai_chat: enableAIChat,
+        enable_email_marketing: enableEmailMarketing,
+        enable_advanced_reports: enableAdvancedReports,
+        enable_custom_branding: enableCustomBranding,
+        enable_api_access: enableAPIAccess,
+        enable_webhooks: enableWebhooks,
+        enable_beta_features: enableBetaFeatures,
+        cache_strategy: cacheStrategy,
+        log_level: logLevel,
+      })
 
       setSuccess(`${category} settings saved successfully!`)
       setTimeout(() => setSuccess(''), 3000)
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to save settings')
+      const detail = err instanceof ApiError ? err.detail : err instanceof Error ? err.message : 'Failed to save settings'
+      setError(detail)
     } finally {
       setSaving(false)
     }

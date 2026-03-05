@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { useCurrentLanguage } from '@/lib/useCurrentLanguage'
+import { getAuthHeaderSync } from '@/lib/auth-client'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -185,19 +186,15 @@ function incrementAnonCount(): void {
 }
 
 // ---------------------------------------------------------------------------
-// Auth token helper
+// Auth token helper — delegates to auth-client (uses sip_token key)
 // ---------------------------------------------------------------------------
 
 function getAuthHeaders(): Record<string, string> {
-  if (typeof window === 'undefined') return {}
-  const token = localStorage.getItem('token') || localStorage.getItem('auth-token')
-  if (token) return { Authorization: `Bearer ${token}` }
-  return {}
+  return getAuthHeaderSync()
 }
 
 function isLoggedIn(): boolean {
-  if (typeof window === 'undefined') return false
-  return !!(localStorage.getItem('token') || localStorage.getItem('auth-token'))
+  return Object.keys(getAuthHeaderSync()).length > 0
 }
 
 // ---------------------------------------------------------------------------

@@ -24,26 +24,26 @@ const FAQ_ITEMS = [
 export default function PricingFAQ() {
   return (
     <section className="mt-12 sm:mt-16 md:mt-32 max-w-3xl mx-auto px-4 sm:px-6" aria-label="Frequently asked questions">
-      <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 sm:mb-8 md:mb-12 text-center transition-colors">
+      <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-6 sm:mb-8 md:mb-12 text-center transition-colors">
         Frequently Asked Questions
       </h2>
       <div className="space-y-3 sm:space-y-4" itemScope itemType="https://schema.org/FAQPage">
         {FAQ_ITEMS.map((item) => (
           <article
             key={item.id}
-            className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all"
+            className="bg-white dark:bg-gray-900 rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md dark:hover:shadow-gray-900/30 transition-all"
             itemScope
             itemType="https://schema.org/Question"
           >
             <h3
-              className="font-bold text-gray-900 mb-2 text-base sm:text-lg transition-colors"
+              className="font-bold text-gray-900 dark:text-white mb-2 text-base sm:text-lg transition-colors"
               itemProp="name"
             >
               {item.q}
             </h3>
             <div itemScope itemType="https://schema.org/Answer">
               <p
-                className="text-sm sm:text-base text-black transition-colors opacity-80 leading-relaxed"
+                className="text-sm sm:text-base text-gray-700 dark:text-gray-400 transition-colors opacity-80 leading-relaxed"
                 itemProp="text"
               >
                 {item.a}

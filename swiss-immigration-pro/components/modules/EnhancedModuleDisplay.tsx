@@ -11,6 +11,7 @@ import { ModuleQuiz } from './ModuleQuiz'
 import { ModuleTTS, type ModuleTTSHandle } from './ModuleTTS'
 import { ModuleContentSection } from './ModuleContentSection'
 import { enhancedModuleStyles } from './moduleStyles'
+import { useToast } from '@/components/providers/ToastProvider'
 
 interface ModuleSection {
   id: string
@@ -52,6 +53,7 @@ export default function EnhancedModuleDisplay({ module, moduleId, quiz }: Enhanc
   const [completedSections, setCompletedSections] = useState<Set<string>>(new Set())
   const sectionTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map())
   const ttsRef = useRef<ModuleTTSHandle>(null)
+  const { showToast } = useToast()
 
   if (!isValid) {
     console.error('Invalid module structure:', module)
@@ -86,7 +88,9 @@ export default function EnhancedModuleDisplay({ module, moduleId, quiz }: Enhanc
           setCompletedSections(new Set(data.sections))
         }
       })
-      .catch(() => {})
+      .catch((err: unknown) => {
+        console.error('Failed to load module progress:', err)
+      })
   }, [moduleId])
 
   const markSectionComplete = useCallback((sectionId: string) => {
@@ -100,7 +104,10 @@ export default function EnhancedModuleDisplay({ module, moduleId, quiz }: Enhanc
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
           body: JSON.stringify({ moduleId, sectionId, completed: true }),
-        }).catch(() => {})
+        }).catch((err: unknown) => {
+          console.error('Failed to save section progress:', err)
+          showToast('Failed to save section progress. Your progress may not be recorded.', 'error')
+        })
       }
       return next
     })

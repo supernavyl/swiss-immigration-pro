@@ -7,7 +7,6 @@ import {
   Calendar, Clock, ArrowRight, ChevronRight,
   FileText, Users, Briefcase, Globe, Home, Star, Languages, Shield,
 } from 'lucide-react'
-import MainHeader from '@/components/layout/MainHeader'
 
 /* ────────────────────────────────────────────────
    Category config
@@ -269,8 +268,6 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950">
-      <MainHeader />
-
       {/* ── Header ── */}
       <section className="pt-16 pb-10 px-5 sm:px-8">
         <div className="max-w-5xl mx-auto">

@@ -6,7 +6,6 @@ import { join } from 'path'
 import { Calendar, Clock, Tag, FileText, ChevronRight, ArrowRight, BookOpen, Calculator, Users, MessageSquare } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import MainHeader from '@/components/layout/MainHeader'
 import { generateMetadata as generateMeta, generateFAQSchema, generateArticleSchema, generateBreadcrumbSchema, formatLastUpdated } from '@/lib/seo/meta-helpers'
 
 // Parse frontmatter from markdown
@@ -247,8 +246,6 @@ export default async function VisaPage({
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950">
-      <MainHeader />
-
       {/* JSON-LD Structured Data */}
       {faqSchemaJson && (
         <script type="application/ld+json" suppressHydrationWarning>

@@ -19,6 +19,7 @@ import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, Cart
 import UserUpgradeModal from '@/components/admin/UserUpgradeModal'
 import AdminHeader from '@/components/layout/AdminHeader'
 import { useToast } from '@/components/providers/ToastProvider'
+import { api, ApiError } from '@/lib/api'
 
 interface AdminUser {
   id: string
@@ -68,6 +69,17 @@ interface ActivityLog {
   description?: string
   user_email?: string
   created_at: string
+}
+
+interface AdminStats {
+  totalUsers: number
+  totalRevenue: number
+  monthlyRevenue: number
+  activeSubscriptions: number
+  messageCount: number
+  totalPurchases: number
+  recentSignups: number
+  usersByPack: Array<{ packId: string; count: number }>
 }
 
 export default function AdminDashboard() {
@@ -146,91 +158,55 @@ export default function AdminDashboard() {
 
   const loadAnalytics = async () => {
     try {
-      const res = await fetch('/api/admin/analytics', {
-        cache: 'no-store',
-        credentials: 'include',
-      })
-      if (res.ok) {
-        const data = await res.json()
-        setAnalytics(data)
-      }
+      const data = await api.get<AdminAnalytics>('/api/admin/analytics', { cache: 'no-store' })
+      setAnalytics(data)
     } catch (error) {
-      console.error('Error loading analytics:', error)
+      console.error('Error loading analytics:', error instanceof ApiError ? error.detail : error)
     }
   }
 
   const loadStats = async () => {
     try {
-      const res = await fetch('/api/admin/stats', {
-        cache: 'no-store',
-        credentials: 'include',
-      })
-      if (res.ok) {
-        const data = await res.json()
-        setStats(data)
-      }
+      const data = await api.get<AdminStats>('/api/admin/stats', { cache: 'no-store' })
+      setStats(data)
     } catch (error) {
-      console.error('Error loading stats:', error)
+      console.error('Error loading stats:', error instanceof ApiError ? error.detail : error)
     }
   }
 
   const loadUsers = async () => {
     try {
-      const res = await fetch('/api/admin/users', {
-        cache: 'no-store',
-        credentials: 'include',
-      })
-      if (res.ok) {
-        const data = await res.json()
-        setUsers(data)
-      }
+      const data = await api.get<User[]>('/api/admin/users', { cache: 'no-store' })
+      setUsers(data)
     } catch (error) {
-      console.error('Error loading users:', error)
+      console.error('Error loading users:', error instanceof ApiError ? error.detail : error)
     }
   }
 
   const loadPackStats = async () => {
     try {
-      const res = await fetch('/api/admin/pack-stats', {
-        cache: 'no-store',
-        credentials: 'include',
-      })
-      if (res.ok) {
-        const data = await res.json()
-        setPackStats(data.packStats || [])
-      }
+      const data = await api.get<{ packStats?: PackStats[] }>('/api/admin/pack-stats', { cache: 'no-store' })
+      setPackStats(data.packStats || [])
     } catch (error) {
-      console.error('Error loading pack stats:', error)
+      console.error('Error loading pack stats:', error instanceof ApiError ? error.detail : error)
     }
   }
 
   const loadPayments = async () => {
     try {
-      const res = await fetch('/api/admin/payments', {
-        cache: 'no-store',
-        credentials: 'include',
-      })
-      if (res.ok) {
-        const data = await res.json()
-        setPayments(data.payments || [])
-      }
+      const data = await api.get<{ payments?: AdminPayment[] }>('/api/admin/payments', { cache: 'no-store' })
+      setPayments(data.payments || [])
     } catch (error) {
-      console.error('Error loading payments:', error)
+      console.error('Error loading payments:', error instanceof ApiError ? error.detail : error)
     }
   }
 
   const loadActivityLogs = async () => {
     try {
-      const res = await fetch('/api/admin/activity-logs', {
-        cache: 'no-store',
-        credentials: 'include',
-      })
-      if (res.ok) {
-        const data = await res.json()
-        setActivityLogs(data.logs || [])
-      }
+      const data = await api.get<{ logs?: ActivityLog[] }>('/api/admin/activity-logs', { cache: 'no-store' })
+      setActivityLogs(data.logs || [])
     } catch (error) {
-      console.error('Error loading activity logs:', error)
+      console.error('Error loading activity logs:', error instanceof ApiError ? error.detail : error)
     }
   }
 
@@ -273,22 +249,17 @@ export default function AdminDashboard() {
     }
 
     try {
-      const promises = Array.from(selectedUsers).map(userId =>
-        fetch(`/api/admin/user/${userId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ packId: newPackId }),
-        })
+      await Promise.all(
+        Array.from(selectedUsers).map(userId =>
+          api.put(`/api/admin/user/${userId}`, { packId: newPackId })
+        )
       )
-
-      await Promise.all(promises)
       setSelectedUsers(new Set())
       await loadUsers()
       await loadStats()
       showToast(`Successfully updated ${selectedUsers.size} users`, 'success')
     } catch (error) {
-      console.error('Error updating users:', error)
+      console.error('Error updating users:', error instanceof ApiError ? error.detail : error)
       showToast('Failed to update users. Please try again.', 'error')
     }
   }
@@ -323,54 +294,32 @@ export default function AdminDashboard() {
     }
 
     try {
-      const res = await fetch('/api/admin/send-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({
-          recipients: emailRecipients,
-          subject: emailSubject,
-          body: emailBody,
-        }),
+      await api.post('/api/admin/send-email', {
+        recipients: emailRecipients,
+        subject: emailSubject,
+        body: emailBody,
       })
-
-      if (res.ok) {
-        showToast(`Email sent to ${emailRecipients.length} users`, 'success')
-        setEmailModal(false)
-        setEmailSubject('')
-        setEmailBody('')
-        setEmailRecipients([])
-      } else {
-        throw new Error('Failed to send email')
-      }
+      showToast(`Email sent to ${emailRecipients.length} users`, 'success')
+      setEmailModal(false)
+      setEmailSubject('')
+      setEmailBody('')
+      setEmailRecipients([])
     } catch (error) {
-      console.error('Error sending email:', error)
+      console.error('Error sending email:', error instanceof ApiError ? error.detail : error)
       showToast('Failed to send email. Please try again.', 'error')
     }
   }
 
   const handleUpdateUserPack = async (userId: string, newPackId: string, expiresAt: string | null = null) => {
     try {
-      const res = await fetch(`/api/admin/user/${userId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ 
-          packId: newPackId,
-          packExpiresAt: expiresAt
-        }),
+      await api.put(`/api/admin/user/${userId}`, {
+        packId: newPackId,
+        packExpiresAt: expiresAt,
       })
-
-      if (!res.ok) {
-        const errorPayload = await res.json().catch(() => ({}))
-        const message = errorPayload?.error || 'Failed to update user pack'
-        throw new Error(message)
-      }
-
       await Promise.all([loadUsers(), loadStats()])
       setUpgradeUser(null)
     } catch (error) {
-      console.error('Error updating user pack:', error)
+      console.error('Error updating user pack:', error instanceof ApiError ? error.detail : error)
       showToast(
         error instanceof Error
           ? error.message

@@ -53,8 +53,8 @@ const en: TranslationDict = {
   'auth.newsletter': 'Newsletter',
 
   // ── Hero / Home ─────────────────────────────────────────────────────────
-  'hero.title': 'Your Path to Swiss Residency',
-  'hero.subtitle': 'Expert AI-powered guidance for permits, visas, and citizenship — tailored to your profile.',
+  'hero.title': 'Get Your Swiss Permit in 6–8 Weeks',
+  'hero.subtitle': 'Others wait 16+ weeks and pay CHF 15,000 in consultant fees. Our AI has guided 18,500+ applicants to approval — from CHF 9/month.',
   'hero.cta': 'Start Free Assessment',
   'hero.ctaSecondary': 'View Pricing',
   'hero.trustedBy': 'Trusted by 18,500+ applicants worldwide',
@@ -445,6 +445,24 @@ const en: TranslationDict = {
   'error.unauthorized': 'You must be logged in to access this page.',
   'error.forbidden': 'You do not have permission to access this page.',
   'error.networkError': 'Network error. Please check your connection.',
+
+  // ── Voice ─────────────────────────────────────────────────────────────
+  'voice.startCall': 'Voice Call',
+  'voice.endCall': 'End Call',
+  'voice.listening': 'Listening...',
+  'voice.processing': 'Processing...',
+  'voice.speaking': 'Speaking...',
+  'voice.interrupt': 'Interrupt',
+  'voice.connecting': 'Connecting...',
+  'voice.disconnected': 'Disconnected',
+  'voice.error': 'Voice error occurred',
+  'voice.upgradeRequired': 'Voice calls require a paid plan',
+  'voice.upgradeMessage': 'Upgrade to Immigration Pack (CHF 9/mo) or higher to unlock voice conversations with our AI lawyer.',
+  'voice.tapToInterrupt': 'Tap to interrupt',
+  'voice.micPermissionDenied': 'Microphone access was denied. Please allow mic access in your browser settings.',
+  'voice.browserNotSupported': 'Your browser does not support voice calls. Please use Chrome or Edge.',
+  'voice.connectionFailed': 'Could not connect to voice server. Please try again.',
+  'voice.atCapacity': 'Voice server is at capacity. Please try again shortly.',
 }
 
 // ---------------------------------------------------------------------------
@@ -488,8 +506,8 @@ const de: TranslationDict = {
   'auth.newsletter': 'Newsletter',
 
   // Hero / Home
-  'hero.title': 'Ihr Weg zur Schweizer Aufenthaltsbewilligung',
-  'hero.subtitle': 'KI-gestützte Expertenberatung für Bewilligungen, Visa und Einbürgerung — massgeschneidert auf Ihr Profil.',
+  'hero.title': 'Ihre Schweizer Bewilligung in 6–8 Wochen',
+  'hero.subtitle': 'Andere warten 16+ Wochen und zahlen CHF 15.000 an Berater. Unsere KI hat 18.500+ Antragsteller zum Erfolg geführt — ab CHF 9/Monat.',
   'hero.cta': 'Kostenlose Bewertung starten',
   'hero.ctaSecondary': 'Preise ansehen',
   'hero.trustedBy': 'Über 18\'500 Antragsteller weltweit vertrauen uns',
@@ -829,8 +847,8 @@ const fr: TranslationDict = {
   'auth.newsletter': 'Newsletter',
 
   // Hero / Home
-  'hero.title': 'Votre chemin vers la résidence suisse',
-  'hero.subtitle': "Conseils d'experts assistés par l'IA pour les permis, visas et la nationalité — adaptés à votre profil.",
+  'hero.title': 'Votre permis suisse en 6–8 semaines',
+  'hero.subtitle': "D'autres attendent 16+ semaines et paient CHF 15'000 en frais de consultant. Notre IA a guidé 18'500+ candidats vers l'approbation — dès CHF 9/mois.",
   'hero.cta': 'Évaluation gratuite',
   'hero.ctaSecondary': 'Voir les tarifs',
   'hero.trustedBy': 'Plus de 18 500 demandeurs nous font confiance',
@@ -1221,6 +1239,24 @@ const fr: TranslationDict = {
   'error.unauthorized': 'Vous devez être connecté pour accéder à cette page.',
   'error.forbidden': "Vous n'avez pas la permission d'accéder à cette page.",
   'error.networkError': 'Erreur réseau. Veuillez vérifier votre connexion.',
+
+  // ── Voice ─────────────────────────────────────────────────────────────
+  'voice.startCall': 'Appel vocal',
+  'voice.endCall': 'Raccrocher',
+  'voice.listening': 'Écoute en cours...',
+  'voice.processing': 'Traitement...',
+  'voice.speaking': 'En train de parler...',
+  'voice.interrupt': 'Interrompre',
+  'voice.connecting': 'Connexion...',
+  'voice.disconnected': 'Déconnecté',
+  'voice.error': 'Erreur vocale',
+  'voice.upgradeRequired': 'Les appels vocaux nécessitent un abonnement payant',
+  'voice.upgradeMessage': "Passez au Pack Immigration (CHF 9/mois) ou supérieur pour débloquer les conversations vocales avec notre avocat IA.",
+  'voice.tapToInterrupt': 'Appuyez pour interrompre',
+  'voice.micPermissionDenied': "L'accès au microphone a été refusé. Autorisez le micro dans les paramètres de votre navigateur.",
+  'voice.browserNotSupported': "Votre navigateur ne prend pas en charge les appels vocaux. Utilisez Chrome ou Edge.",
+  'voice.connectionFailed': 'Impossible de se connecter au serveur vocal. Veuillez réessayer.',
+  'voice.atCapacity': 'Le serveur vocal est saturé. Veuillez réessayer dans un instant.',
 }
 
 // ---------------------------------------------------------------------------

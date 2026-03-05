@@ -11,8 +11,6 @@ import {
   BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid,
   Tooltip, Legend, ResponsiveContainer, LineChart, Line
 } from 'recharts'
-import MainHeader from '@/components/layout/MainHeader'
-
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6']
 
 // Quota Data
@@ -216,9 +214,8 @@ export default function EmploymentPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50">
-      <MainHeader />
       <div className="pt-24 pb-32">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="sip-container-wide">
         {/* Modern Hero Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

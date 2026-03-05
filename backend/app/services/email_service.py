@@ -197,7 +197,7 @@ async def send_abandoned_checkout_email(email: str, pack_name: str | None = None
          to save 10% on any plan.</p>
     </div>
     <div style="text-align: center; margin: 30px 0;">
-      <a href="{settings.app_url}/pricing"
+      <a href="{settings.app_url}/pricing?discount=WELCOME10"
         style="background: #0056B3; color: white; padding: 15px 30px;
         text-decoration: none; border-radius: 8px;
         display: inline-block; font-weight: bold;">Complete My Order →</a>
@@ -207,11 +207,154 @@ async def send_abandoned_checkout_email(email: str, pack_name: str | None = None
     text = (
         f"You left your checkout{(' for ' + pack_name) if pack_name else ''} incomplete. "
         "Use code WELCOME10 for 10% off when you return: "
-        f"{settings.app_url}/pricing"
+        f"{settings.app_url}/pricing?discount=WELCOME10"
     )
     return await send_email(
         email,
         "You left something behind — here's 10% off 🇨🇭",
+        html,
+        text,
+    )
+
+
+async def send_churn_recovery_email(email: str, pack_name: str) -> dict:
+    """Send a recovery email when a user's subscription is cancelled."""
+    html = _base_template(
+        "We're sorry to see you go",
+        f"""
+    <p>Hi there,</p>
+    <p>We noticed your <strong>{pack_name}</strong> subscription has ended.
+       We hope Swiss Immigration Pro helped you on your journey.</p>
+    <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;
+      border-left: 4px solid #FF6B35;">
+      <h2 style="margin-top: 0; color: #FF6B35;">Come back and save 20%</h2>
+      <p>Use code <strong>COMEBACK20</strong> to get 20% off your next 3 months
+         on any plan. This offer expires in 7 days.</p>
+    </div>
+    <div style="text-align: center; margin: 30px 0;">
+      <a href="{settings.app_url}/pricing?discount=COMEBACK20"
+        style="background: #0056B3; color: white; padding: 15px 30px;
+        text-decoration: none; border-radius: 8px;
+        display: inline-block; font-weight: bold;">Reactivate My Plan &rarr;</a>
+    </div>
+    <p style="color: #666; font-size: 14px;">Questions? Reply to this email — we're happy to help.</p>""",
+    )
+    text = (
+        f"Your {pack_name} subscription has ended. "
+        "Use code COMEBACK20 for 20% off your next 3 months: "
+        f"{settings.app_url}/pricing?discount=COMEBACK20"
+    )
+    return await send_email(
+        email,
+        "We're sorry to see you go — here's 20% off to come back",
+        html,
+        text,
+    )
+
+
+async def send_quiz_result_email(email: str, name: str, visa_path: str) -> dict:
+    """Day 0: Send personalized visa path result after quiz completion."""
+    greeting = html_mod.escape(name) if name else "there"
+    html = _base_template(
+        "Your Personalized Visa Path",
+        f"""
+    <p style="font-size: 18px;">Hello {greeting},</p>
+    <p>Thank you for completing the Swiss Immigration Quiz! Based on your answers,
+       we've identified your ideal pathway:</p>
+    <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;
+      border-left: 4px solid #0056B3;">
+      <h2 style="margin-top: 0; color: #0056B3;">{html_mod.escape(visa_path)}</h2>
+      <p>This pathway is tailored to your nationality, education, experience, and timeline.
+         Our platform has all the resources you need to succeed.</p>
+    </div>
+    <div style="text-align: center; margin: 30px 0;">
+      <a href="{settings.app_url}/dashboard"
+        style="background: #0056B3; color: white; padding: 15px 30px;
+        text-decoration: none; border-radius: 8px;
+        display: inline-block; font-weight: bold;">View Your Path &rarr;</a>
+    </div>""",
+    )
+    text = (
+        f"Hello {greeting}, your quiz results are in! "
+        f"Your recommended pathway: {visa_path}. "
+        f"View details at {settings.app_url}/dashboard"
+    )
+    return await send_email(email, "Your Personalized Swiss Visa Path", html, text)
+
+
+async def send_quiz_tips_email(email: str, name: str) -> dict:
+    """Day 1: Top 5 mistakes to avoid + module recommendation."""
+    greeting = html_mod.escape(name) if name else "there"
+    html = _base_template(
+        "Top 5 Immigration Mistakes to Avoid",
+        f"""
+    <p>Hi {greeting},</p>
+    <p>Yesterday you took our immigration quiz — great first step!
+       Today we're sharing the <strong>top 5 mistakes</strong> that delay or
+       reject Swiss immigration applications:</p>
+    <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+      <ol style="padding-left: 20px; line-height: 1.8;">
+        <li><strong>Missing the quota window</strong> — Third-country permits have annual limits</li>
+        <li><strong>Incomplete documents</strong> — One missing form = back of the queue</li>
+        <li><strong>Wrong canton</strong> — Processing times vary 3-12 months by region</li>
+        <li><strong>Ignoring language requirements</strong> — Critical for C permits and citizenship</li>
+        <li><strong>No employer sponsorship plan</strong> — Many permits require a Swiss employer</li>
+      </ol>
+    </div>
+    <p>Our Immigration Pack covers all of these in detail with step-by-step checklists.</p>
+    <div style="text-align: center; margin: 30px 0;">
+      <a href="{settings.app_url}/modules"
+        style="background: #0056B3; color: white; padding: 15px 30px;
+        text-decoration: none; border-radius: 8px;
+        display: inline-block; font-weight: bold;">Explore Modules</a>
+    </div>""",
+    )
+    text = (
+        f"Hi {greeting}, here are the top 5 immigration mistakes to avoid. "
+        f"Learn more at {settings.app_url}/modules"
+    )
+    return await send_email(
+        email, "Top 5 Swiss Immigration Mistakes (Avoid These!)", html, text
+    )
+
+
+async def send_quiz_offer_email(
+    email: str, name: str, code: str, is_final: bool = False
+) -> dict:
+    """Day 3 or Day 7: Discount offer with coupon code."""
+    greeting = html_mod.escape(name) if name else "there"
+    safe_code = html_mod.escape(code)
+    urgency = "Last chance" if is_final else "Limited time offer"
+    subject_prefix = "Final Reminder" if is_final else "Special Offer"
+
+    html = _base_template(
+        f"{urgency}: Save on Your Immigration Journey",
+        f"""
+    <p>Hi {greeting},</p>
+    <p>{"This is your last chance to claim this offer. " if is_final else ""}
+       We want to help you start your Swiss immigration journey right.</p>
+    <div style="background: linear-gradient(135deg, #FF6B35, #FF8F00); padding: 25px;
+      border-radius: 10px; margin: 20px 0; text-align: center; color: white;">
+      <h2 style="margin: 0 0 10px 0; font-size: 22px;">Immigration Pack — CHF 9/mo</h2>
+      <p style="margin: 0 0 15px 0; font-size: 16px;">
+        Use code <strong style="font-size: 20px; letter-spacing: 2px;">{safe_code}</strong>
+        for 25% off your first 3 months
+      </p>
+      <a href="{settings.app_url}/pricing?discount={safe_code}"
+        style="background: white; color: #FF6B35; padding: 12px 30px;
+        text-decoration: none; border-radius: 8px;
+        display: inline-block; font-weight: bold;">Claim Your Discount &rarr;</a>
+    </div>
+    <p style="font-size: 14px; color: #666;">
+      30-day money-back guarantee. Cancel anytime. No risk.</p>""",
+    )
+    text = (
+        f"Hi {greeting}, use code {code} for 25% off the Immigration Pack (CHF 9/mo). "
+        f"Claim at {settings.app_url}/pricing?discount={code}"
+    )
+    return await send_email(
+        email,
+        f"{subject_prefix}: 25% Off Your Immigration Pack",
         html,
         text,
     )

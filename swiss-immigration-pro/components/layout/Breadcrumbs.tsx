@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ChevronRight, Home } from 'lucide-react'
@@ -36,6 +37,8 @@ const LABEL_MAP: Record<string, string> = {
   'timeline-planner': 'Timeline Planner',
   'apartment-finder': 'Apartment Finder',
   'dossier-generator': 'Dossier Generator',
+  'document-checklist': 'Document Checklist',
+  'citizenship-timeline': 'Citizenship Timeline',
 
   // Layers
   eu: 'EU Citizens',
@@ -46,6 +49,22 @@ const LABEL_MAP: Record<string, string> = {
   admin: 'Admin',
   newsletter: 'Newsletter',
   settings: 'Settings',
+
+  // Other
+  'case-studies': 'Case Studies',
+  employment: 'Employment',
+  account: 'Account',
+  billing: 'Billing',
+  notifications: 'Notifications',
+  data: 'Data & Privacy',
+  referrals: 'Referrals',
+  security: 'Security',
+  changelog: 'Changelog',
+  downloads: 'Downloads',
+  b2b: 'For Companies',
+  success: 'Success',
+  lawyer: 'Virtual Lawyer',
+  resources: 'Resources',
 
   // Legal
   terms: 'Terms of Service',
@@ -92,9 +111,15 @@ function toLabel(segment: string): string {
 }
 
 export default function Breadcrumbs() {
+  const [mounted, setMounted] = useState(false)
   const pathname = usePathname()
 
-  if (!pathname) return null
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return null
+  if (!pathname || pathname === '/' || pathname.startsWith('/auth')) return null
 
   const segments = pathname.split('/').filter(Boolean)
   if (segments.length === 0) return null

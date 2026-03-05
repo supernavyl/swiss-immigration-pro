@@ -29,11 +29,9 @@ export function ChatbotProvider({ children }: { children: ReactNode }) {
   return (
     <ChatbotContext.Provider value={{ openChatbot, closeChatbot, isOpen }}>
       {children}
-      {isOpen && (
-        <Suspense fallback={null}>
-          <ChatbotRight isOpen={isOpen} onClose={closeChatbot} />
-        </Suspense>
-      )}
+      <Suspense fallback={null}>
+        <ChatbotRight isOpen={isOpen} onClose={closeChatbot} />
+      </Suspense>
     </ChatbotContext.Provider>
   )
 }

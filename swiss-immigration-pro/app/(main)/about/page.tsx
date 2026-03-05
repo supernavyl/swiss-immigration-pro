@@ -9,7 +9,6 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
-import MainHeader from '@/components/layout/MainHeader'
 
 const CORE_VALUES = [
   {
@@ -182,11 +181,9 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950">
-      <MainHeader />
-
       {/* Hero */}
       <section className="pt-24 pb-16 sm:pt-32 sm:pb-20 bg-white dark:bg-slate-950">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 text-center">
+        <div className="sip-container text-center">
           <div className="inline-flex items-center gap-2 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-4 py-1.5 rounded-full text-xs font-semibold mb-6 border border-blue-100 dark:border-blue-800">
             <BadgeCheck className="w-3.5 h-3.5" />
             Trusted Immigration Platform
@@ -228,8 +225,8 @@ export default function AboutPage() {
       </section>
 
       {/* Mission & Vision */}
-      <section className="py-16 sm:py-20 bg-slate-50/50 dark:bg-slate-900/30">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8">
+      <section className="sip-section bg-slate-50/50 dark:bg-slate-900/30">
+        <div className="sip-container">
           <div className="grid md:grid-cols-2 gap-6 mb-12">
             <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-7 hover:shadow-lg transition-shadow duration-300">
               <div className="flex items-center gap-4 mb-5">
@@ -301,8 +298,8 @@ export default function AboutPage() {
       </section>
 
       {/* Core Values */}
-      <section className="py-16 sm:py-20 bg-white dark:bg-slate-950">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8">
+      <section className="sip-section bg-white dark:bg-slate-950">
+        <div className="sip-container">
           <div className="text-center mb-12">
             <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 tracking-wide uppercase mb-3">
               What We Stand For
@@ -339,8 +336,8 @@ export default function AboutPage() {
       </section>
 
       {/* Leadership Team */}
-      <section className="py-16 sm:py-20 bg-slate-50/50 dark:bg-slate-900/30">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8">
+      <section className="sip-section bg-slate-50/50 dark:bg-slate-900/30">
+        <div className="sip-container">
           <div className="text-center mb-12">
             <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 tracking-wide uppercase mb-3">
               Meet the Team
@@ -391,8 +388,8 @@ export default function AboutPage() {
       </section>
 
       {/* Impact & Statistics */}
-      <section className="py-16 sm:py-20 bg-white dark:bg-slate-950">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8">
+      <section className="sip-section bg-white dark:bg-slate-950">
+        <div className="sip-container">
           <div
             ref={statsRef}
             className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-8 sm:p-12 text-white relative overflow-hidden"
@@ -423,8 +420,8 @@ export default function AboutPage() {
       </section>
 
       {/* Get Started */}
-      <section className="py-16 sm:py-20 bg-slate-50/50 dark:bg-slate-900/30">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8">
+      <section className="sip-section bg-slate-50/50 dark:bg-slate-900/30">
+        <div className="sip-container">
           <div className="text-center mb-12">
             <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 tracking-wide uppercase mb-3">
               Start Your Journey
@@ -467,8 +464,8 @@ export default function AboutPage() {
       </section>
 
       {/* Certifications & Trust */}
-      <section className="py-16 sm:py-20 bg-white dark:bg-slate-950">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8">
+      <section className="sip-section bg-white dark:bg-slate-950">
+        <div className="sip-container">
           <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-7 sm:p-10">
             <div className="text-center mb-10">
               <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-3">
@@ -495,8 +492,8 @@ export default function AboutPage() {
       </section>
 
       {/* Trusted Partners */}
-      <section className="py-16 sm:py-20 bg-slate-50/50 dark:bg-slate-900/30">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 text-center">
+      <section className="sip-section bg-slate-50/50 dark:bg-slate-900/30">
+        <div className="sip-container text-center">
           <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-8">
             Trusted Partners & Sources
           </h2>

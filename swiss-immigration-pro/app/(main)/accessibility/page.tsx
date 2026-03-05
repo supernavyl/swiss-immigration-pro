@@ -3,8 +3,6 @@
 import { motion } from 'framer-motion'
 import { Accessibility, Eye, MousePointerClick, Keyboard, Volume2, CheckCircle2, Mail, Globe, Monitor } from 'lucide-react'
 import Link from 'next/link'
-import MainHeader from '@/components/layout/MainHeader'
-
 const features = [
   {
     icon: Keyboard,
@@ -57,9 +55,7 @@ const standards = [
 export default function AccessibilityPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
-      <MainHeader />
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="sip-container-wide py-16">
         {/* Hero Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

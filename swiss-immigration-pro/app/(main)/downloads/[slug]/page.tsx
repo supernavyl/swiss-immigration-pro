@@ -4,8 +4,6 @@ import { useState, useEffect, use } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Download, Mail, CheckCircle, AlertCircle, FileText, ArrowRight } from 'lucide-react'
-import MainHeader from '@/components/layout/MainHeader'
-
 const LEAD_MAGNETS: Record<string, {
   id: string
   title: string
@@ -142,7 +140,7 @@ export default function DownloadPage({
   if (!leadMagnet) {
     return (
       <div className="min-h-screen bg-slate-50">
-        <MainHeader />
+
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
           <h1 className="text-3xl font-bold text-slate-900 mb-4">Download Not Found</h1>
           <p className="text-slate-600 mb-8">The download you're looking for doesn't exist.</p>
@@ -158,7 +156,7 @@ export default function DownloadPage({
   if (submitted || alreadyDownloaded) {
     return (
       <div className="min-h-screen bg-slate-50">
-        <MainHeader />
+
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -233,8 +231,6 @@ export default function DownloadPage({
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <MainHeader />
-
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

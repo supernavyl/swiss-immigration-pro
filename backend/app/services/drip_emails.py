@@ -34,6 +34,30 @@ ONBOARDING_SEQUENCE = [
         "subject": "Don't lose access - upgrade your plan today",
         "template": "trial_ending",
     },
+    {
+        "step": 5,
+        "delay_days": 10,
+        "subject": "Your Swiss CV is costing you interviews (here's the fix)",
+        "template": "cv_spotlight",
+    },
+    {
+        "step": 6,
+        "delay_days": 14,
+        "subject": "3 people who moved to Switzerland this month (their stories)",
+        "template": "social_proof_roundup",
+    },
+    {
+        "step": 7,
+        "delay_days": 21,
+        "subject": "We noticed you haven't started your application yet",
+        "template": "re_engagement",
+    },
+    {
+        "step": 8,
+        "delay_days": 30,
+        "subject": "Last chance: 20% off your first 3 months",
+        "template": "winback_offer",
+    },
 ]
 
 
@@ -135,6 +159,143 @@ def _render_drip_email(template: str, name: str) -> tuple[str, str]:
             font-weight: bold; font-size: 18px;">Upgrade Now</a>
         </div>""")
         text = f"Hi {greeting}, your trial is ending. Upgrade at {base_url}/pricing - plans from CHF 9/mo"
+        return html, text
+
+    if template == "cv_spotlight":
+        html = _base_template("Your Swiss CV Needs an Upgrade", f"""
+        <p style="font-size: 18px;">Hi {greeting},</p>
+        <p>Did you know that <strong>78% of Swiss employers</strong> use ATS
+        (Applicant Tracking Systems) to filter CVs before a human ever sees them?</p>
+        <div style="background: #fff3cd; padding: 20px; border-radius: 8px;
+          margin: 20px 0; border-left: 4px solid #ffc107;">
+          <h3 style="margin-top: 0; color: #856404;">Common CV mistakes that get you rejected:</h3>
+          <ul style="padding-left: 20px;">
+            <li>Using a non-Swiss CV format (photo placement, personal details)</li>
+            <li>Missing AHV/AVS number field (required for Swiss applications)</li>
+            <li>Wrong date format (DD.MM.YYYY is Swiss standard)</li>
+            <li>No "Hobbies" section (yes, Swiss employers expect this)</li>
+          </ul>
+        </div>
+        <p>Our <strong>25+ Swiss CV templates</strong> are ATS-optimized and formatted
+        exactly how Swiss HR departments expect. Available from the Immigration Pack (CHF 9/mo).</p>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="{base_url}/pricing"
+            style="background: #0056B3; color: white; padding: 15px 30px;
+            text-decoration: none; border-radius: 8px;
+            display: inline-block; font-weight: bold;">Get Swiss CV Templates</a>
+        </div>""")
+        text = (
+            f"Hi {greeting}, 78% of Swiss employers use ATS to filter CVs. "
+            f"Get 25+ Swiss-optimized templates at {base_url}/pricing"
+        )
+        return html, text
+
+    if template == "social_proof_roundup":
+        html = _base_template("3 Success Stories This Month", f"""
+        <p style="font-size: 18px;">Hi {greeting},</p>
+        <p>Here's what happened on Swiss Immigration Pro this month:</p>
+
+        <div style="background: #f0f9ff; padding: 20px; border-radius: 8px;
+          margin: 20px 0; border-left: 4px solid #0056B3;">
+          <p style="margin: 0 0 15px 0;"><strong>Sarah C.</strong> (Singapore → Zürich)<br/>
+          Software engineer. Used our cantonal strategy guide to target Zürich over Basel.
+          B permit approved in <strong>5 weeks</strong>. Now earning CHF 120K.</p>
+
+          <p style="margin: 0 0 15px 0;"><strong>Ahmed H.</strong> (Jordan → Zürich)<br/>
+          Tech professional. Used the family reunification module to bring his wife and daughter.
+          All permits approved in <strong>8 weeks</strong>.</p>
+
+          <p style="margin: 0;"><strong>Elena M.</strong> (Romania → Lausanne)<br/>
+          EU national. Used our free assessment + Immigration Pack to fast-track her L-to-B
+          permit conversion. Done in <strong>4 weeks</strong>.</p>
+        </div>
+
+        <p>They all started exactly where you are now.</p>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="{base_url}/pricing"
+            style="background: #0056B3; color: white; padding: 15px 30px;
+            text-decoration: none; border-radius: 8px;
+            display: inline-block; font-weight: bold;">Start Your Success Story</a>
+        </div>""")
+        text = (
+            f"Hi {greeting}, 3 people successfully moved to Switzerland this month "
+            f"using our platform. See their stories and start yours at {base_url}/pricing"
+        )
+        return html, text
+
+    if template == "re_engagement":
+        html = _base_template("Your Swiss Immigration Plan Is Waiting", f"""
+        <p style="font-size: 18px;">Hi {greeting},</p>
+        <p>We noticed you haven't started your application yet. That's completely normal
+        — immigration is a big decision.</p>
+        <div style="background: white; padding: 20px; border-radius: 8px;
+          margin: 20px 0; border-left: 4px solid #6366f1;">
+          <h3 style="margin-top: 0; color: #4f46e5;">Here's what most successful
+          applicants do first:</h3>
+          <ol style="padding-left: 20px; line-height: 2;">
+            <li><strong>Take the 2-minute quiz</strong> to find your best pathway</li>
+            <li><strong>Read Module 1</strong> (free) to understand permit types</li>
+            <li><strong>Check canton quotas</strong> — some fill up fast</li>
+            <li><strong>Talk to our AI</strong> about your specific situation</li>
+          </ol>
+        </div>
+        <p>The hardest part is starting. Everything else, we handle together.</p>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="{base_url}/dashboard"
+            style="background: #6366f1; color: white; padding: 15px 30px;
+            text-decoration: none; border-radius: 8px;
+            display: inline-block; font-weight: bold;">Pick Up Where You Left Off</a>
+        </div>""")
+        text = (
+            f"Hi {greeting}, your Swiss immigration plan is waiting. "
+            f"Start with our free quiz at {base_url}/dashboard"
+        )
+        return html, text
+
+    if template == "winback_offer":
+        html = _base_template("Exclusive: 20% Off Your First 3 Months", f"""
+        <p style="font-size: 18px;">Hi {greeting},</p>
+        <p>We haven't seen you in a while, and we don't want you to miss out.</p>
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          padding: 30px; border-radius: 12px; margin: 20px 0; text-align: center;">
+          <p style="color: white; font-size: 14px; margin: 0 0 10px 0;
+            text-transform: uppercase; letter-spacing: 2px;">Exclusive offer</p>
+          <p style="color: white; font-size: 32px; font-weight: bold; margin: 0 0 10px 0;">
+            20% OFF</p>
+          <p style="color: rgba(255,255,255,0.9); margin: 0 0 5px 0;">
+            Your first 3 months on any paid plan</p>
+          <p style="color: rgba(255,255,255,0.7); font-size: 14px; margin: 0;">
+            Use code: <strong style="color: white;">COMEBACK20</strong></p>
+        </div>
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #eee;">
+              Immigration Pack: <strong>CHF 9 → CHF 7.20/mo</strong></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border-bottom: 1px solid #eee;">
+              Advanced Pack: <strong>CHF 29 → CHF 23.20/mo</strong></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px;">
+              Citizenship Pro: <strong>CHF 79 → CHF 63.20/mo</strong></td>
+          </tr>
+        </table>
+        <p style="color: #dc3545; font-weight: bold;">
+          This offer expires in 48 hours.</p>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="{base_url}/pricing?discount=COMEBACK20"
+            style="background: #28a745; color: white; padding: 18px 35px;
+            text-decoration: none; border-radius: 8px;
+            display: inline-block; font-weight: bold; font-size: 18px;">
+            Claim 20% Off Now</a>
+        </div>
+        <p style="color: #666; font-size: 13px; text-align: center;">
+          30-day money-back guarantee · Cancel anytime · No commitment</p>""")
+        text = (
+            f"Hi {greeting}, exclusive offer: 20% off your first 3 months "
+            f"with code COMEBACK20. Claim at {base_url}/pricing?discount=COMEBACK20"
+        )
         return html, text
 
     if template == "dunning_day1":
