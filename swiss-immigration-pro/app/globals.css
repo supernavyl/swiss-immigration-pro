@@ -153,7 +153,7 @@
   }
 
   body {
-    font-family: var(--font-jakarta), system-ui, sans-serif;
+    font-family: var(--font-inter), system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     /* Optimize text rendering */
