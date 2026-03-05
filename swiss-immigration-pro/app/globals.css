@@ -1025,6 +1025,80 @@ input:focus, select:focus, button:focus {
 }
 
 /* ========================================
+   Advanced Background Animations
+   ======================================== */
+
+/* Animated blobs for hero background */
+@keyframes blob-1 {
+  0%, 100% { transform: translate(0%, 0%) scale(1) rotate(0deg); }
+  20%  { transform: translate(6%, -10%) scale(1.12) rotate(8deg); }
+  40%  { transform: translate(12%, 4%) scale(0.92) rotate(-4deg); }
+  60%  { transform: translate(4%, 12%) scale(1.08) rotate(6deg); }
+  80%  { transform: translate(-4%, 2%) scale(0.96) rotate(-2deg); }
+}
+@keyframes blob-2 {
+  0%, 100% { transform: translate(0%, 0%) scale(1) rotate(0deg); }
+  25%  { transform: translate(-10%, 7%) scale(1.14) rotate(-15deg); }
+  50%  { transform: translate(8%, -9%) scale(0.86) rotate(10deg); }
+  75%  { transform: translate(4%, 8%) scale(1.1) rotate(-5deg); }
+}
+@keyframes blob-3 {
+  0%, 100% { transform: translate(0%, 0%) scale(1); }
+  33%  { transform: translate(-6%, 6%) scale(1.18); }
+  66%  { transform: translate(7%, -5%) scale(0.88); }
+}
+@keyframes blob-4 {
+  0%, 100% { transform: translate(0%, 0%) scale(1) rotate(0deg); }
+  30%  { transform: translate(5%, -5%) scale(0.95) rotate(12deg); }
+  70%  { transform: translate(-7%, 7%) scale(1.1) rotate(-8deg); }
+}
+
+/* Aurora gradient animation */
+@keyframes aurora-flow {
+  0%, 100% { background-position: 0% 50%; filter: hue-rotate(0deg); }
+  50%       { background-position: 100% 50%; filter: hue-rotate(25deg); }
+}
+
+/* Nav gradient shimmer */
+@keyframes nav-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+/* Glowing orb pulse */
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50%       { opacity: 0.7; transform: scale(1.08); }
+}
+
+/* Header gradient border animation */
+@keyframes gradient-border {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
+}
+
+/* Grid dot entrance animation */
+@keyframes dot-fade {
+  0%   { opacity: 0; transform: scale(0); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Particle float */
+@keyframes particle-float {
+  0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.4; }
+  100% { transform: translateY(-120px) translateX(40px) rotate(180deg); opacity: 0; }
+}
+
+/* Mesh gradient shift */
+@keyframes mesh-shift {
+  0%, 100% { background-position: 0% 0%; }
+  33%       { background-position: 100% 0%; }
+  66%       { background-position: 50% 100%; }
+}
+
+/* ========================================
    Dark Mode for Enhanced Module Content
    Inline-style colors are transformed into CSS custom properties
    by the rehype-inline-styles plugin. The --mod-* variables defined

@@ -33,6 +33,7 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = ["S101", "ARG001", "ARG002"]
 "app/routers/**/*.py" = ["ARG001"]
+"app/routers/marketing.py" = ["E501"]  # HTML email templates have unavoidably long inline styles
 
 [tool.ruff.lint.isort]
 known-first-party = ["app"]

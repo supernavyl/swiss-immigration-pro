@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import {
@@ -12,7 +13,7 @@ import {
   ArrowRight,
   ChevronDown,
   Crown,
-  Bot,
+  Sparkles,
 } from 'lucide-react'
 import { useSession, signOut } from '@/lib/auth-client'
 import { useT } from '@/lib/i18n/useTranslation'
@@ -36,7 +37,7 @@ interface AppUser {
   packId?: string | null
 }
 
-export default function MainHeader() {
+export default function MainHeader(): React.ReactElement | null {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -54,10 +55,10 @@ export default function MainHeader() {
 
   useEffect(() => {
     let ticking = false
-    const onScroll = () => {
+    const onScroll = (): void => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          setScrolled(window.scrollY > 8)
+          setScrolled(window.scrollY > 12)
           ticking = false
         })
         ticking = true
@@ -75,7 +76,7 @@ export default function MainHeader() {
   }, [isMobile, isMenuOpen])
 
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
+    const handler = (e: KeyboardEvent): void => {
       if (
         e.key === '?' &&
         !['INPUT', 'TEXTAREA', 'SELECT'].includes(
@@ -112,21 +113,24 @@ export default function MainHeader() {
     [t],
   )
 
-  const closeMenu = useCallback(() => {
+  const closeMenu = useCallback((): void => {
     setIsMenuOpen(false)
     haptic('light')
   }, [haptic])
-  const toggleMenu = useCallback(() => {
+
+  const toggleMenu = useCallback((): void => {
     setIsMenuOpen((prev) => {
       const next = !prev
       haptic(next ? 'medium' : 'light')
       return next
     })
   }, [haptic])
-  const handleSignOut = useCallback(async () => {
+
+  const handleSignOut = useCallback(async (): Promise<void> => {
     await signOut({ callbackUrl: '/' })
   }, [])
-  const isActive = (href: string) =>
+
+  const isActive = (href: string): boolean =>
     href === '/' ? pathname === '/' : pathname.startsWith(href)
 
   if (mounted && pathname?.startsWith('/auth')) return null
@@ -134,24 +138,58 @@ export default function MainHeader() {
   return (
     <header
       className={cn(
-        'sticky top-0 z-50 w-full transition-all duration-300',
+        'sticky top-0 z-50 w-full transition-all duration-500',
         scrolled
-          ? 'bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border-b border-slate-200/80 dark:border-slate-800/80'
-          : 'bg-white dark:bg-slate-950 border-b border-transparent',
+          ? 'bg-white/88 dark:bg-slate-950/88 backdrop-blur-2xl'
+          : 'bg-white dark:bg-slate-950',
       )}
     >
+      {/* Animated gradient bottom border */}
+      <div
+        className={cn(
+          'absolute bottom-0 left-0 right-0 h-px transition-opacity duration-500',
+          scrolled ? 'opacity-100' : 'opacity-40',
+        )}
+        style={{
+          background:
+            'linear-gradient(90deg, transparent 0%, rgba(59,130,246,0.5) 25%, rgba(139,92,246,0.6) 50%, rgba(59,130,246,0.5) 75%, transparent 100%)',
+          backgroundSize: '200% 100%',
+          animation: 'gradient-border 4s linear infinite',
+        }}
+      />
+
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-14">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 shrink-0 group">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-600">
-            <svg viewBox="0 0 16 16" className="w-3.5 h-3.5" fill="white">
-              <rect x="3" y="6.5" width="10" height="3" rx="0.5" />
-              <rect x="6.5" y="3" width="3" height="10" rx="0.5" />
-            </svg>
+        <Link
+          href="/"
+          className="flex items-center gap-2.5 shrink-0 group"
+          aria-label="Swiss Immigration Pro — Home"
+        >
+          <div className="relative h-8 w-8 shrink-0">
+            <Image
+              src="/images/logo-removebg.png"
+              alt="Swiss Immigration Pro logo"
+              fill
+              className="object-contain drop-shadow-sm group-hover:drop-shadow-md transition-all duration-300"
+              sizes="32px"
+              priority
+            />
           </div>
-          <span className="text-[15px] font-semibold tracking-tight text-slate-900 dark:text-white hidden sm:block">
-            Swiss Immigration Pro
-          </span>
+          <div className="hidden sm:block">
+            <span className="text-[15px] font-bold tracking-tight text-slate-900 dark:text-white leading-none">
+              Swiss{' '}
+              <span
+                className="bg-clip-text text-transparent"
+                style={{
+                  backgroundImage:
+                    'linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)',
+                }}
+              >
+                Immigration
+              </span>{' '}
+              Pro
+            </span>
+          </div>
         </Link>
 
         {/* Desktop nav */}
@@ -161,26 +199,41 @@ export default function MainHeader() {
               key={item.href}
               href={item.href}
               className={cn(
-                'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
+                'relative px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
                 isActive(item.href)
-                  ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/50'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-900',
+                  ? 'text-blue-600 dark:text-blue-400'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-900/60',
               )}
             >
               {item.label}
+              {/* Active underline */}
+              {isActive(item.href) && (
+                <span
+                  className="absolute left-2 right-2 -bottom-px h-0.5 rounded-full"
+                  style={{ background: 'linear-gradient(90deg, #2563eb, #7c3aed)' }}
+                />
+              )}
             </Link>
           ))}
           <ResourcesDropdown />
+
+          {/* SIP AI — iridescent gradient pill */}
           <Link
             href="/lawyer"
             className={cn(
-              'inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
+              'inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold rounded-lg transition-all',
               isActive('/lawyer')
-                ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/50'
-                : 'text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/50',
+                ? 'text-white shadow-md'
+                : 'text-white shadow-sm hover:shadow-md hover:scale-[1.02]',
             )}
+            style={{
+              background: isActive('/lawyer')
+                ? 'linear-gradient(135deg, #2563eb 0%, #7c3aed 60%, #c026d3 100%)'
+                : 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 60%, #d946ef 100%)',
+              boxShadow: '0 0 16px rgba(99,102,241,0.35)',
+            }}
           >
-            <Bot className="w-3.5 h-3.5" />
+            <Sparkles className="w-3.5 h-3.5" />
             SIP AI
           </Link>
         </div>
@@ -206,13 +259,18 @@ export default function MainHeader() {
 
           {/* Desktop auth */}
           {mounted && (
-            <div className="hidden lg:flex items-center gap-1">
+            <div className="hidden lg:flex items-center gap-1.5">
               {appUser ? (
                 <>
                   {appUser.packId === 'free' && (
                     <Link
                       href="/pricing"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white rounded-lg transition-all hover:scale-[1.02]"
+                      style={{
+                        background:
+                          'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)',
+                        boxShadow: '0 0 14px rgba(37,99,235,0.4)',
+                      }}
                     >
                       Upgrade
                     </Link>
@@ -239,12 +297,20 @@ export default function MainHeader() {
                             onClick={() => setProfileOpen(false)}
                           />
                           <motion.div
-                            initial={{ opacity: 0, y: -4, scale: 0.97 }}
+                            initial={{ opacity: 0, y: -6, scale: 0.96 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, y: -4, scale: 0.97 }}
-                            transition={{ duration: 0.15 }}
-                            className="absolute right-0 mt-2 w-52 z-50 bg-white dark:bg-slate-900 rounded-xl shadow-xl ring-1 ring-slate-200 dark:ring-slate-800 py-1.5"
+                            exit={{ opacity: 0, y: -6, scale: 0.96 }}
+                            transition={{ duration: 0.15, ease: 'easeOut' }}
+                            className="absolute right-0 mt-2 w-52 z-50 bg-white dark:bg-slate-900 rounded-xl shadow-2xl ring-1 ring-slate-200/60 dark:ring-slate-700/60 py-1.5 overflow-hidden"
                           >
+                            {/* Subtle gradient header inside dropdown */}
+                            <div
+                              className="absolute inset-x-0 top-0 h-0.5"
+                              style={{
+                                background:
+                                  'linear-gradient(90deg, #2563eb, #7c3aed, #c026d3)',
+                              }}
+                            />
                             <div className="px-3 py-2 border-b border-slate-100 dark:border-slate-800">
                               <span
                                 className={cn(
@@ -302,7 +368,12 @@ export default function MainHeader() {
                   </Link>
                   <Link
                     href="/consultation"
-                    className="inline-flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+                    className="inline-flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold text-white rounded-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
+                    style={{
+                      background:
+                        'linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #4f46e5 100%)',
+                      boxShadow: '0 0 18px rgba(37,99,235,0.45)',
+                    }}
                   >
                     Get started
                     <ArrowRight className="h-3.5 w-3.5" />

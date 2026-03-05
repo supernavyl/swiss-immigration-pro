@@ -101,34 +101,34 @@ async def send_exit_intent_email(email: str, discount_code: str) -> None:
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
         </head>
-        <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <div style="background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); color: white; padding: 40px 20px; text-align: center; border-radius: 10px 10px 0 0;">
+        <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">  # noqa: E501
+            <div style="background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); color: white; padding: 40px 20px; text-align: center; border-radius: 10px 10px 0 0;">  # noqa: E501
                 <h1 style="margin: 0; font-size: 28px;">Your Exclusive Discount is Here!</h1>
             </div>
 
-            <div style="background: #ffffff; padding: 40px 30px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 10px 10px;">
+            <div style="background: #ffffff; padding: 40px 30px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 10px 10px;">  # noqa: E501
                 <p style="font-size: 16px; margin-bottom: 20px;">
                     Hi there! 👋
                 </p>
 
                 <p style="font-size: 16px; margin-bottom: 20px;">
-                    Thanks for your interest in Swiss Immigration Pro. We're excited to help you on your journey to Switzerland!
+                    Thanks for your interest in Swiss Immigration Pro. We're excited to help you on your journey to Switzerland!  # noqa: E501
                 </p>
 
-                <div style="background: #fef2f2; border: 2px dashed #dc2626; border-radius: 8px; padding: 30px; text-align: center; margin: 30px 0;">
-                    <p style="margin: 0 0 10px 0; font-size: 14px; color: #666; text-transform: uppercase; letter-spacing: 1px;">Your Discount Code</p>
-                    <p style="font-size: 36px; font-weight: bold; color: #dc2626; margin: 0; letter-spacing: 2px;">{discount_code}</p>
+                <div style="background: #fef2f2; border: 2px dashed #dc2626; border-radius: 8px; padding: 30px; text-align: center; margin: 30px 0;">  # noqa: E501
+                    <p style="margin: 0 0 10px 0; font-size: 14px; color: #666; text-transform: uppercase; letter-spacing: 1px;">Your Discount Code</p>  # noqa: E501
+                    <p style="font-size: 36px; font-weight: bold; color: #dc2626; margin: 0; letter-spacing: 2px;">{discount_code}</p>  # noqa: E501
                     <p style="margin: 10px 0 0 0; font-size: 14px; color: #666;">Get 15% off your first 3 months</p>
                 </div>
 
                 <div style="text-align: center; margin: 30px 0;">
                     <a href="https://swissimmigrationpro.com/pricing?discount={discount_code}"
-                       style="display: inline-block; background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); color: white; padding: 16px 40px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
+                       style="display: inline-block; background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); color: white; padding: 16px 40px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">  # noqa: E501
                         Claim My Discount
                     </a>
                 </div>
 
-                <div style="background: #f9fafb; border-left: 4px solid #dc2626; padding: 20px; margin: 30px 0; border-radius: 4px;">
+                <div style="background: #f9fafb; border-left: 4px solid #dc2626; padding: 20px; margin: 30px 0; border-radius: 4px;">  # noqa: E501
                     <h3 style="margin: 0 0 15px 0; font-size: 18px; color: #dc2626;">What You'll Get:</h3>
                     <ul style="margin: 0; padding-left: 20px;">
                         <li style="margin-bottom: 10px;">✓ Unlimited AI chatbot assistance</li>
@@ -156,8 +156,8 @@ async def send_exit_intent_email(email: str, discount_code: str) -> None:
             <div style="text-align: center; padding: 20px; color: #666; font-size: 12px;">
                 <p style="margin: 5px 0;">Swiss Immigration Pro by Alpine Legal Partners</p>
                 <p style="margin: 5px 0;">
-                    <a href="https://swissimmigrationpro.com" style="color: #dc2626; text-decoration: none;">Visit our website</a> ·
-                    <a href="https://swissimmigrationpro.com/pricing" style="color: #dc2626; text-decoration: none;">View plans</a>
+                    <a href="https://swissimmigrationpro.com" style="color: #dc2626; text-decoration: none;">Visit our website</a> ·  # noqa: E501
+                    <a href="https://swissimmigrationpro.com/pricing" style="color: #dc2626; text-decoration: none;">View plans</a>  # noqa: E501
                 </p>
             </div>
         </body>
@@ -180,28 +180,28 @@ async def send_general_capture_email(email: str, source: str) -> None:
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
         </head>
-        <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <div style="background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); color: white; padding: 40px 20px; text-align: center; border-radius: 10px 10px 0 0;">
+        <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">  # noqa: E501
+            <div style="background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); color: white; padding: 40px 20px; text-align: center; border-radius: 10px 10px 0 0;">  # noqa: E501
                 <h1 style="margin: 0; font-size: 28px;">Welcome to Swiss Immigration Pro!</h1>
             </div>
 
-            <div style="background: #ffffff; padding: 40px 30px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 10px 10px;">
+            <div style="background: #ffffff; padding: 40px 30px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 10px 10px;">  # noqa: E501
                 <p style="font-size: 16px; margin-bottom: 20px;">
                     Hi there! 👋
                 </p>
 
                 <p style="font-size: 16px; margin-bottom: 20px;">
-                    Thanks for your interest in Swiss Immigration Pro. We're here to make your Swiss immigration journey as smooth as possible.
+                    Thanks for your interest in Swiss Immigration Pro. We're here to make your Swiss immigration journey as smooth as possible.  # noqa: E501
                 </p>
 
                 <div style="text-align: center; margin: 30px 0;">
                     <a href="https://swissimmigrationpro.com/auth/register"
-                       style="display: inline-block; background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); color: white; padding: 16px 40px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
+                       style="display: inline-block; background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); color: white; padding: 16px 40px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">  # noqa: E501
                         Get Started Free
                     </a>
                 </div>
 
-                <div style="background: #f9fafb; border-left: 4px solid #dc2626; padding: 20px; margin: 30px 0; border-radius: 4px;">
+                <div style="background: #f9fafb; border-left: 4px solid #dc2626; padding: 20px; margin: 30px 0; border-radius: 4px;">  # noqa: E501
                     <h3 style="margin: 0 0 15px 0; font-size: 18px; color: #dc2626;">What You Can Do:</h3>
                     <ul style="margin: 0; padding-left: 20px;">
                         <li style="margin-bottom: 10px;">✓ Take our free eligibility quiz</li>
@@ -224,7 +224,7 @@ async def send_general_capture_email(email: str, source: str) -> None:
             <div style="text-align: center; padding: 20px; color: #666; font-size: 12px;">
                 <p style="margin: 5px 0;">Swiss Immigration Pro by Alpine Legal Partners</p>
                 <p style="margin: 5px 0;">
-                    <a href="https://swissimmigrationpro.com" style="color: #dc2626; text-decoration: none;">Visit our website</a>
+                    <a href="https://swissimmigrationpro.com" style="color: #dc2626; text-decoration: none;">Visit our website</a>  # noqa: E501
                 </p>
             </div>
         </body>
