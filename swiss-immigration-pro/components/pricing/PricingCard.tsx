@@ -175,7 +175,7 @@ export default function PricingCard({ pack, idx, billingCycle, onCheckout }: Pri
         className={`w-full py-3 sm:py-4 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm transition-all shadow-lg touch-manipulation min-h-[44px] ${tier.btnClass}`}
         aria-label={`${pack.price === 0 ? 'Start with' : 'Get'} ${pack.name} plan`}
       >
-        {pack.price === 0 ? 'Start Free' : 'Start 7-Day Free Trial'}
+        {pack.price === 0 ? 'Start Free' : 'Get started'}
       </button>
       </div>
     </motion.article>
