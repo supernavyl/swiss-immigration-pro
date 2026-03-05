@@ -468,8 +468,8 @@ export default function ProductPage({
 
         <div className="grid md:grid-cols-2 gap-6">
           {/* Traditional */}
-          <div className="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800/30 rounded-2xl p-8">
-            <h3 className="text-xl font-bold text-red-700 dark:text-red-400 mb-6">
+          <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800/30 rounded-2xl p-8">
+            <h3 className="text-xl font-bold text-blue-700 dark:text-blue-400 mb-6">
               Traditional Consultant
             </h3>
             <ul className="space-y-4 text-slate-700 dark:text-gray-300">
@@ -482,7 +482,7 @@ export default function ProductPage({
                 "Weeks to schedule first meeting",
               ].map((item, i) => (
                 <li key={i} className="flex items-start gap-2.5">
-                  <X className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                  <X className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
                   <span>{item}</span>
                 </li>
               ))}

@@ -51,7 +51,7 @@ export default function UrgencyBar() {
         animate={{ opacity: 1, y: 0 }}
         className={`rounded-xl p-4 border ${
           urgencyLevel === "high"
-            ? "bg-red-50 dark:bg-red-900/10 border-red-200 dark:border-red-800/30"
+            ? "bg-blue-50 dark:bg-blue-900/10 border-blue-200 dark:border-blue-800/30"
             : "bg-amber-50 dark:bg-amber-900/10 border-amber-200 dark:border-amber-800/30"
         }`}
       >
@@ -59,7 +59,7 @@ export default function UrgencyBar() {
           <AlertTriangle
             className={`w-5 h-5 flex-shrink-0 mt-0.5 ${
               urgencyLevel === "high"
-                ? "text-red-500"
+                ? "text-blue-500"
                 : "text-amber-500"
             }`}
           />
@@ -67,7 +67,7 @@ export default function UrgencyBar() {
             <p
               className={`text-sm font-semibold ${
                 urgencyLevel === "high"
-                  ? "text-red-800 dark:text-red-300"
+                  ? "text-blue-800 dark:text-blue-300"
                   : "text-amber-800 dark:text-amber-300"
               }`}
             >
@@ -84,7 +84,7 @@ export default function UrgencyBar() {
                 transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
                 className={`h-full rounded-full ${
                   urgencyLevel === "high"
-                    ? "bg-red-500"
+                    ? "bg-blue-500"
                     : "bg-amber-500"
                 }`}
               />

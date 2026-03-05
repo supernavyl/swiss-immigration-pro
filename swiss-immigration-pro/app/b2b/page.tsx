@@ -279,7 +279,7 @@ export default function B2BLandingPage() {
                 key={item.stat}
                 className="bg-white rounded-2xl p-8 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-100 text-center"
               >
-                <div className="text-4xl font-extrabold text-red-600 mb-2">{item.stat}</div>
+                <div className="text-4xl font-extrabold text-blue-600 mb-2">{item.stat}</div>
                 <div className="text-base font-semibold text-slate-900 mb-2">{item.label}</div>
                 <div className="text-sm text-slate-500">{item.detail}</div>
               </div>
@@ -327,7 +327,7 @@ export default function B2BLandingPage() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-3xl sm:text-4xl font-bold mb-6">
-                The Cost of <em className="not-italic text-red-300">Not</em> Using SIP Corporate
+                The Cost of <em className="not-italic text-blue-300">Not</em> Using SIP Corporate
               </h2>
               <div className="space-y-6">
                 {[
@@ -366,7 +366,7 @@ export default function B2BLandingPage() {
                 </div>
                 <div className="flex justify-between items-center py-3 border-b border-white/10">
                   <span className="text-blue-100">SIP Corporate (Business plan)</span>
-                  <span className="font-bold text-red-300">- CHF 5,988</span>
+                  <span className="font-bold text-blue-300">- CHF 5,988</span>
                 </div>
               </div>
               <div className="bg-white/10 rounded-xl p-6 text-center">

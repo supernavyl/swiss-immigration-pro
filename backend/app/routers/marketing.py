@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, EmailStr
@@ -47,7 +47,7 @@ async def capture_email(
         if existing:
             # Update existing capture
             existing.capture_count += 1
-            existing.last_captured_at = datetime.now(timezone.utc)
+            existing.last_captured_at = datetime.now(UTC)
             if request.discount_code and not existing.discount_code:
                 existing.discount_code = request.discount_code
         else:
@@ -57,8 +57,8 @@ async def capture_email(
                 source=request.source,
                 discount_code=request.discount_code,
                 referrer=request.referrer,
-                captured_at=datetime.now(timezone.utc),
-                last_captured_at=datetime.now(timezone.utc),
+                captured_at=datetime.now(UTC),
+                last_captured_at=datetime.now(UTC),
                 capture_count=1,
                 converted=False,
             )
@@ -87,7 +87,7 @@ async def capture_email(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to capture email",
-        )
+        ) from e
 
 
 async def send_exit_intent_email(email: str, discount_code: str) -> None:
@@ -173,7 +173,7 @@ async def send_general_capture_email(email: str, source: str) -> None:
     """Send general welcome email for non-discount captures"""
     try:
         subject = "Welcome to Swiss Immigration Pro! 🇨🇭"
-        html_content = f"""
+        html_content = """
         <!DOCTYPE html>
         <html>
         <head>

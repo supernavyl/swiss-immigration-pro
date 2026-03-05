@@ -149,10 +149,7 @@ async def _process_dunning_emails():
                         continue
 
                     # Check if enough time has passed since subscription went past_due
-                    if sub.updated_at:
-                        days_past_due = (now - sub.updated_at).total_seconds() / 86400
-                    else:
-                        days_past_due = 0
+                    days_past_due = (now - sub.updated_at).total_seconds() / 86400 if sub.updated_at else 0
 
                     if days_past_due < delay_days:
                         continue

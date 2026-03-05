@@ -1207,7 +1207,7 @@ export default function ResourcesPage() {
                   case 'blue':
                     return 'from-blue-500 to-blue-600 border-blue-200 bg-blue-50'
                   case 'red':
-                    return 'from-red-500 to-red-600 border-red-200 bg-red-50'
+                    return 'from-blue-500 to-blue-600 border-blue-200 bg-blue-50'
                   case 'purple':
                     return 'from-purple-500 to-purple-600 border-purple-200 bg-purple-50'
                   case 'green':
@@ -1278,7 +1278,7 @@ export default function ResourcesPage() {
                               title={favoriteResources.has(magnet.id) ? 'Remove from favorites' : 'Add to favorites'}
                             >
                               <Heart 
-                                className={`w-4 h-4 ${favoriteResources.has(magnet.id) ? 'fill-red-500 text-red-500' : 'text-gray-400'}`} 
+                                className={`w-4 h-4 ${favoriteResources.has(magnet.id) ? 'fill-blue-500 text-blue-500' : 'text-gray-400'}`} 
                               />
                             </button>
                           </div>
@@ -1405,7 +1405,7 @@ export default function ResourcesPage() {
                               title={favoriteResources.has(resource.id) ? 'Remove from favorites' : 'Add to favorites'}
                             >
                               <Heart 
-                                className={`w-4 h-4 ${favoriteResources.has(resource.id) ? 'fill-red-500 text-red-500' : 'text-gray-400'}`} 
+                                className={`w-4 h-4 ${favoriteResources.has(resource.id) ? 'fill-blue-500 text-blue-500' : 'text-gray-400'}`} 
                               />
                             </button>
                           </div>
@@ -1488,7 +1488,7 @@ export default function ResourcesPage() {
                         title={favoriteResources.has(resource.id) ? 'Remove from favorites' : 'Add to favorites'}
                       >
                         <Heart 
-                          className={`w-4 h-4 ${favoriteResources.has(resource.id) ? 'fill-red-500 text-red-500' : 'text-gray-400'}`} 
+                          className={`w-4 h-4 ${favoriteResources.has(resource.id) ? 'fill-blue-500 text-blue-500' : 'text-gray-400'}`} 
                         />
                       </button>
                       <a
@@ -1580,7 +1580,7 @@ export default function ResourcesPage() {
                       title={favoriteResources.has(resource.id || resource.title) ? 'Remove from favorites' : 'Add to favorites'}
                     >
                       <Heart 
-                        className={`w-4 h-4 ${favoriteResources.has(resource.id || resource.title) ? 'fill-red-500 text-red-500' : 'text-gray-400'}`} 
+                        className={`w-4 h-4 ${favoriteResources.has(resource.id || resource.title) ? 'fill-blue-500 text-blue-500' : 'text-gray-400'}`} 
                       />
                     </button>
                     <Link

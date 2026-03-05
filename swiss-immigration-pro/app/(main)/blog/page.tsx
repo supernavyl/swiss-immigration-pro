@@ -58,7 +58,7 @@ const CATEGORY_STYLES: Record<string, CategoryStyle> = {
     dot: 'bg-rose-500',
     bg: 'bg-rose-50 dark:bg-rose-950/40',
     text: 'text-rose-700 dark:text-rose-300',
-    gradient: 'from-rose-500 to-pink-600',
+    gradient: 'from-rose-500 to-indigo-600',
     icon: Users,
     thumbnail: '/images/blog/family.jpg',
   },

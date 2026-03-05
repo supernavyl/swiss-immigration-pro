@@ -685,8 +685,8 @@ Keep your response concise but comprehensive (2-4 paragraphs max).`
                 transition={{ duration: 1, repeat: Infinity }}
                 className="flex items-center space-x-1.5 sm:space-x-2"
               >
-                <Mic className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-500 flex-shrink-0" />
-                <span className="text-xs text-red-600">Listening...</span>
+                <Mic className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-500 flex-shrink-0" />
+                <span className="text-xs text-blue-600">Listening...</span>
               </motion.div>
             )}
             {isSpeaking && (
@@ -724,7 +724,7 @@ Keep your response concise but comprehensive (2-4 paragraphs max).`
                 disabled={isLoading}
                 className={`absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 p-1.5 rounded-lg transition-colors touch-manipulation ${
                   isListening 
-                    ? 'bg-red-100 text-red-600 hover:bg-red-200' 
+                    ? 'bg-blue-100 text-blue-600 hover:bg-blue-200' 
                     : 'bg-blue-100 text-blue-600 hover:bg-blue-200'
                 }`}
                 title={isListening ? 'Stop listening' : 'Start voice input'}

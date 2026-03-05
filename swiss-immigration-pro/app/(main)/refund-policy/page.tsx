@@ -216,23 +216,23 @@ export default function RefundPolicyPage() {
         <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-6 border border-gray-100 dark:border-gray-700">
           <ul className="space-y-3">
             <li className="flex items-start gap-3">
-              <div className="w-2 h-2 bg-red-600 rounded-full mt-2 flex-shrink-0" />
+              <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0" />
               <span className="text-gray-700 dark:text-gray-200">Services accessed more than 20% or used extensively</span>
             </li>
             <li className="flex items-start gap-3">
-              <div className="w-2 h-2 bg-red-600 rounded-full mt-2 flex-shrink-0" />
+              <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0" />
               <span className="text-gray-700 dark:text-gray-200">Consultation services cancelled less than 48 hours before scheduled time</span>
             </li>
             <li className="flex items-start gap-3">
-              <div className="w-2 h-2 bg-red-600 rounded-full mt-2 flex-shrink-0" />
+              <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0" />
               <span className="text-gray-700 dark:text-gray-200">Downloaded materials (PDFs, templates) that have been accessed</span>
             </li>
             <li className="flex items-start gap-3">
-              <div className="w-2 h-2 bg-red-600 rounded-full mt-2 flex-shrink-0" />
+              <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0" />
               <span className="text-gray-700 dark:text-gray-200">Refund requests submitted more than 14 days after purchase</span>
             </li>
             <li className="flex items-start gap-3">
-              <div className="w-2 h-2 bg-red-600 rounded-full mt-2 flex-shrink-0" />
+              <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0" />
               <span className="text-gray-700 dark:text-gray-200">Services purchased during promotional periods (unless otherwise stated)</span>
             </li>
           </ul>

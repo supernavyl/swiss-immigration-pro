@@ -75,7 +75,7 @@ export default function ModuleMarkdown({ content, completedSections }: ModuleMar
           const isBlock = /language-/.test(className ?? '')
           if (!isBlock) {
             return (
-              <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-sm font-mono text-red-600" {...props}>
+              <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-sm font-mono text-blue-600" {...props}>
                 {children}
               </code>
             )

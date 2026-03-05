@@ -181,12 +181,12 @@ export default function QuizPage() {
             >
               <div className={`w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center ${
                 layer === 'europeans' ? 'bg-blue-100 dark:bg-blue-900/30' :
-                layer === 'americans' ? 'bg-red-100 dark:bg-red-900/30' :
+                layer === 'americans' ? 'bg-blue-100 dark:bg-blue-900/30' :
                 'bg-green-100 dark:bg-green-900/30'
               }`}>
                 <layerInfo.icon className={`w-10 h-10 ${
                   layer === 'europeans' ? 'text-blue-600' :
-                  layer === 'americans' ? 'text-red-600' : 'text-green-600'
+                  layer === 'americans' ? 'text-blue-600' : 'text-green-600'
                 }`} />
               </div>
               <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">

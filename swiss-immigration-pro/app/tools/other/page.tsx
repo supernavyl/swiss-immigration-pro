@@ -494,7 +494,7 @@ export default function OtherPage() {
 
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 leading-tight">
             Ready to Make Switzerland
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">
               Your New Home?
             </span>
           </h2>

@@ -132,16 +132,16 @@ export default function WorkPermitContent({ faqItems }: { faqItems: FAQItem[] })
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
               <MapPin className="w-4 h-4 text-white" />
             </div>
             <span className="text-lg font-bold text-slate-900">
-              Swiss Immigration <span className="text-red-600">Pro</span>
+              Swiss Immigration <span className="text-blue-600">Pro</span>
             </span>
           </Link>
           <Link
             href="/auth/register?redirect=/tools/permit-calculator"
-            className="text-sm font-semibold bg-red-600 text-white px-5 py-2.5 rounded-lg hover:bg-red-700 transition-colors"
+            className="text-sm font-semibold bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-colors"
           >
             Start Free
           </Link>
@@ -149,7 +149,7 @@ export default function WorkPermitContent({ faqItems }: { faqItems: FAQItem[] })
       </nav>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-red-950 to-slate-900 text-white pt-20">
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white pt-20">
         <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-5" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-24 pb-24 sm:pb-32">
@@ -160,18 +160,18 @@ export default function WorkPermitContent({ faqItems }: { faqItems: FAQItem[] })
               transition={{ duration: 0.6 }}
             >
               <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-medium border border-white/10 mb-6">
-                <Briefcase className="w-3.5 h-3.5 text-red-400" />
+                <Briefcase className="w-3.5 h-3.5 text-blue-400" />
                 AI-Powered Work Permit Guidance
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.1] mb-6 tracking-tight">
                 Get Your Swiss Work Permit{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-300">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-sky-300">
                   Step by Step
                 </span>
               </h1>
 
-              <p className="text-lg sm:text-xl text-red-100/80 font-light leading-relaxed mb-8 max-w-2xl">
+              <p className="text-lg sm:text-xl text-blue-100/80 font-light leading-relaxed mb-8 max-w-2xl">
                 57% of first-time applicants get rejected. Our AI-powered platform guides you through
                 every requirement, document, and deadline — so you get approved the first time.
               </p>
@@ -205,7 +205,7 @@ export default function WorkPermitContent({ faqItems }: { faqItems: FAQItem[] })
                   className="bg-white/5 backdrop-blur-md rounded-xl p-4 border border-white/10"
                 >
                   <div className="text-2xl font-bold">{stat.value}</div>
-                  <div className="text-xs text-red-200/60 mt-1">{stat.label}</div>
+                  <div className="text-xs text-blue-200/60 mt-1">{stat.label}</div>
                 </div>
               ))}
             </motion.div>
@@ -242,10 +242,10 @@ export default function WorkPermitContent({ faqItems }: { faqItems: FAQItem[] })
                 transition={{ delay: i * 0.1 }}
                 className="bg-white rounded-2xl p-8 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-100 text-center"
               >
-                <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <point.icon className="w-6 h-6 text-red-600" />
+                <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <point.icon className="w-6 h-6 text-blue-600" />
                 </div>
-                <div className="text-3xl font-extrabold text-red-600 mb-2">{point.stat}</div>
+                <div className="text-3xl font-extrabold text-blue-600 mb-2">{point.stat}</div>
                 <div className="text-base font-semibold text-slate-900 mb-2">{point.title}</div>
                 <div className="text-sm text-slate-500">{point.description}</div>
               </motion.div>
@@ -264,7 +264,7 @@ export default function WorkPermitContent({ faqItems }: { faqItems: FAQItem[] })
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <div className="inline-flex items-center gap-2 bg-red-50 text-red-700 px-4 py-1.5 rounded-full text-xs font-semibold mb-4 border border-red-100">
+            <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-1.5 rounded-full text-xs font-semibold mb-4 border border-blue-100">
               <ArrowRight className="w-3.5 h-3.5" />
               Simple 3-Step Process
             </div>
@@ -283,7 +283,7 @@ export default function WorkPermitContent({ faqItems }: { faqItems: FAQItem[] })
                 transition={{ delay: i * 0.15 }}
                 className="text-center"
               >
-                <div className="w-16 h-16 bg-gradient-to-br from-red-600 to-red-700 rounded-2xl flex items-center justify-center mx-auto mb-6 text-white text-2xl font-extrabold shadow-lg shadow-red-500/20">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl flex items-center justify-center mx-auto mb-6 text-white text-2xl font-extrabold shadow-lg shadow-blue-500/20">
                   {step.number}
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-3">{step.title}</h3>
@@ -295,7 +295,7 @@ export default function WorkPermitContent({ faqItems }: { faqItems: FAQItem[] })
           <div className="text-center mt-12">
             <Link
               href="/quiz"
-              className="inline-flex items-center gap-2 bg-red-600 text-white font-semibold px-8 py-3.5 rounded-lg hover:bg-red-700 transition-colors shadow-lg shadow-red-500/20"
+              className="inline-flex items-center gap-2 bg-blue-600 text-white font-semibold px-8 py-3.5 rounded-lg hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/20"
             >
               Take the Free Quiz
               <ArrowRight className="w-4 h-4" />
@@ -332,8 +332,8 @@ export default function WorkPermitContent({ faqItems }: { faqItems: FAQItem[] })
                 transition={{ delay: i * 0.08 }}
                 className="bg-white rounded-2xl p-8 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.1)] border border-slate-100 transition-all duration-300 hover:-translate-y-1"
               >
-                <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center mb-5">
-                  <feature.icon className="w-6 h-6 text-red-600" />
+                <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mb-5">
+                  <feature.icon className="w-6 h-6 text-blue-600" />
                 </div>
                 <h3 className="text-lg font-bold text-slate-900 mb-2">{feature.title}</h3>
                 <p className="text-sm text-slate-600 leading-relaxed">{feature.description}</p>
@@ -366,9 +366,9 @@ export default function WorkPermitContent({ faqItems }: { faqItems: FAQItem[] })
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="bg-white rounded-2xl p-8 shadow-xl border border-slate-200 hover:border-red-300 transition-all hover:-translate-y-1"
+              className="bg-white rounded-2xl p-8 shadow-xl border border-slate-200 hover:border-blue-300 transition-all hover:-translate-y-1"
             >
-              <div className="text-xs font-bold text-red-600 bg-red-50 px-3 py-1 rounded-full w-fit mb-4">
+              <div className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full w-fit mb-4">
                 {immigrationPack.badge}
               </div>
               <h3 className="text-xl font-bold text-slate-900 mb-1">{immigrationPack.name}</h3>
@@ -398,12 +398,12 @@ export default function WorkPermitContent({ faqItems }: { faqItems: FAQItem[] })
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="relative bg-white rounded-2xl p-8 shadow-xl ring-2 ring-red-500 border border-red-500 transition-all hover:-translate-y-1 scale-[1.02]"
+              className="relative bg-white rounded-2xl p-8 shadow-xl ring-2 ring-blue-500 border border-blue-500 transition-all hover:-translate-y-1 scale-[1.02]"
             >
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-red-600 to-orange-600 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">
                 BEST VALUE
               </div>
-              <div className="text-xs font-bold text-red-600 bg-red-50 px-3 py-1 rounded-full w-fit mb-4">
+              <div className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full w-fit mb-4">
                 {advancedPack.badge}
               </div>
               <h3 className="text-xl font-bold text-slate-900 mb-1">{advancedPack.name}</h3>
@@ -414,14 +414,14 @@ export default function WorkPermitContent({ faqItems }: { faqItems: FAQItem[] })
               <ul className="space-y-3 mb-8">
                 {advancedPack.features.slice(0, 6).map((f) => (
                   <li key={f} className="flex items-start gap-2.5 text-sm text-slate-700">
-                    <CheckCircle className="w-4 h-4 shrink-0 mt-0.5 text-red-600" />
+                    <CheckCircle className="w-4 h-4 shrink-0 mt-0.5 text-blue-600" />
                     {f}
                   </li>
                 ))}
               </ul>
               <Link
                 href="/auth/register?redirect=/tools/permit-calculator"
-                className="block w-full py-3.5 rounded-xl font-bold text-sm text-center bg-gradient-to-r from-red-600 to-orange-600 text-white hover:shadow-lg hover:shadow-red-500/30 transition-all"
+                className="block w-full py-3.5 rounded-xl font-bold text-sm text-center bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:shadow-lg hover:shadow-blue-500/30 transition-all"
               >
                 Start Free Trial
               </Link>
@@ -515,18 +515,18 @@ export default function WorkPermitContent({ faqItems }: { faqItems: FAQItem[] })
       </section>
 
       {/* Final CTA */}
-      <section className="py-20 sm:py-24 bg-gradient-to-br from-slate-900 via-red-950 to-slate-900 text-white">
+      <section className="py-20 sm:py-24 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <Briefcase className="w-12 h-12 mx-auto mb-6 text-red-400" />
+            <Briefcase className="w-12 h-12 mx-auto mb-6 text-blue-400" />
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
               Start Your Swiss Journey Today
             </h2>
-            <p className="text-lg text-red-100/80 font-light mb-8 max-w-2xl mx-auto">
+            <p className="text-lg text-blue-100/80 font-light mb-8 max-w-2xl mx-auto">
               Navigate Swiss immigration with {SITE_STATS.modules} expert modules across all {SITE_STATS.cantons} cantons.
               Free tier available — no credit card required.
             </p>
@@ -545,7 +545,7 @@ export default function WorkPermitContent({ faqItems }: { faqItems: FAQItem[] })
                 Compare Plans
               </Link>
             </div>
-            <p className="text-xs text-red-300/50 mt-6">
+            <p className="text-xs text-blue-300/50 mt-6">
               Free forever tier. No credit card required. Upgrade anytime.
             </p>
           </motion.div>

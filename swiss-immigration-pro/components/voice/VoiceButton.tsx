@@ -40,7 +40,7 @@ export function VoiceButton({
         isActive
           ? isSpeaking
             ? "bg-blue-500/10 text-blue-500 dark:bg-blue-500/20"
-            : "bg-red-500/10 text-red-500 dark:bg-red-500/20 animate-pulse"
+            : "bg-blue-500/10 text-blue-500 dark:bg-blue-500/20 animate-pulse"
           : "text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800",
         disabled && "opacity-50 cursor-not-allowed",
       )}
@@ -60,7 +60,7 @@ export function VoiceButton({
         </>
       )}
       {isActive && !compact && (
-        <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-ping" />
+        <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-blue-500 rounded-full animate-ping" />
       )}
     </button>
   );

@@ -65,7 +65,7 @@ export default function MobileDrawer({
         <div className="sticky top-0 z-10 flex items-center justify-between bg-white/95 dark:bg-gray-950/95 backdrop-blur-2xl px-5 py-4 border-b border-gray-100 dark:border-gray-900">
           <div className="flex items-baseline gap-0 leading-none">
             <span className="text-sm font-semibold tracking-tight text-gray-900 dark:text-white">Swiss</span>
-            <span className="text-sm font-semibold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500">
+            <span className="text-sm font-semibold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-500">
               Immigration
             </span>
             <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 ml-0.5 self-end mb-0.5">
@@ -125,7 +125,7 @@ export default function MobileDrawer({
             <Link
               href="/consultation"
               onClick={onClose}
-              className="flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 px-4 py-3 text-sm font-semibold text-white transition-all shadow-sm shadow-red-600/25 touch-manipulation"
+              className="flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 px-4 py-3 text-sm font-semibold text-white transition-all shadow-sm shadow-blue-600/25 touch-manipulation"
               style={{ WebkitTapHighlightColor: 'transparent' }}
             >
               {t('nav.consultation')}

@@ -190,8 +190,8 @@ export default function ExitIntentPopup({
               {/* Icon */}
               <div className="flex justify-center mb-4">
                 <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-red-600 rounded-full blur-xl opacity-50 animate-pulse" />
-                  <div className="relative bg-gradient-to-r from-red-500 to-red-600 rounded-full p-4">
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full blur-xl opacity-50 animate-pulse" />
+                  <div className="relative bg-gradient-to-r from-blue-500 to-blue-600 rounded-full p-4">
                     <Gift className="w-8 h-8 text-white" />
                   </div>
                 </div>
@@ -204,7 +204,7 @@ export default function ExitIntentPopup({
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400">
                   Get{" "}
-                  <span className="font-bold text-red-600">
+                  <span className="font-bold text-blue-600">
                     {discountPercent}% off
                   </span>{" "}
                   your first 3 months
@@ -212,14 +212,14 @@ export default function ExitIntentPopup({
               </div>
 
               {/* Discount code display */}
-              <div className="bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 rounded-lg p-4 mb-6 text-center">
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg p-4 mb-6 text-center">
                 <div className="flex items-center justify-center gap-2 mb-2">
-                  <Sparkles className="w-5 h-5 text-red-600" />
+                  <Sparkles className="w-5 h-5 text-blue-600" />
                   <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                     Your Exclusive Code:
                   </span>
                 </div>
-                <div className="text-3xl font-bold text-red-600 dark:text-red-400 tracking-wider">
+                <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 tracking-wider">
                   {discountCode}
                 </div>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
@@ -239,7 +239,7 @@ export default function ExitIntentPopup({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email to save this offer"
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                     required
                     disabled={isSubmitting}
                   />
@@ -248,7 +248,7 @@ export default function ExitIntentPopup({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {isSubmitting ? (
                     <>

@@ -106,7 +106,7 @@ const AI_SUGGESTIONS = [
     description: 'Find out which permits you qualify for based on your background.',
     action: 'Check Eligibility',
     link: '/tools',
-    gradient: 'from-orange-600 to-red-700',
+    gradient: 'from-orange-600 to-blue-700',
   },
 ]
 

@@ -417,5 +417,5 @@ def schedule_drip_sequence(user_id: str, email: str) -> None:
     try:
         from app.tasks.email import process_email_queue  # type: ignore[import]
         process_email_queue.delay()
-    except Exception:
+    except Exception:  # noqa: S110
         pass  # Celery unavailable in tests / dev — beat will handle it

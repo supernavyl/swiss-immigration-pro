@@ -32,7 +32,7 @@ const SECTIONS = [
   {
     icon: Shield,
     title: 'Swiss Data Residency',
-    color: 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/30',
+    color: 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/30',
     body: 'Your data is stored exclusively in Swiss and European data centres. We do not transfer personal data to jurisdictions with inadequate data protection standards without explicit consent.',
   },
   {

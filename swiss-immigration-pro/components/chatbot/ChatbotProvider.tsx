@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, useCallback, lazy, Suspense, ReactNode } from 'react'
+import { createContext, useContext, useState, useCallback, useEffect, lazy, Suspense, ReactNode } from 'react'
 
 const ChatbotRight = lazy(() => import('./ChatbotRight'))
 
@@ -26,9 +26,24 @@ export function ChatbotProvider({ children }: { children: ReactNode }) {
   const openChatbot = useCallback(() => setIsOpen(true), [])
   const closeChatbot = useCallback(() => setIsOpen(false), [])
 
+  // Register global opener for dashboard buttons etc.
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      ;(window as unknown as Record<string, unknown>).__openChatbot = openChatbot
+      return () => {
+        delete (window as unknown as Record<string, unknown>).__openChatbot
+      }
+    }
+  }, [openChatbot])
+
   return (
     <ChatbotContext.Provider value={{ openChatbot, closeChatbot, isOpen }}>
-      {children}
+      <div
+        className="transition-[margin] duration-300 ease-out"
+        style={{ marginRight: isOpen ? '420px' : '0' }}
+      >
+        {children}
+      </div>
       <Suspense fallback={null}>
         <ChatbotRight isOpen={isOpen} onClose={closeChatbot} />
       </Suspense>

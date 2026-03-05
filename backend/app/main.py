@@ -199,7 +199,7 @@ async def health_check():
         async with engine.connect() as conn:
             await conn.execute(text("SELECT 1"))
         checks["database"] = "ok"
-    except Exception as e:
+    except Exception:
         checks["database"] = "error"
     # Redis check (when available)
     try:

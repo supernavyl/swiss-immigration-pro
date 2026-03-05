@@ -146,7 +146,7 @@ export default function ChatbotRight({ isOpen, onClose }: ChatbotRightProps) {
             <div>
               <div className="flex items-center gap-1.5">
                 <h2 className="font-semibold text-sm text-gray-900 dark:text-white">SIP-AI</h2>
-                <span className="w-1.5 h-1.5 rounded-full bg-red-600" />
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
               </div>
               <p className="text-xs text-gray-500 dark:text-gray-400">Swiss Immigration Expert</p>
             </div>

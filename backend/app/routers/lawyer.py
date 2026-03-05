@@ -20,7 +20,6 @@ from sqlalchemy import delete, desc, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import get_settings
-from app.redis_pool import get_redis
 from app.database import get_db
 from app.middleware.auth import CurrentUser, get_current_user, get_optional_user
 from app.models.lawyer import (
@@ -30,6 +29,7 @@ from app.models.lawyer import (
     LawyerMessage,
 )
 from app.models.user import UserLimit
+from app.redis_pool import get_redis
 from app.schemas import CamelModel
 from app.services import lawyer_service
 from app.services.document_processor import extract_text, validate_file
@@ -65,7 +65,7 @@ async def _check_anon_lawyer_limit(request: Request) -> None:
         raise HTTPException(
             status_code=503,
             detail="Service temporarily unavailable. Please try again later.",
-        )
+        ) from None
 
     if count > limit:
         raise HTTPException(

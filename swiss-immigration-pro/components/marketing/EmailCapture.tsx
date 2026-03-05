@@ -85,7 +85,7 @@ export default function EmailCapture() {
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center justify-center mt-4 text-red-200"
+                  className="flex items-center justify-center mt-4 text-blue-200"
                 >
                   <AlertCircle className="w-5 h-5 mr-2" />
                   Something went wrong. Please try again.

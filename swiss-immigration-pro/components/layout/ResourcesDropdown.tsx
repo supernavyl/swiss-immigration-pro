@@ -57,8 +57,8 @@ export default function ResourcesDropdown() {
                   onClick={() => setOpen(false)}
                   className="flex items-start gap-3 px-3 py-2.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors group/item"
                 >
-                  <div className="flex h-7 w-7 items-center justify-center rounded-md bg-gray-100 dark:bg-gray-800 shrink-0 mt-0.5 group-hover/item:bg-red-50 dark:group-hover/item:bg-red-950/30 transition-colors">
-                    <link.icon className="h-3.5 w-3.5 text-gray-500 dark:text-gray-400 group-hover/item:text-red-600 transition-colors" />
+                  <div className="flex h-7 w-7 items-center justify-center rounded-md bg-gray-100 dark:bg-gray-800 shrink-0 mt-0.5 group-hover/item:bg-blue-50 dark:group-hover/item:bg-blue-950/30 transition-colors">
+                    <link.icon className="h-3.5 w-3.5 text-gray-500 dark:text-gray-400 group-hover/item:text-blue-600 transition-colors" />
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-900 dark:text-white leading-none mb-0.5">{link.label}</p>

@@ -427,7 +427,7 @@ placeholder="Max CHF"
                 <span>Updated daily</span>
               </div>
               <div className="flex items-center gap-2">
-                <Heart className="w-4 h-4 text-red-600" />
+                <Heart className="w-4 h-4 text-blue-600" />
                 <span>Save favorites</span>
               </div>
             </motion.div>
@@ -511,11 +511,11 @@ placeholder="Max CHF"
                     onClick={() => setShowSavedOnly(!showSavedOnly)}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                       showSavedOnly
-                        ? 'bg-red-100 dark:bg-red-900/30 text-red-700 border-2 border-red-300 dark:border-gray-600'
+                        ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 border-2 border-blue-300 dark:border-gray-600'
                         : 'bg-white dark:bg-gray-800 text-slate-600 dark:text-gray-400 border-2 border-slate-200 dark:border-gray-700 hover:border-slate-300 dark:hover:border-gray-600'
                     }`}
                   >
-                    <Heart className={`w-4 h-4 ${showSavedOnly ? 'fill-red-600' : ''}`} />
+                    <Heart className={`w-4 h-4 ${showSavedOnly ? 'fill-blue-600' : ''}`} />
                     Saved ({savedProperties.size})
                   </button>
 
@@ -768,12 +768,12 @@ function PropertyCard({ property, viewMode, isSaved, onToggleSave, delay }: Prop
                 onClick={onToggleSave}
                 className={`p-3 rounded-xl transition-all ${
                   isSaved
-                    ? 'bg-red-100 dark:bg-red-900/30 text-red-600 hover:bg-red-200'
+                    ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 hover:bg-blue-200'
                     : 'bg-slate-100 dark:bg-gray-700 text-slate-600 dark:text-gray-300 hover:bg-slate-200 dark:hover:bg-gray-600'
                 }`}
                 title={isSaved ? 'Remove from saved' : 'Save property'}
               >
-                <Heart className={`w-5 h-5 ${isSaved ? 'fill-red-600' : ''}`} />
+                <Heart className={`w-5 h-5 ${isSaved ? 'fill-blue-600' : ''}`} />
               </button>
               
               <div className="relative">
@@ -848,7 +848,7 @@ function PropertyCard({ property, viewMode, isSaved, onToggleSave, delay }: Prop
             onClick={onToggleSave}
             className={`p-2.5 rounded-full backdrop-blur-md transition-all shadow-lg ${
               isSaved
-                ? 'bg-red-500 text-white'
+                ? 'bg-blue-500 text-white'
                 : 'bg-white/90 text-slate-700 hover:bg-white'
             }`}
             title={isSaved ? 'Remove from saved' : 'Save property'}

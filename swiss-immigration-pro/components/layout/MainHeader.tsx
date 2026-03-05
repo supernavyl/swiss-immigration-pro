@@ -12,12 +12,14 @@ import {
   ArrowRight,
   ChevronDown,
   Crown,
+  Bot,
 } from 'lucide-react'
 import { useSession, signOut } from '@/lib/auth-client'
 import { useT } from '@/lib/i18n/useTranslation'
 import { AnimatePresence, motion } from 'framer-motion'
 import AdvancedSearch from '@/components/ui/AdvancedSearch'
 import LanguageSwitcher from '@/components/layout/LanguageSwitcher'
+import { useChatbot } from '@/components/chatbot/ChatbotProvider'
 import DarkModeToggle from '@/components/ui/DarkModeToggle'
 import ResourcesDropdown from '@/components/layout/ResourcesDropdown'
 import MobileDrawer from '@/components/layout/MobileDrawer'
@@ -46,6 +48,7 @@ export default function MainHeader() {
   const { haptic } = useHaptic()
   const isMobile = useIsMobile()
   const { data: session, status } = useSession()
+  const { openChatbot } = useChatbot()
 
   useEffect(() => {
     setMounted(true)
@@ -170,6 +173,13 @@ export default function MainHeader() {
             </Link>
           ))}
           <ResourcesDropdown />
+          <button
+            onClick={openChatbot}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-blue-600 dark:text-blue-400 rounded-md hover:bg-blue-50 dark:hover:bg-blue-950/50 transition-colors"
+          >
+            <Bot className="w-3.5 h-3.5" />
+            SIP AI
+          </button>
         </div>
 
         {/* Right side */}

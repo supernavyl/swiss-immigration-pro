@@ -335,7 +335,7 @@ async def handle_payment_failed(invoice: dict, db: AsyncSession):
         from app.tasks.email import process_dunning_emails
 
         process_dunning_emails.delay()
-    except Exception:
+    except Exception:  # noqa: S110
         pass  # Celery unavailable — daily beat will catch it
 
     logger.info("Payment failed handled: subscription=%s", sub_id)

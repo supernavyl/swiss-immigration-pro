@@ -180,7 +180,7 @@ export function VoiceModeOverlay({
             <button
               onClick={onEndCall}
               className={cn(
-                "flex items-center gap-2 px-5 py-2.5 rounded-full bg-red-500 hover:bg-red-600 text-white transition-colors",
+                "flex items-center gap-2 px-5 py-2.5 rounded-full bg-blue-500 hover:bg-blue-600 text-white transition-colors",
                 compact && "px-4 py-2 text-sm",
               )}
             >

@@ -187,35 +187,35 @@ export default function DisclaimerPage() {
         <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
           <ul className="space-y-4">
             <li className="flex items-start gap-3">
-              <div className="w-2 h-2 bg-red-600 rounded-full mt-2 flex-shrink-0" />
+              <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0" />
               <div>
                 <strong className="text-gray-900">Any decisions made based on information from this platform</strong>
                 <span className="text-gray-700 ml-2">including visa applications, permit choices, or immigration strategies</span>
               </div>
             </li>
             <li className="flex items-start gap-3">
-              <div className="w-2 h-2 bg-red-600 rounded-full mt-2 flex-shrink-0" />
+              <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0" />
               <div>
                 <strong className="text-gray-900">Any immigration application outcomes</strong>
                 <span className="text-gray-700 ml-2">including denials, delays, or rejections</span>
               </div>
             </li>
             <li className="flex items-start gap-3">
-              <div className="w-2 h-2 bg-red-600 rounded-full mt-2 flex-shrink-0" />
+              <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0" />
               <div>
                 <strong className="text-gray-900">Financial losses</strong>
                 <span className="text-gray-700 ml-2">including application fees, relocation costs, or lost opportunities</span>
               </div>
             </li>
             <li className="flex items-start gap-3">
-              <div className="w-2 h-2 bg-red-600 rounded-full mt-2 flex-shrink-0" />
+              <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0" />
               <div>
                 <strong className="text-gray-900">Errors or omissions in content</strong>
                 <span className="text-gray-700 ml-2">including outdated information or technical inaccuracies</span>
               </div>
             </li>
             <li className="flex items-start gap-3">
-              <div className="w-2 h-2 bg-red-600 rounded-full mt-2 flex-shrink-0" />
+              <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0" />
               <div>
                 <strong className="text-gray-900">Technical issues</strong>
                 <span className="text-gray-700 ml-2">including platform downtime, data loss, or service interruptions</span>
