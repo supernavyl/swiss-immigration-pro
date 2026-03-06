@@ -8,7 +8,7 @@ import CTASection from '@/components/home/CTASection'
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950 font-sans selection:bg-blue-100 selection:text-blue-900 dark:selection:bg-blue-900 dark:selection:text-blue-100">
+    <div className="min-h-screen bg-[#06060a] font-sans selection:bg-indigo-500/30 selection:text-white">
       <HeroSection />
       <FeaturesGrid />
       <PathwayGrid />

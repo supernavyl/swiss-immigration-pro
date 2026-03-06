@@ -1182,3 +1182,9 @@ input:focus, select:focus, button:focus {
 .dark .typing-cursor--streaming {
   box-shadow: 0 0 6px rgba(96, 165, 250, 0.4);
 }
+
+/* ── Homepage marquee ── */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}

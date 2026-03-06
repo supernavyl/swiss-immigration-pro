@@ -17,7 +17,7 @@ const TESTIMONIALS = [
     role: 'Product Manager · USA → Geneva',
     photo: '/images/testimonials/michael-rodriguez.jpg',
     quote:
-      'The AI answered questions my employer\'s HR couldn\'t. Step-by-step breakdown of the whole process in plain English.',
+      "The AI answered questions my employer's HR couldn't. Step-by-step breakdown of the whole process in plain English.",
     result: 'Work permit · Geneva',
   },
   {
@@ -25,8 +25,8 @@ const TESTIMONIALS = [
     role: 'Financial Analyst · France → Basel',
     photo: '/images/testimonials/marie-dubois.jpg',
     quote:
-      'Coming from France I thought it would be simple. It\'s not. SIP walked me through every requirement — cantonal quotas included.',
-    result: 'G permit → B permit · Basel',
+      "Coming from France I thought it would be simple. It's not. SIP walked me through every requirement — cantonal quotas included.",
+    result: 'G → B permit · Basel',
   },
   {
     name: 'Ahmed Hassan',
@@ -54,7 +54,7 @@ const TESTIMONIALS = [
   },
 ]
 
-function Stars() {
+function Stars(): React.ReactElement {
   return (
     <div className="flex gap-0.5">
       {Array.from({ length: 5 }).map((_, i) => (
@@ -64,51 +64,51 @@ function Stars() {
   )
 }
 
-export default function TestimonialsSection() {
+export default function TestimonialsSection(): React.ReactElement {
   return (
-    <section className="sip-section bg-white dark:bg-slate-950">
-      <div className="sip-container">
-        <div className="text-center mb-12">
-          <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 tracking-widest uppercase mb-3">
+    <section className="py-24 bg-[#08080d]">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="text-center mb-14">
+          <p className="text-xs font-semibold text-indigo-400 tracking-widest uppercase mb-3">
             User stories
           </p>
-          <h2 className="text-fluid-2xl font-bold text-slate-900 dark:text-white mb-3">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">
             From first question to permit in hand
           </h2>
-          <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto">
+          <p className="text-slate-500 max-w-xl mx-auto">
             People navigating Swiss immigration with SIP — from different countries, different cantons, different permit types.
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {TESTIMONIALS.map((t) => (
             <article
               key={t.name}
-              className="bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 flex flex-col gap-4"
+              className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 flex flex-col gap-4 hover:border-white/[0.10] transition-colors"
             >
               <Stars />
-              <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed flex-1">
+              <p className="text-slate-400 text-sm leading-relaxed flex-1">
                 &ldquo;{t.quote}&rdquo;
               </p>
-              <div className="flex items-center gap-3 pt-2 border-t border-slate-200 dark:border-slate-800">
-                <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 bg-slate-200 dark:bg-slate-800">
+              <div className="flex items-center gap-3 pt-4 border-t border-white/[0.06]">
+                <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 border border-white/[0.08]">
                   <Image
                     src={t.photo}
                     alt={t.name}
-                    width={40}
-                    height={40}
+                    width={36}
+                    height={36}
                     className="object-cover w-full h-full"
                   />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                  <p className="text-sm font-semibold text-white truncate">
                     {t.name}
                   </p>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                  <p className="text-[11px] text-slate-500 truncate">
                     {t.role}
                   </p>
                 </div>
-                <span className="ml-auto shrink-0 text-[10px] font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/50 px-2 py-1 rounded-full whitespace-nowrap">
+                <span className="ml-auto shrink-0 text-[10px] font-semibold text-indigo-400 border border-indigo-400/20 bg-indigo-400/[0.06] px-2 py-1 rounded-full whitespace-nowrap">
                   {t.result}
                 </span>
               </div>

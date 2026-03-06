@@ -31,50 +31,53 @@ const PATHWAYS = [
   },
 ]
 
-export default function PathwayGrid() {
+export default function PathwayGrid(): React.ReactElement {
   const { t } = useT()
 
   return (
-    <section className="sip-section bg-white dark:bg-slate-950">
-      <div className="sip-container">
+    <section className="py-24 bg-[#08080d]">
+      <div className="max-w-6xl mx-auto px-6">
         <div className="flex justify-between items-end mb-10">
           <div className="max-w-xl">
-            <h2 className="text-fluid-2xl font-bold text-slate-900 dark:text-white mb-2">
+            <p className="text-xs font-semibold text-indigo-400 tracking-widest uppercase mb-3">
+              Pathways
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-2">
               {t('home.choosePathway')}
             </h2>
-            <p className="text-slate-500 dark:text-slate-400">
+            <p className="text-slate-500">
               Tailored to your nationality and situation.
             </p>
           </div>
           <Link
             href="/visas"
-            className="hidden md:flex items-center gap-1.5 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+            className="hidden md:flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-white transition-colors"
           >
             View all <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-px bg-slate-200 dark:bg-slate-800 rounded-2xl overflow-hidden">
+        <div className="grid md:grid-cols-3 gap-4">
           {PATHWAYS.map((p) => (
             <Link key={p.link} href={p.link} className="group">
-              <div className="bg-white dark:bg-slate-950 p-7 h-full flex flex-col hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-xs font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+              <div className="h-full rounded-2xl border border-white/[0.06] bg-white/[0.02] p-7 flex flex-col hover:border-white/[0.12] hover:bg-white/[0.04] transition-all">
+                <div className="flex items-center justify-between mb-5">
+                  <span className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">
                     {p.type}
                   </span>
-                  <span className="text-xs font-medium text-slate-500 dark:text-slate-400 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800">
+                  <span className="text-[11px] font-semibold text-indigo-400 px-2.5 py-1 rounded-full border border-indigo-400/20 bg-indigo-400/[0.06]">
                     {p.badge}
                   </span>
                 </div>
 
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+                <h3 className="text-lg font-bold text-white mb-2">
                   {p.name}
                 </h3>
-                <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-6 flex-1">
+                <p className="text-sm text-slate-500 leading-relaxed mb-6 flex-1">
                   {p.desc}
                 </p>
 
-                <div className="flex items-center text-sm font-medium text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                <div className="flex items-center text-sm font-medium text-slate-400 group-hover:text-white transition-colors">
                   {p.cta}
                   <ChevronRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-0.5" />
                 </div>

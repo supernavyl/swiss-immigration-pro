@@ -51,30 +51,35 @@ const FEATURES: Feature[] = [
   },
 ]
 
-export default function FeaturesGrid() {
+export default function FeaturesGrid(): React.ReactElement {
   return (
-    <section className="sip-section bg-slate-50/50 dark:bg-slate-900/30">
-      <div className="sip-container">
-        <div className="max-w-2xl mb-12">
-          <h2 className="text-fluid-2xl font-bold text-slate-900 dark:text-white mb-3">
+    <section className="py-24 bg-[#06060a]">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="max-w-2xl mb-14">
+          <p className="text-xs font-semibold text-indigo-400 tracking-widest uppercase mb-3">
+            Platform
+          </p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">
             Everything you need to succeed
           </h2>
-          <p className="text-slate-500 dark:text-slate-400 leading-relaxed">
+          <p className="text-slate-500 leading-relaxed">
             Comprehensive tools, templates, and expert guidance — all in one platform.
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-slate-200 dark:bg-slate-800 rounded-2xl overflow-hidden">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-white/[0.06] rounded-2xl overflow-hidden">
           {FEATURES.map((item) => (
             <div
               key={item.title}
-              className="bg-white dark:bg-slate-950 p-6 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
+              className="bg-[#06060a] p-6 hover:bg-white/[0.02] transition-colors"
             >
-              <item.icon className="w-5 h-5 text-slate-400 dark:text-slate-500 mb-4" />
-              <h3 className="font-semibold text-slate-900 dark:text-white text-sm mb-1.5">
+              <div className="w-9 h-9 rounded-lg bg-white/[0.05] border border-white/[0.06] flex items-center justify-center mb-4">
+                <item.icon className="w-4 h-4 text-slate-400" />
+              </div>
+              <h3 className="font-semibold text-white text-sm mb-1.5">
                 {item.title}
               </h3>
-              <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+              <p className="text-slate-500 text-sm leading-relaxed">
                 {item.desc}
               </p>
             </div>
