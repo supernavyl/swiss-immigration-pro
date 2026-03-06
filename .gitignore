@@ -224,3 +224,4 @@ generate_*.py
 # Testimonial images and video assets (use CDN)
 swiss-immigration-pro/public/images/testimonials/
 swiss-immigration-pro/public/images/videos/
+.vercel

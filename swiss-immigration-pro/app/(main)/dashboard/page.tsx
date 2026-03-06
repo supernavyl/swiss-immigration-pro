@@ -16,6 +16,7 @@ import ResourcesTab from '@/components/dashboard/ResourcesTab'
 import ProgressTab from '@/components/dashboard/ProgressTab'
 import PackStatusWidget from '@/components/dashboard/PackStatusWidget'
 import ReferralEarningsWidget from '@/components/dashboard/ReferralEarningsWidget'
+import SmartBriefingWidget from '@/components/dashboard/SmartBriefingWidget'
 
 const LAST_MODULE_KEY = 'sip_last_module'
 
@@ -124,7 +125,7 @@ export default function Dashboard() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
           <div className="flex items-start justify-between">
             <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-              Welcome back, {user.name ?? 'User'}!
+              Dashboard
             </h1>
             <div className="flex items-center gap-2">
               <Link
@@ -148,16 +149,11 @@ export default function Dashboard() {
               <Crown className="w-4 h-4 mr-1" />
               {user.packId.toUpperCase()} PACK
             </span>
-            {isFree && (
-              <a
-                href="/pricing"
-                className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-lg hover:from-blue-700 hover:to-blue-900 transition-all text-sm"
-              >
-                Upgrade to Unlock All Content &rarr;
-              </a>
-            )}
           </div>
         </motion.div>
+
+        {/* Smart Briefing */}
+        <SmartBriefingWidget user={user} progress={progress} />
 
         {/* Status widgets */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">

@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 import { Calendar, Clock, ChevronRight, ArrowRight, Tag } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { BlogContentWrapper } from '@/components/blog/BlogContentWrapper'
 import { generateMetadata as generateMeta, generateFAQSchema, generateArticleSchema, generateBreadcrumbSchema, formatLastUpdated } from '@/lib/seo/meta-helpers'
 
 // Blog posts data - in production, this would come from a CMS or markdown files
@@ -2811,24 +2812,26 @@ export default async function BlogPostPage({
           </header>
 
           {/* Content */}
-          <div className="prose prose-lg prose-slate dark:prose-invert max-w-none
-            prose-headings:tracking-tight prose-headings:font-bold
-            prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4 prose-h2:border-b prose-h2:border-slate-200 prose-h2:dark:border-slate-800 prose-h2:pb-3
-            prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
-            prose-p:leading-relaxed
-            prose-a:text-blue-600 prose-a:dark:text-blue-400 prose-a:no-underline prose-a:font-medium hover:prose-a:underline
-            prose-strong:text-slate-900 prose-strong:dark:text-white
-            prose-blockquote:border-blue-500 prose-blockquote:bg-blue-50/50 prose-blockquote:dark:bg-blue-950/20 prose-blockquote:rounded-r-lg prose-blockquote:py-1
-            prose-table:text-sm
-            prose-th:bg-slate-100 prose-th:dark:bg-slate-800 prose-th:px-4 prose-th:py-2
-            prose-td:px-4 prose-td:py-2
-            prose-li:marker:text-slate-400 prose-li:dark:marker:text-slate-500
-            prose-code:text-blue-600 prose-code:dark:text-blue-400 prose-code:bg-blue-50 prose-code:dark:bg-blue-950/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:font-normal prose-code:before:content-none prose-code:after:content-none
-          ">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {post.content}
-            </ReactMarkdown>
-          </div>
+          <BlogContentWrapper>
+            <div className="prose prose-lg prose-slate dark:prose-invert max-w-none
+              prose-headings:tracking-tight prose-headings:font-bold
+              prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4 prose-h2:border-b prose-h2:border-slate-200 prose-h2:dark:border-slate-800 prose-h2:pb-3
+              prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
+              prose-p:leading-relaxed
+              prose-a:text-blue-600 prose-a:dark:text-blue-400 prose-a:no-underline prose-a:font-medium hover:prose-a:underline
+              prose-strong:text-slate-900 prose-strong:dark:text-white
+              prose-blockquote:border-blue-500 prose-blockquote:bg-blue-50/50 prose-blockquote:dark:bg-blue-950/20 prose-blockquote:rounded-r-lg prose-blockquote:py-1
+              prose-table:text-sm
+              prose-th:bg-slate-100 prose-th:dark:bg-slate-800 prose-th:px-4 prose-th:py-2
+              prose-td:px-4 prose-td:py-2
+              prose-li:marker:text-slate-400 prose-li:dark:marker:text-slate-500
+              prose-code:text-blue-600 prose-code:dark:text-blue-400 prose-code:bg-blue-50 prose-code:dark:bg-blue-950/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:font-normal prose-code:before:content-none prose-code:after:content-none
+            ">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {post.content}
+              </ReactMarkdown>
+            </div>
+          </BlogContentWrapper>
 
           {/* FAQ Section */}
           {post.faqs && post.faqs.length > 0 && (

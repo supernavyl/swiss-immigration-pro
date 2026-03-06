@@ -18,6 +18,7 @@ import remarkGfm from 'remark-gfm'
 import Link from 'next/link'
 import { PRESELECTION_CATEGORIES, QUICK_QUESTIONS, PreselectionOption } from './ChatbotPreselection'
 import { useChatStream } from '@/lib/useChatStream'
+import { useChatbot } from './ChatbotProvider'
 import { PageCard } from '@/components/ui/PageCard'
 import TypingMarkdown from './TypingMarkdown'
 import { cn } from '@/lib/utils/cn'
@@ -46,6 +47,8 @@ export default function ChatbotRight({ isOpen, onClose }: ChatbotRightProps) {
     limitReached,
   } = useChatStream({ storageKey: 'sip-chat-right' })
 
+  const { initialMessage, setInitialMessage } = useChatbot()
+
   const [input, setInput] = useState('')
   const [showPreselection, setShowPreselection] = useState(true)
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null)
@@ -59,9 +62,19 @@ export default function ChatbotRight({ isOpen, onClose }: ChatbotRightProps) {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  // Reset preselection when opening
+  // Handle initial message from context (e.g. from blog context menu)
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && initialMessage) {
+      setInput(initialMessage)
+      setInitialMessage('') // Clear it so it doesn't persist
+      setShowPreselection(false)
+      setTimeout(() => inputRef.current?.focus(), 300)
+    }
+  }, [isOpen, initialMessage, setInitialMessage])
+
+  // Reset preselection when opening (only if no initial message)
+  useEffect(() => {
+    if (isOpen && !initialMessage) {
       if (messages.length <= 1) {
         setShowPreselection(true)
         setExpandedCategory(null)

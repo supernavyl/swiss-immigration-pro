@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import ClientErrorBoundary from "@/components/ui/ClientErrorBoundary";
 
@@ -32,6 +32,14 @@ import ClientErrorBoundary from "@/components/ui/ClientErrorBoundary";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap",
+  preload: true,
+});
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-jakarta",
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
   preload: true,
 });
@@ -187,7 +195,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} antialiased bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 touch-pan-y`}
+        className={`${inter.variable} ${plusJakarta.variable} antialiased bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 touch-pan-y`}
         suppressHydrationWarning
       >
         {/* Skip to main content for accessibility */}

@@ -23,7 +23,7 @@ export default function InitialQuizModal({ isOpen, onClose, onComplete }: Initia
   const [currentStep, setCurrentStep] = useState(1)
   const [answers, setAnswers] = useState<Partial<QuizAnswers>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const countries = COUNTRIES_LIST // Use memoized list
+  const countries = COUNTRIES_LIST
   const scrollRef = useRef<HTMLDivElement>(null)
 
   // Reset on open
@@ -91,7 +91,6 @@ export default function InitialQuizModal({ isOpen, onClose, onComplete }: Initia
       email: answers.email,
     }
 
-    // Save to localStorage & cookies for persistence
     localStorage.setItem('quizAnswers', JSON.stringify(completeAnswers))
     localStorage.setItem('userLayer', layer)
     localStorage.setItem('quizCompleted', 'true')
@@ -103,7 +102,6 @@ export default function InitialQuizModal({ isOpen, onClose, onComplete }: Initia
       document.cookie = `countryOfOrigin=${completeAnswers.countryOfOrigin}; path=/; max-age=${oneYear}`
     }
 
-    // Capture email lead and save quiz answers
     if (completeAnswers.email) {
       const savePromises = [
         fetch('/api/newsletter/subscribe', {
@@ -130,7 +128,6 @@ export default function InitialQuizModal({ isOpen, onClose, onComplete }: Initia
 
     onComplete(completeAnswers, layer)
 
-    // Redirect to personalized results page
     setTimeout(() => {
       router.push('/quiz/results')
       setIsSubmitting(false)
@@ -162,416 +159,450 @@ export default function InitialQuizModal({ isOpen, onClose, onComplete }: Initia
 
   const progressPercent = Math.round((currentStep / TOTAL_STEPS) * 100)
 
+  const inputClass = 'w-full px-4 py-3.5 rounded-xl bg-slate-800/60 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/60 focus:ring-1 focus:ring-cyan-500/40 transition-all text-sm'
+
+  const optionClass = (selected: boolean) =>
+    `flex items-center gap-3 p-4 rounded-xl border cursor-pointer transition-all duration-150 ${
+      selected
+        ? 'border-cyan-400 bg-cyan-400/10 shadow-[0_0_16px_rgba(6,182,212,0.25)]'
+        : 'border-white/10 bg-white/[0.03] hover:border-cyan-400/50 hover:bg-cyan-400/[0.06]'
+    }`
+
+  const iconClass = 'w-5 h-5 text-cyan-400 flex-shrink-0'
+
   return (
     <AnimatePresence>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+        className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4"
         onClick={onClose}
       >
+        {/* Ambient glow */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/8 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-violet-500/8 rounded-full blur-3xl" />
+        </div>
+
         <motion.div
           ref={scrollRef}
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          initial={{ opacity: 0, scale: 0.95, y: 24 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto flex flex-col"
+          exit={{ opacity: 0, scale: 0.95, y: 24 }}
+          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          className="relative bg-slate-950 border border-cyan-500/15 rounded-3xl shadow-[0_0_80px_rgba(6,182,212,0.12)] w-full max-w-2xl max-h-[90vh] overflow-y-auto flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="px-6 py-6 border-b border-gray-200 flex items-start justify-between gap-6 sticky top-0 bg-white z-10">
-            <div className="space-y-2">
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
-                Personalized Swiss Assessment
+          {/* Dot grid ambient */}
+          <div
+            className="absolute inset-0 rounded-3xl pointer-events-none opacity-[0.04]"
+            style={{
+              backgroundImage: 'radial-gradient(circle, #06b6d4 1px, transparent 1px)',
+              backgroundSize: '24px 24px',
+            }}
+          />
+
+          {/* Header */}
+          <div className="relative px-6 py-5 border-b border-white/[0.06] flex items-start justify-between gap-4 sticky top-0 bg-slate-950/95 backdrop-blur-sm z-10 rounded-t-3xl">
+            <div className="space-y-1">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                Personalized Assessment
               </span>
-              <div>
-                <h2 className="text-3xl font-bold text-gray-900">
-                  Build Your Swiss Immigration Pathway
-                </h2>
-                <p className="text-sm text-gray-600 mt-1">
-                  {progressPercent}% complete • Step {currentStep} of {TOTAL_STEPS}
-                </p>
-              </div>
+              <h2 className="text-xl font-bold text-white">
+                Build Your Swiss Pathway
+              </h2>
             </div>
             <button
               onClick={onClose}
-              className="p-2 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100"
+              className="p-1.5 text-slate-500 hover:text-slate-300 transition-colors rounded-lg hover:bg-white/5 flex-shrink-0"
             >
-              <X className="w-6 h-6" />
+              <X className="w-5 h-5" />
             </button>
           </div>
 
-          <main className="flex-1 px-4 sm:px-6 lg:px-8 py-10">
-            <div className="w-full space-y-8">
-              <div>
-                <div className="flex justify-between text-sm text-gray-600 mb-3">
-                  <span>Step {currentStep} of {TOTAL_STEPS}</span>
-                  <span>{progressPercent}% complete</span>
+          <main className="relative flex-1 px-6 py-6">
+            <div className="space-y-6">
+
+              {/* Step dots + progress */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-center gap-2">
+                  {Array.from({ length: TOTAL_STEPS }, (_, i) => {
+                    const step = i + 1
+                    const isActive = step === currentStep
+                    const isPast = step < currentStep
+                    return (
+                      <div
+                        key={step}
+                        className={`rounded-full transition-all duration-300 ${
+                          isActive
+                            ? 'w-6 h-2 bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]'
+                            : isPast
+                            ? 'w-2 h-2 bg-slate-400'
+                            : 'w-2 h-2 bg-slate-700'
+                        }`}
+                      />
+                    )
+                  })}
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                <div className="flex justify-between text-[11px] text-slate-500 px-0.5">
+                  <span>Step {currentStep} of {TOTAL_STEPS}</span>
+                  <span>{progressPercent}%</span>
+                </div>
+                <div className="w-full bg-slate-800/80 rounded-full h-1.5 overflow-hidden">
                   <motion.div
                     key={currentStep}
                     initial={{ width: 0 }}
                     animate={{ width: `${progressPercent}%` }}
-                    transition={{ duration: 0.4 }}
-                    className="bg-blue-600 h-2"
+                    transition={{ duration: 0.4, ease: 'easeOut' }}
+                    className="h-1.5 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 shadow-[0_0_8px_rgba(6,182,212,0.6)]"
                   />
                 </div>
               </div>
 
-              <div className="bg-white border border-gray-200 rounded-2xl shadow-lg p-6 sm:p-8">
+              {/* Step card */}
+              <div className="bg-white/[0.025] border border-white/[0.07] rounded-2xl p-5 sm:p-6">
                 <AnimatePresence mode="wait">
-                {/* Step 1: Country of Origin */}
-                {currentStep === 1 && (
-                  <motion.div
-                    key="step1"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    className="space-y-4"
-                  >
-                    <div className="flex items-center space-x-3 mb-6">
-                      <Globe className="w-8 h-8 text-blue-600" />
-                      <div>
-                        <h3 className="text-2xl font-semibold text-gray-900">
-                          Where are you from?
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          This helps us personalize your immigration pathway
-                        </p>
-                      </div>
-                    </div>
-                    <select
-                      value={answers.countryOfOrigin || ''}
-                      onChange={(e) => setAnswers({ ...answers, countryOfOrigin: e.target.value })}
-                      className="w-full px-4 py-4 border-2 border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:text-white text-lg"
+
+                  {/* Step 1: Country of Origin */}
+                  {currentStep === 1 && (
+                    <motion.div
+                      key="step1"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.2 }}
+                      className="space-y-4"
                     >
-                      <option value="">Select your country...</option>
-                      {countries.map((country) => (
-                        <option key={country.code} value={country.code}>
-                          {country.name}
-                        </option>
-                      ))}
-                    </select>
-                    {answers.countryOfOrigin && (
-                      <div className="mt-4 p-5 bg-blue-50 rounded-xl">
-                        <p className="text-sm text-blue-900 leading-relaxed">
-                          💡 Based on your selection, you&apos;ll be categorized into one of three personalized pathways:
-                          <br />
-                          <strong>EU/EFTA:</strong> Freedom of movement benefits
-                          <br />
-                          <strong>Americans:</strong> US/Canada specific guidance
-                          <br />
-                          <strong>Others:</strong> Third-country comprehensive support
-                        </p>
-                      </div>
-                    )}
-                  </motion.div>
-                )}
-
-                {/* Step 2: Immigration Reason */}
-                {currentStep === 2 && (
-                  <motion.div
-                    key="step2"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    className="space-y-4"
-                  >
-                    <div className="flex items-center space-x-3 mb-6">
-                      <Briefcase className="w-8 h-8 text-blue-600" />
-                      <div>
-                        <h3 className="text-2xl font-semibold text-gray-900">
-                          Why do you want to immigrate to Switzerland?
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          Select all that apply (you can choose multiple)
-                        </p>
-                      </div>
-                    </div>
-                    {['Work', 'Study', 'Family', 'Investment', 'Other'].map((reason) => (
-                      <label
-                        key={reason}
-                        className="flex items-center space-x-3 p-5 border-2 border-gray-300 dark:border-gray-700 rounded-xl cursor-pointer hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={answers.immigrationReason?.includes(reason) || false}
-                          onChange={(e) => {
-                            const current = answers.immigrationReason || []
-                            if (e.target.checked) {
-                              setAnswers({ ...answers, immigrationReason: [...current, reason] })
-                            } else {
-                              setAnswers({ ...answers, immigrationReason: current.filter((r) => r !== reason) })
-                            }
-                          }}
-                          className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"
-                        />
-                        <span className="text-lg text-gray-900">{reason}</span>
-                      </label>
-                    ))}
-                  </motion.div>
-                )}
-
-                {/* Step 3: Nationality */}
-                {currentStep === 3 && (
-                  <motion.div
-                    key="step3"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    className="space-y-4"
-                  >
-                    <div className="flex items-center space-x-3 mb-6">
-                      <User className="w-8 h-8 text-blue-600" />
-                      <div>
-                        <h3 className="text-2xl font-semibold text-gray-900">
-                          Your nationality?
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          (Optional - if different from country of origin)
-                        </p>
-                      </div>
-                    </div>
-                    <select
-                      value={answers.nationality || answers.countryOfOrigin || ''}
-                      onChange={(e) => setAnswers({ ...answers, nationality: e.target.value })}
-                      className="w-full px-4 py-4 border-2 border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:text-white text-lg"
-                    >
-                      <option value="">Same as country of origin</option>
-                      {countries.map((country) => (
-                        <option key={country.code} value={country.code}>
-                          {country.name}
-                        </option>
-                      ))}
-                    </select>
-                  </motion.div>
-                )}
-
-                {/* Step 4: Age Range */}
-                {currentStep === 4 && (
-                  <motion.div
-                    key="step4"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    className="space-y-4"
-                  >
-                    <div className="flex items-center space-x-3 mb-6">
-                      <Calendar className="w-8 h-8 text-blue-600" />
-                      <div>
-                        <h3 className="text-2xl font-semibold text-gray-900">
-                          Age range?
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          (Optional - helps us tailor opportunities)
-                        </p>
-                      </div>
-                    </div>
-                    {(['18-25', '26-40', '41+'] as const).map((age) => (
-                      <label
-                        key={age}
-                        className="flex items-center space-x-3 p-5 border-2 border-gray-300 dark:border-gray-700 rounded-xl cursor-pointer hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors"
-                      >
-                        <input
-                          type="radio"
-                          name="ageRange"
-                          value={age}
-                          checked={answers.ageRange === age}
-                          onChange={() => setAnswers({ ...answers, ageRange: age })}
-                          className="w-5 h-5 text-blue-600 focus:ring-blue-500"
-                        />
-                        <span className="text-lg text-gray-900">{age} years</span>
-                      </label>
-                    ))}
-                  </motion.div>
-                )}
-
-                {/* Step 5: Job Offer */}
-                {currentStep === 5 && (
-                  <motion.div
-                    key="step5"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    className="space-y-4"
-                  >
-                    <div className="flex items-center space-x-3 mb-6">
-                      <Briefcase className="w-8 h-8 text-blue-600" />
-                      <div>
-                        <h3 className="text-2xl font-semibold text-gray-900">
-                          Do you have a job offer or sponsor?
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          This significantly impacts your pathway options
-                        </p>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {[true, false].map((value) => (
-                        <label
-                          key={String(value)}
-                          className={`flex items-center justify-center space-x-3 p-6 border-2 rounded-xl cursor-pointer transition-all ${
-                            answers.hasJobOffer === value
-                              ? 'border-blue-600 bg-blue-50 shadow-md'
-                              : 'border-gray-300 hover:border-blue-500'
-                          }`}
-                        >
-                          <input
-                            type="radio"
-                            name="hasJobOffer"
-                            checked={answers.hasJobOffer === value}
-                            onChange={() => setAnswers({ ...answers, hasJobOffer: value })}
-                            className="sr-only"
-                          />
-                          <span className="text-2xl font-semibold text-gray-900">
-                            {value ? 'Yes' : 'No'}
-                          </span>
-                        </label>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-
-                {/* Step 6: Language Skills */}
-                {currentStep === 6 && (
-                  <motion.div
-                    key="step6"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    className="space-y-6"
-                  >
-                    <div className="flex items-center space-x-3 mb-6">
-                      <Languages className="w-8 h-8 text-blue-600" />
-                      <div>
-                        <h3 className="text-2xl font-semibold text-gray-900">
-                          Language skills?
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          (Optional - select your proficiency levels)
-                        </p>
-                      </div>
-                    </div>
-                    {['en', 'de', 'fr', 'it'].map((lang) => {
-                      const langNames = { en: 'English', de: 'German', fr: 'French', it: 'Italian' }
-                      const levels: Array<'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2'> = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
-                      return (
-                        <div key={lang} className="space-y-2">
-                          <label className="text-sm font-medium text-gray-700">
-                            {langNames[lang as keyof typeof langNames]}
-                          </label>
-                          <select
-                            value={answers.languageSkills?.[lang as keyof typeof answers.languageSkills] || ''}
-                            onChange={(e) => {
-                              const skills = answers.languageSkills || {}
-                              setAnswers({
-                                ...answers,
-                                languageSkills: {
-                                  ...skills,
-                                  [lang]: e.target.value || undefined,
-                                },
-                              })
-                            }}
-                            className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
-                          >
-                            <option value="">No proficiency</option>
-                            {levels.map((level) => (
-                              <option key={level} value={level}>
-                                {level}
-                              </option>
-                            ))}
-                          </select>
+                      <div className="flex items-center gap-3 mb-5">
+                        <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
+                          <Globe className={iconClass} />
                         </div>
-                      )
-                    })}
-                  </motion.div>
-                )}
+                        <div>
+                          <h3 className="text-lg font-semibold text-white">Where are you from?</h3>
+                          <p className="text-xs text-slate-400">Personalizes your immigration pathway</p>
+                        </div>
+                      </div>
+                      <select
+                        value={answers.countryOfOrigin || ''}
+                        onChange={(e) => setAnswers({ ...answers, countryOfOrigin: e.target.value })}
+                        className={inputClass}
+                      >
+                        <option value="" className="bg-slate-900">Select your country…</option>
+                        {countries.map((country) => (
+                          <option key={country.code} value={country.code} className="bg-slate-900">
+                            {country.name}
+                          </option>
+                        ))}
+                      </select>
+                      {answers.countryOfOrigin && (
+                        <div className="mt-3 p-4 bg-cyan-500/5 border border-cyan-500/15 rounded-xl">
+                          <p className="text-xs text-cyan-300 leading-relaxed">
+                            💡 You&apos;ll be placed in one of three personalized pathways:
+                            EU/EFTA · Americas · Third-country
+                          </p>
+                        </div>
+                      )}
+                    </motion.div>
+                  )}
 
-                {/* Step 7: Email (required for personalized plan) */}
-                {currentStep === 7 && (
-                  <motion.div
-                    key="step7"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    className="space-y-4"
-                  >
-                    <div className="flex items-center space-x-3 mb-6">
-                      <Mail className="w-8 h-8 text-blue-600" />
-                      <div>
-                        <h3 className="text-2xl font-semibold text-gray-900">
-                          Get your free personalized immigration plan
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          Enter your email to receive your custom pathway and recommendations
+                  {/* Step 2: Immigration Reason */}
+                  {currentStep === 2 && (
+                    <motion.div
+                      key="step2"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.2 }}
+                      className="space-y-3"
+                    >
+                      <div className="flex items-center gap-3 mb-5">
+                        <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
+                          <Briefcase className={iconClass} />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-white">Why immigrate to Switzerland?</h3>
+                          <p className="text-xs text-slate-400">Select all that apply</p>
+                        </div>
+                      </div>
+                      {['Work', 'Study', 'Family', 'Investment', 'Other'].map((reason) => {
+                        const selected = answers.immigrationReason?.includes(reason) || false
+                        return (
+                          <label key={reason} className={optionClass(selected)}>
+                            <input
+                              type="checkbox"
+                              checked={selected}
+                              onChange={(e) => {
+                                const current = answers.immigrationReason || []
+                                setAnswers({
+                                  ...answers,
+                                  immigrationReason: e.target.checked
+                                    ? [...current, reason]
+                                    : current.filter((r) => r !== reason),
+                                })
+                              }}
+                              className="sr-only"
+                            />
+                            <div className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 transition-all ${selected ? 'bg-cyan-500 border-cyan-500' : 'border-white/20'}`}>
+                              {selected && <span className="text-white text-[10px] font-bold">✓</span>}
+                            </div>
+                            <span className="text-sm text-slate-200">{reason}</span>
+                          </label>
+                        )
+                      })}
+                    </motion.div>
+                  )}
+
+                  {/* Step 3: Nationality */}
+                  {currentStep === 3 && (
+                    <motion.div
+                      key="step3"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.2 }}
+                      className="space-y-4"
+                    >
+                      <div className="flex items-center gap-3 mb-5">
+                        <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
+                          <User className={iconClass} />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-white">Your nationality?</h3>
+                          <p className="text-xs text-slate-400">Optional — if different from country of origin</p>
+                        </div>
+                      </div>
+                      <select
+                        value={answers.nationality || answers.countryOfOrigin || ''}
+                        onChange={(e) => setAnswers({ ...answers, nationality: e.target.value })}
+                        className={inputClass}
+                      >
+                        <option value="" className="bg-slate-900">Same as country of origin</option>
+                        {countries.map((country) => (
+                          <option key={country.code} value={country.code} className="bg-slate-900">
+                            {country.name}
+                          </option>
+                        ))}
+                      </select>
+                    </motion.div>
+                  )}
+
+                  {/* Step 4: Age Range */}
+                  {currentStep === 4 && (
+                    <motion.div
+                      key="step4"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.2 }}
+                      className="space-y-3"
+                    >
+                      <div className="flex items-center gap-3 mb-5">
+                        <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
+                          <Calendar className={iconClass} />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-white">Age range?</h3>
+                          <p className="text-xs text-slate-400">Optional — tailors opportunities to you</p>
+                        </div>
+                      </div>
+                      {(['18-25', '26-40', '41+'] as const).map((age) => {
+                        const selected = answers.ageRange === age
+                        return (
+                          <label key={age} className={optionClass(selected)}>
+                            <input
+                              type="radio"
+                              name="ageRange"
+                              value={age}
+                              checked={selected}
+                              onChange={() => setAnswers({ ...answers, ageRange: age })}
+                              className="sr-only"
+                            />
+                            <div className={`w-4 h-4 rounded-full border flex items-center justify-center flex-shrink-0 transition-all ${selected ? 'border-cyan-400' : 'border-white/20'}`}>
+                              {selected && <div className="w-2 h-2 rounded-full bg-cyan-400" />}
+                            </div>
+                            <span className="text-sm text-slate-200">{age} years</span>
+                          </label>
+                        )
+                      })}
+                    </motion.div>
+                  )}
+
+                  {/* Step 5: Job Offer */}
+                  {currentStep === 5 && (
+                    <motion.div
+                      key="step5"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.2 }}
+                      className="space-y-4"
+                    >
+                      <div className="flex items-center gap-3 mb-5">
+                        <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
+                          <Briefcase className={iconClass} />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-white">Do you have a job offer?</h3>
+                          <p className="text-xs text-slate-400">Significantly impacts your pathway options</p>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        {[true, false].map((value) => {
+                          const selected = answers.hasJobOffer === value
+                          return (
+                            <label key={String(value)} className={`${optionClass(selected)} justify-center py-6`}>
+                              <input
+                                type="radio"
+                                name="hasJobOffer"
+                                checked={selected}
+                                onChange={() => setAnswers({ ...answers, hasJobOffer: value })}
+                                className="sr-only"
+                              />
+                              <span className={`text-xl font-bold transition-colors ${selected ? 'text-cyan-400' : 'text-slate-300'}`}>
+                                {value ? 'Yes' : 'No'}
+                              </span>
+                            </label>
+                          )
+                        })}
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {/* Step 6: Language Skills */}
+                  {currentStep === 6 && (
+                    <motion.div
+                      key="step6"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.2 }}
+                      className="space-y-4"
+                    >
+                      <div className="flex items-center gap-3 mb-5">
+                        <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
+                          <Languages className={iconClass} />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-white">Language skills?</h3>
+                          <p className="text-xs text-slate-400">Optional — select your proficiency</p>
+                        </div>
+                      </div>
+                      {['en', 'de', 'fr', 'it'].map((lang) => {
+                        const langNames = { en: 'English', de: 'German', fr: 'French', it: 'Italian' }
+                        const levels: Array<'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2'> = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
+                        return (
+                          <div key={lang} className="space-y-1.5">
+                            <label className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                              {langNames[lang as keyof typeof langNames]}
+                            </label>
+                            <select
+                              value={answers.languageSkills?.[lang as keyof typeof answers.languageSkills] || ''}
+                              onChange={(e) => {
+                                const skills = answers.languageSkills || {}
+                                setAnswers({
+                                  ...answers,
+                                  languageSkills: { ...skills, [lang]: e.target.value || undefined },
+                                })
+                              }}
+                              className={inputClass}
+                            >
+                              <option value="" className="bg-slate-900">No proficiency</option>
+                              {levels.map((level) => (
+                                <option key={level} value={level} className="bg-slate-900">{level}</option>
+                              ))}
+                            </select>
+                          </div>
+                        )
+                      })}
+                    </motion.div>
+                  )}
+
+                  {/* Step 7: Email */}
+                  {currentStep === 7 && (
+                    <motion.div
+                      key="step7"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.2 }}
+                      className="space-y-4"
+                    >
+                      <div className="flex items-center gap-3 mb-5">
+                        <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
+                          <Mail className={iconClass} />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-white">Get your personalized plan</h3>
+                          <p className="text-xs text-slate-400">Free — your custom Swiss pathway delivered</p>
+                        </div>
+                      </div>
+                      <input
+                        type="email"
+                        value={answers.email || ''}
+                        onChange={(e) => setAnswers({ ...answers, email: e.target.value })}
+                        placeholder="your.email@example.com"
+                        className={inputClass}
+                      />
+                      <div className="p-4 bg-emerald-500/5 border border-emerald-500/15 rounded-xl">
+                        <p className="text-xs text-emerald-400 leading-relaxed space-y-0.5">
+                          You&apos;ll receive your personalized immigration pathway, timeline checklist, and recommended next steps. No spam — unsubscribe anytime.
                         </p>
                       </div>
-                    </div>
-                    <input
-                      type="email"
-                      value={answers.email || ''}
-                      onChange={(e) => setAnswers({ ...answers, email: e.target.value })}
-                      placeholder="your.email@example.com"
-                      className="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 text-lg"
-                    />
-                    <div className="p-5 bg-green-50 rounded-xl">
-                      <p className="text-sm text-green-900 leading-relaxed">
-                        You&apos;ll receive:
-                        <br />• Your personalized immigration pathway
-                        <br />• Timeline and requirements checklist
-                        <br />• Recommended next steps and resources
-                        <br />• No spam, unsubscribe anytime
-                      </p>
-                    </div>
-                  </motion.div>
-                )}
+                    </motion.div>
+                  )}
+
                 </AnimatePresence>
               </div>
 
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              {/* Navigation */}
+              <div className="flex items-center justify-between gap-4">
                 <button
                   onClick={handleBack}
                   disabled={currentStep === 1}
-                  className="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="flex items-center gap-1.5 px-4 py-2.5 text-sm text-slate-400 hover:text-slate-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 >
                   <ArrowLeft className="w-4 h-4" />
-                  <span>Back</span>
+                  Back
                 </button>
-                <div className="text-sm text-gray-600 text-center sm:text-left">
+
+                <p className="text-[11px] text-slate-500 text-center hidden sm:block">
                   {currentStep === TOTAL_STEPS
-                    ? 'Final review before we build your pathway.'
-                    : 'Complete each step to personalize your Swiss roadmap.'}
-                </div>
+                    ? 'Final step — build your pathway'
+                    : 'Each step personalizes your roadmap'}
+                </p>
+
                 {currentStep < TOTAL_STEPS ? (
                   <button
                     onClick={handleNext}
                     disabled={!canProceed}
-                    className="inline-flex items-center space-x-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-cyan-500 to-violet-600 text-white hover:from-cyan-400 hover:to-violet-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-[0_0_20px_rgba(6,182,212,0.25)] hover:shadow-[0_0_28px_rgba(6,182,212,0.4)]"
                   >
-                    <span>Next</span>
+                    Next
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 ) : (
                   <button
                     onClick={handleSubmit}
                     disabled={!canProceed || isSubmitting}
-                    className="inline-flex items-center space-x-2 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-emerald-500 to-cyan-600 text-white hover:from-emerald-400 hover:to-cyan-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)]"
                   >
                     {isSubmitting ? (
                       <>
                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        <span>Processing...</span>
+                        Processing…
                       </>
                     ) : (
                       <>
                         <CheckCircle className="w-4 h-4" />
-                        <span>Complete & Get My Pathway</span>
+                        Complete &amp; Get My Pathway
                       </>
                     )}
                   </button>
                 )}
               </div>
+
             </div>
           </main>
         </motion.div>
@@ -579,4 +610,3 @@ export default function InitialQuizModal({ isOpen, onClose, onComplete }: Initia
     </AnimatePresence>
   )
 }
-

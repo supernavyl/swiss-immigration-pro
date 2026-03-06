@@ -7,6 +7,8 @@ const ChatbotRight = lazy(() => import('./ChatbotRight'))
 interface ChatbotContextType {
   openChatbot: () => void
   closeChatbot: () => void
+  setInitialMessage: (msg: string) => void
+  initialMessage: string
   isOpen: boolean
 }
 
@@ -22,6 +24,7 @@ export function useChatbot() {
 
 export function ChatbotProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false)
+  const [initialMessage, setInitialMessage] = useState('')
 
   const openChatbot = useCallback(() => setIsOpen(true), [])
   const closeChatbot = useCallback(() => setIsOpen(false), [])
@@ -37,7 +40,7 @@ export function ChatbotProvider({ children }: { children: ReactNode }) {
   }, [openChatbot])
 
   return (
-    <ChatbotContext.Provider value={{ openChatbot, closeChatbot, isOpen }}>
+    <ChatbotContext.Provider value={{ openChatbot, closeChatbot, isOpen, initialMessage, setInitialMessage }}>
       <div
         className="transition-[margin] duration-300 ease-out"
         style={{ marginRight: isOpen ? '420px' : '0' }}
