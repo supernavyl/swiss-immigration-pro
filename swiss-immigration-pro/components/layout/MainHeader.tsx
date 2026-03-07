@@ -79,31 +79,31 @@ const MEGA_MENUS: Record<string, MegaMenuData> = {
       {
         heading: 'Work Permits',
         links: [
-          { href: '/visas/l-permit', label: 'L Permit — Short-Stay', desc: 'Up to 12 months, renewable once' },
-          { href: '/visas/b-permit', label: 'B Permit — Annual', desc: '1-year renewable residence permit' },
-          { href: '/visas/c-permit', label: 'C Permit — Settlement', desc: 'Permanent residence, no renewal' },
-          { href: '/visas/g-permit', label: 'G Permit — Frontier Worker', desc: 'Cross-border commuters' },
-          { href: '/visas/seasonal', label: 'Seasonal Permit', desc: 'Agriculture & hospitality (9 mo)' },
-          { href: '/visas/eu-efta', label: 'EU/EFTA Free Movement', desc: 'Simplified process for EU citizens' },
+          { href: '/visas/l-permit-guide', label: 'L Permit — Short-Stay', desc: 'Up to 12 months, renewable once' },
+          { href: '/visas/b-permit-guide', label: 'B Permit — Annual', desc: '1-year renewable residence permit' },
+          { href: '/visas/c-permit-guide', label: 'C Permit — Settlement', desc: 'Permanent residence, no renewal' },
+          { href: '/visas#g-permit', label: 'G Permit — Frontier Worker', desc: 'Cross-border commuters' },
+          { href: '/visas#seasonal', label: 'Seasonal Permit', desc: 'Agriculture & hospitality (9 mo)' },
+          { href: '/visas#eu-efta', label: 'EU/EFTA Free Movement', desc: 'Simplified process for EU citizens' },
         ],
       },
       {
         heading: 'Residency & Family',
         links: [
-          { href: '/visas/family-reunification', label: 'Family Reunification', desc: 'Bring spouse & children to CH' },
-          { href: '/visas/student', label: 'Student Visa', desc: 'Study at Swiss universities' },
-          { href: '/visas/investor', label: 'Investor / Art. 30', desc: 'Business & lump-sum taxation' },
-          { href: '/visas/asylum', label: 'Asylum & Protection', desc: 'Refugee status & humanitarian' },
-          { href: '/visas/cantonal-rules', label: 'Cantonal Requirements', desc: 'Rules for all 26 cantons' },
+          { href: '/visas#family-reunification', label: 'Family Reunification', desc: 'Bring spouse & children to CH' },
+          { href: '/visas#student', label: 'Student Visa', desc: 'Study at Swiss universities' },
+          { href: '/visas#investor', label: 'Investor / Art. 30', desc: 'Business & lump-sum taxation' },
+          { href: '/visas#asylum', label: 'Asylum & Protection', desc: 'Refugee status & humanitarian' },
+          { href: '/cantons', label: 'Cantonal Requirements', desc: 'Rules for all 26 cantons' },
         ],
       },
       {
         heading: 'Citizenship',
         links: [
-          { href: '/visas/naturalization', label: 'Ordinary Naturalization', desc: '10-year residency requirement' },
-          { href: '/visas/simplified', label: 'Simplified Naturalization', desc: 'Spouses & second generation' },
-          { href: '/visas/dual-citizenship', label: 'Dual Citizenship', desc: 'Keep your home passport' },
-          { href: '/visas/reintegration', label: 'Reintegration', desc: 'Former Swiss nationals' },
+          { href: '/citizenship', label: 'Ordinary Naturalization', desc: '10-year residency requirement' },
+          { href: '/citizenship#simplified', label: 'Simplified Naturalization', desc: 'Spouses & second generation' },
+          { href: '/citizenship#dual', label: 'Dual Citizenship', desc: 'Keep your home passport' },
+          { href: '/citizenship#reintegration', label: 'Reintegration', desc: 'Former Swiss nationals' },
         ],
       },
     ],
@@ -121,32 +121,32 @@ const MEGA_MENUS: Record<string, MegaMenuData> = {
         heading: 'AI-Powered Tools',
         links: [
           { href: '/lawyer', label: 'AI Immigration Lawyer', desc: 'Chat — Llama 3.3 70B', badge: 'AI' },
-          { href: '/tools/cv-builder', label: 'Swiss CV Builder', desc: '15 professional templates' },
-          { href: '/tools/eligibility', label: 'Eligibility Checker', desc: 'Find your permit type in 2 min' },
-          { href: '/tools/timeline', label: 'Permit Timeline Tracker', desc: 'Step-by-step application view' },
+          { href: '/tools/cv-editor', label: 'Swiss CV Builder', desc: '15 professional templates' },
+          { href: '/quiz', label: 'Eligibility Checker', desc: 'Find your permit type in 2 min' },
+          { href: '/tools/timeline-planner', label: 'Permit Timeline Tracker', desc: 'Step-by-step application view' },
         ],
       },
       {
         heading: 'Calculators',
         links: [
-          { href: '/tools/cost-calculator', label: 'Cost Calculator', desc: 'All fees, taxes & cantonal costs' },
-          { href: '/tools/integration', label: 'Integration Score', desc: 'Citizenship readiness assessment' },
-          { href: '/tools/quota', label: 'Quota Tracker 2025', desc: 'B & L permit availability live' },
-          { href: '/tools/salary', label: 'Salary Benchmark', desc: 'Gross/net, by canton & sector' },
+          { href: '/tools/permit-calculator', label: 'Cost Calculator', desc: 'All fees, taxes & cantonal costs' },
+          { href: '/tools/citizenship-timeline', label: 'Citizenship Timeline', desc: 'Citizenship readiness assessment' },
+          { href: '/tools/document-checklist', label: 'Document Checklist', desc: 'Per permit, per canton' },
+          { href: '/tools/dossier-generator', label: 'Dossier Generator', desc: 'Complete application package' },
         ],
       },
       {
-        heading: 'Documents & Templates',
+        heading: 'Resources & Guides',
         links: [
-          { href: '/tools/checklist', label: 'Document Checklist', desc: 'Per permit, per canton' },
-          { href: '/tools/templates', label: 'Letter Templates', desc: 'Cover letters & appeal letters' },
-          { href: '/tools/glossary', label: 'Legal Glossary', desc: '300+ Swiss immigration terms' },
-          { href: '/tools/translator', label: 'Document Guide', desc: 'What to prepare & certify' },
+          { href: '/resources', label: 'Free Downloads', desc: 'Checklists, guides & templates' },
+          { href: '/faq', label: 'FAQ', desc: 'Most common permit questions' },
+          { href: '/blog', label: 'Expert Guides', desc: 'Weekly immigration insights' },
+          { href: '/case-studies', label: 'Success Stories', desc: 'Real journeys, real outcomes' },
         ],
       },
     ],
     featured: {
-      href: '/tools/cv-builder',
+      href: '/tools/cv-editor',
       label: 'Build Your Swiss CV for Free',
       desc: '15 templates designed for Swiss employers — ATS-optimized, cantonal standards.',
       badge: 'Free',
@@ -165,22 +165,21 @@ const MEGA_MENUS: Record<string, MegaMenuData> = {
         ],
       },
       {
-        heading: 'Official Sources',
+        heading: 'Resources',
         links: [
-          { href: '/resources/sem', label: 'SEM Guidelines', desc: 'Swiss State Secretariat docs' },
-          { href: '/resources/cantons', label: 'Cantonal Migration Offices', desc: 'Direct links, all 26 cantons' },
-          { href: '/resources/legal-updates', label: 'Legal Updates 2025', desc: 'Quota changes & new laws' },
-          { href: '/resources/integration', label: 'Integration Programs', desc: 'Language & civic courses' },
-          { href: '/resources/eu-agreements', label: 'CH–EU Agreements', desc: 'Bilateral treaties explained' },
+          { href: '/resources', label: 'Free Downloads & Guides', desc: 'Checklists, templates & more' },
+          { href: '/cantons', label: 'Cantonal Guide', desc: 'All 26 cantons compared' },
+          { href: '/citizenship', label: 'Citizenship Path', desc: 'Naturalization requirements' },
+          { href: '/about', label: 'About SIP', desc: 'Our mission & team' },
         ],
       },
       {
         heading: 'Modules & Courses',
         links: [
-          { href: '/modules', label: 'All 31 Learning Modules', desc: 'From free tier to Citizenship Pro' },
+          { href: '/pricing', label: 'All Learning Packs', desc: 'Free to CHF 79/month' },
           { href: '/modules/work-permits', label: 'Work Permit Module', desc: 'Free — complete overview' },
           { href: '/modules/naturalization', label: 'Naturalization Path', desc: 'Advanced pack — 12 lessons' },
-          { href: '/pricing', label: 'View All Plans', desc: 'Free to CHF 79/month' },
+          { href: '/pricing', label: 'View All Plans', desc: 'Compare features & pricing' },
         ],
       },
     ],
@@ -230,18 +229,18 @@ const MEGA_MENUS: Record<string, MegaMenuData> = {
         heading: 'AI Advisor',
         links: [
           { href: '/lawyer', label: 'AI Immigration Lawyer', desc: 'Chat with Llama 3.3 70B AI', badge: 'AI' },
-          { href: '/chatbot', label: 'Quick Chatbot', desc: 'Fast answers, free tier' },
-          { href: '/lawyer/history', label: 'Conversation History', desc: 'Review your past sessions' },
-          { href: '/lawyer/documents', label: 'Document Analysis', desc: 'Upload & analyse your docs' },
+          { href: '/chat', label: 'Quick Chatbot', desc: 'Fast answers, free tier' },
+          { href: '/lawyer#voice', label: 'Voice Mode', desc: 'Speak to Catherine AI' },
+          { href: '/quiz', label: 'Eligibility Quiz', desc: 'Find your permit type in 2 min' },
         ],
       },
       {
         heading: 'AI Features',
         links: [
-          { href: '/lawyer#voice', label: 'Voice Mode', desc: 'Speak to the AI — multilingual' },
-          { href: '/lawyer#jurisdiction', label: 'Canton-Specific Advice', desc: 'All 26 cantonal rules' },
-          { href: '/lawyer#timeline', label: 'AI Timeline Builder', desc: 'Personalised application plan' },
-          { href: '/lawyer#checklist', label: 'Smart Checklist', desc: 'AI-generated document list' },
+          { href: '/lawyer', label: 'Canton-Specific Advice', desc: 'All 26 cantonal rules' },
+          { href: '/tools/permit-calculator', label: 'Cost Calculator', desc: 'Fees, taxes & cantonal costs' },
+          { href: '/tools/citizenship-timeline', label: 'Citizenship Timeline', desc: 'Personalised application plan' },
+          { href: '/tools/document-checklist', label: 'Smart Checklist', desc: 'AI-generated document list' },
         ],
       },
       {
@@ -400,8 +399,8 @@ export default function MainHeader(): React.ReactElement | null {
             <span className="text-slate-600">Mon–Fri 9–18 CET</span>
           </div>
           <div className="flex items-center gap-5">
-            <Link href="/resources/sem" className="hover:text-slate-200 transition-colors">SEM Guidelines</Link>
-            <Link href="/resources/legal-updates" className="hover:text-slate-200 transition-colors">Legal Updates 2025</Link>
+            <Link href="/resources" className="hover:text-slate-200 transition-colors">Resources</Link>
+            <Link href="/blog" className="hover:text-slate-200 transition-colors">Expert Guides</Link>
             <Link href="/contact" className="flex items-center gap-1 hover:text-slate-200 transition-colors">
               <HelpCircle className="h-2.5 w-2.5" />
               Help Center

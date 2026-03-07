@@ -84,7 +84,18 @@ const nextConfig: NextConfig = {
   // Note: framer-motion removed from optimizePackageImports to fix HMR issues
 
   // Headers for security and performance
-  async headers() {
+  async headers(): Promise<{ source: string; headers: { key: string; value: string }[] }[]> {
+    // Build CSP connect-src with dynamic voice WS URL
+    const voiceWsUrl = process.env.NEXT_PUBLIC_VOICE_WS_URL || "";
+    let voiceWsCsp = "";
+    if (voiceWsUrl) {
+      try {
+        const normalized = voiceWsUrl.replace(/^ws:/, "http:").replace(/^wss:/, "https:");
+        voiceWsCsp = `wss://${new URL(normalized).host}`;
+      } catch {
+        // Invalid URL — skip
+      }
+    }
     return [
       {
         source: "/:path*",
@@ -123,7 +134,7 @@ const nextConfig: NextConfig = {
               "img-src 'self' data: blob: https://images.unsplash.com https://files.stripe.com https://*.swissimmigrationpro.com https://translate.google.com https://www.gstatic.com",
               "font-src 'self' https://fonts.gstatic.com",
               // wss: for VoiceEngine WebSocket; https://ipapi.co for geolocation
-              "connect-src 'self' https://api.stripe.com https://ipapi.co wss://*.swissimmigrationpro.com https://translate.googleapis.com",
+              `connect-src 'self' https://api.stripe.com https://ipapi.co wss://*.swissimmigrationpro.com wss://*.trycloudflare.com ${voiceWsCsp} https://translate.googleapis.com`.replace(/\s+/g, " "),
               "frame-src https://js.stripe.com https://hooks.stripe.com https://translate.google.com",
               // blob: required for AudioWorklet (voice feature) and PDF generation
               "media-src 'self' blob:",
