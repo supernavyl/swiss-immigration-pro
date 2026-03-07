@@ -446,23 +446,23 @@ const en: TranslationDict = {
   'error.forbidden': 'You do not have permission to access this page.',
   'error.networkError': 'Network error. Please check your connection.',
 
-  // ── Voice ─────────────────────────────────────────────────────────────
-  'voice.startCall': 'Voice Call',
+  // ── Voice (Catherine AI) ──────────────────────────────────────────────
+  'voice.startCall': 'Talk to Catherine',
   'voice.endCall': 'End Call',
-  'voice.listening': 'Listening...',
-  'voice.processing': 'Processing...',
-  'voice.speaking': 'Speaking...',
+  'voice.listening': 'Catherine is listening...',
+  'voice.processing': 'Catherine is thinking...',
+  'voice.speaking': 'Catherine is speaking...',
   'voice.interrupt': 'Interrupt',
-  'voice.connecting': 'Connecting...',
+  'voice.connecting': 'Connecting to Catherine...',
   'voice.disconnected': 'Disconnected',
   'voice.error': 'Voice error occurred',
-  'voice.upgradeRequired': 'Voice calls require a paid plan',
-  'voice.upgradeMessage': 'Upgrade to Immigration Pack (CHF 9/mo) or higher to unlock voice conversations with our AI lawyer.',
-  'voice.tapToInterrupt': 'Tap to interrupt',
+  'voice.upgradeRequired': 'Voice calls are available for all users',
+  'voice.upgradeMessage': 'Voice mode is now available on free and paid plans.',
+  'voice.tapToInterrupt': 'Tap to interrupt Catherine',
   'voice.micPermissionDenied': 'Microphone access was denied. Please allow mic access in your browser settings.',
   'voice.browserNotSupported': 'Your browser does not support voice calls. Please use Chrome or Edge.',
-  'voice.connectionFailed': 'Could not connect to voice server. Please try again.',
-  'voice.atCapacity': 'Voice server is at capacity. Please try again shortly.',
+  'voice.connectionFailed': 'Could not connect to Catherine. Please try again.',
+  'voice.atCapacity': 'Catherine is at capacity. Please try again shortly.',
 }
 
 // ---------------------------------------------------------------------------
@@ -1240,23 +1240,23 @@ const fr: TranslationDict = {
   'error.forbidden': "Vous n'avez pas la permission d'accéder à cette page.",
   'error.networkError': 'Erreur réseau. Veuillez vérifier votre connexion.',
 
-  // ── Voice ─────────────────────────────────────────────────────────────
-  'voice.startCall': 'Appel vocal',
+  // ── Voice (Catherine AI) ──────────────────────────────────────────────
+  'voice.startCall': 'Parler à Catherine',
   'voice.endCall': 'Raccrocher',
-  'voice.listening': 'Écoute en cours...',
-  'voice.processing': 'Traitement...',
-  'voice.speaking': 'En train de parler...',
+  'voice.listening': 'Catherine écoute...',
+  'voice.processing': 'Catherine réfléchit...',
+  'voice.speaking': 'Catherine parle...',
   'voice.interrupt': 'Interrompre',
-  'voice.connecting': 'Connexion...',
+  'voice.connecting': 'Connexion à Catherine...',
   'voice.disconnected': 'Déconnecté',
   'voice.error': 'Erreur vocale',
-  'voice.upgradeRequired': 'Les appels vocaux nécessitent un abonnement payant',
-  'voice.upgradeMessage': "Passez au Pack Immigration (CHF 9/mois) ou supérieur pour débloquer les conversations vocales avec notre avocat IA.",
-  'voice.tapToInterrupt': 'Appuyez pour interrompre',
+  'voice.upgradeRequired': 'Les appels vocaux sont disponibles pour tous les utilisateurs',
+  'voice.upgradeMessage': "Le mode vocal est maintenant disponible sur les offres gratuites et payantes.",
+  'voice.tapToInterrupt': 'Appuyez pour interrompre Catherine',
   'voice.micPermissionDenied': "L'accès au microphone a été refusé. Autorisez le micro dans les paramètres de votre navigateur.",
   'voice.browserNotSupported': "Votre navigateur ne prend pas en charge les appels vocaux. Utilisez Chrome ou Edge.",
-  'voice.connectionFailed': 'Impossible de se connecter au serveur vocal. Veuillez réessayer.',
-  'voice.atCapacity': 'Le serveur vocal est saturé. Veuillez réessayer dans un instant.',
+  'voice.connectionFailed': 'Impossible de se connecter à Catherine. Veuillez réessayer.',
+  'voice.atCapacity': 'Catherine est saturée. Veuillez réessayer dans un instant.',
 }
 
 // ---------------------------------------------------------------------------

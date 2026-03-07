@@ -252,6 +252,7 @@ export default function SwissVirtualLawyer() {
   const voice = useVoiceChat({
     mode: "lawyer",
     language: t("__lang") || "en",
+    conversationId: chat.activeConversationId ?? undefined,
     onTranscription: (text) => {
       // Add user's transcription to chat history as visible text
       chat.sendMessage(text);
@@ -267,9 +268,6 @@ export default function SwissVirtualLawyer() {
     },
     onError: (error) => {
       setVoiceError(error);
-      if (error === "voice.upgradeRequired") {
-        // Could show upgrade modal here
-      }
     },
   });
 
@@ -402,7 +400,11 @@ export default function SwissVirtualLawyer() {
   // -----------------------------------------------------------------------
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="relative flex h-screen bg-[#030614] text-white overflow-hidden">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(61,127,255,0.16),transparent_42%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_86%_84%,rgba(139,92,246,0.14),transparent_42%)]" />
+      </div>
       {/* ─── Sidebar ─── */}
       <AnimatePresence>
         {sidebarOpen && (
@@ -420,7 +422,7 @@ export default function SwissVirtualLawyer() {
               animate={{ x: 0 }}
               exit={{ x: -280 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed lg:relative z-40 w-[280px] h-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col"
+              className="fixed lg:relative z-40 w-[280px] h-full bg-[#0b1326]/90 border-r border-white/10 backdrop-blur-md flex flex-col"
             >
               {/* New chat button */}
               <div className="p-3 border-b border-gray-200 dark:border-gray-800">
@@ -429,7 +431,7 @@ export default function SwissVirtualLawyer() {
                     chat.newConversation();
                     if (window.innerWidth < 1024) setSidebarOpen(false);
                   }}
-                  className="flex items-center gap-2 w-full px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                  className="flex items-center gap-2 w-full px-3 py-2 text-sm font-medium text-white bg-white/10 hover:bg-white/15 rounded-lg transition-colors border border-white/10"
                   aria-label={t("lawyer.newChat")}
                 >
                   <Plus className="w-4 h-4" />
@@ -494,7 +496,7 @@ export default function SwissVirtualLawyer() {
                       </div>
                     </div>
                     {filteredConversations.length === 0 && (
-                      <p className="text-xs text-gray-400 text-center py-4">
+                      <p className="text-xs text-white/40 text-center py-4">
                         {t("lawyer.noConversations")}
                       </p>
                     )}
@@ -507,8 +509,8 @@ export default function SwissVirtualLawyer() {
                         }}
                         className={`group w-full text-left px-3 py-2 mb-1 rounded-lg text-xs transition-colors ${
                           chat.activeConversationId === convo.id
-                            ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300"
-                            : "hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400"
+                            ? "bg-blue-500/20 text-blue-200 border border-blue-300/20"
+                            : "hover:bg-white/8 text-white/65"
                         }`}
                       >
                         <div className="flex items-center justify-between">
@@ -782,26 +784,26 @@ export default function SwissVirtualLawyer() {
       </AnimatePresence>
 
       {/* ─── Main area ─── */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="relative z-10 flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <header className="flex items-center justify-between px-4 py-2.5 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+        <header className="flex items-center justify-between px-4 py-2.5 border-b border-white/10 bg-[#0b1326]/70 backdrop-blur-md">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+              className="p-1.5 hover:bg-white/10 rounded-lg"
               aria-label="Toggle sidebar"
             >
-              <Menu className="w-5 h-5 text-gray-500" />
+              <Menu className="w-5 h-5 text-white/60" />
             </button>
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center">
                 <Scale className="w-4 h-4 text-white" />
               </div>
               <div>
-                <h1 className="text-sm font-bold text-gray-900 dark:text-white">
+                <h1 className="text-sm font-bold text-white">
                   {t("lawyer.title")}
                 </h1>
-                <p className="text-[10px] text-blue-600 dark:text-blue-400 font-medium">
+                <p className="text-[10px] text-blue-300 font-medium">
                   {t("lawyer.subtitle")}
                 </p>
               </div>
@@ -816,7 +818,7 @@ export default function SwissVirtualLawyer() {
             {chat.isAuthenticated && chat.activeConversationId && (
               <button
                 onClick={() => chat.exportPdf(chat.activeConversationId!)}
-                className="flex items-center gap-1 px-2.5 py-1.5 text-xs text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+                className="flex items-center gap-1 px-2.5 py-1.5 text-xs text-white/70 hover:bg-white/10 rounded-lg"
                 aria-label={t("lawyer.exportPdf")}
               >
                 <Download className="w-3.5 h-3.5" />
@@ -827,7 +829,7 @@ export default function SwissVirtualLawyer() {
             )}
             <button
               onClick={() => router.push("/")}
-              className="flex items-center gap-1 px-2.5 py-1.5 text-xs text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+              className="flex items-center gap-1 px-2.5 py-1.5 text-xs text-white/70 hover:bg-white/10 rounded-lg"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               {t("lawyer.exit")}
@@ -919,17 +921,17 @@ export default function SwissVirtualLawyer() {
                       setInputValue("");
                       chat.sendMessage(prompt.question);
                     }}
-                    className="group p-3 text-left bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-md transition-all"
+                    className="group p-3 text-left bg-white/[0.04] border border-white/10 rounded-xl hover:border-blue-300/30 hover:bg-white/[0.06] transition-all"
                   >
                     <div className="flex items-center gap-2 mb-1">
                       <prompt.icon className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                      <span className="text-xs font-semibold text-gray-900 dark:text-white">
+                      <span className="text-xs font-semibold text-white">
                         {t(
                           `lawyer.quick${prompt.key.charAt(0).toUpperCase() + prompt.key.slice(1)}`,
                         )}
                       </span>
                     </div>
-                    <p className="text-[10px] text-gray-500 dark:text-gray-400">
+                    <p className="text-[10px] text-white/55">
                       {t(
                         `lawyer.quick${prompt.key.charAt(0).toUpperCase() + prompt.key.slice(1)}Desc`,
                       )}
@@ -958,7 +960,7 @@ export default function SwissVirtualLawyer() {
 
             {/* Loading indicator */}
             {chat.isLoading && !chat.messages.some((m) => m.isStreaming) && (
-              <div className="flex items-center gap-2 text-sm text-gray-400">
+              <div className="flex items-center gap-2 text-sm text-white/45">
                 <div className="flex gap-1">
                   <span
                     className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"
@@ -1029,13 +1031,13 @@ export default function SwissVirtualLawyer() {
         </div>
 
         {/* Input area */}
-        <div className="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-4 py-3">
+        <div className="border-t border-white/10 bg-[#0b1326]/75 backdrop-blur-md px-4 py-3">
           <div className="max-w-3xl mx-auto">
             <div className="flex items-end gap-2">
               {chat.isAuthenticated && (
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg shrink-0"
+                  className="p-2 text-white/50 hover:text-white/80 hover:bg-white/10 rounded-lg shrink-0"
                   aria-label={t("lawyer.uploadDocument")}
                 >
                   <Upload className="w-5 h-5" />
@@ -1050,7 +1052,7 @@ export default function SwissVirtualLawyer() {
                   placeholder={t("lawyer.placeholder")}
                   disabled={chat.limitReached && !chat.isAuthenticated}
                   rows={1}
-                  className="w-full resize-none px-4 py-2.5 text-sm bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
+                  className="w-full resize-none px-4 py-2.5 text-sm text-white bg-white/[0.06] border border-white/12 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent placeholder:text-white/40 disabled:opacity-50"
                   aria-label={t("lawyer.placeholder")}
                 />
               </div>
@@ -1073,9 +1075,9 @@ export default function SwissVirtualLawyer() {
                 <Send className="w-5 h-5" />
               </button>
             </div>
-            <p className="text-[10px] text-gray-400 mt-1.5 text-center">
+            <p className="text-[10px] text-white/45 mt-1.5 text-center">
               {t("lawyer.disclaimer")}{" "}
-              <a href="/marketplace" className="text-blue-500 hover:underline">
+              <a href="/marketplace" className="text-blue-400 hover:underline">
                 {t("lawyer.findRealLawyer")}
               </a>
             </p>

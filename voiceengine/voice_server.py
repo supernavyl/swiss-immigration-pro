@@ -28,6 +28,7 @@ Protocol (binary + text mixed WebSocket):
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import json
 import logging
 import sys
@@ -60,15 +61,71 @@ MIC_SAMPLE_RATE = 16_000     # Hz — what browser sends
 EDGE_TTS_SAMPLE_RATE = 24_000  # Hz — Edge TTS output
 CHUNK_BYTES = 8_192           # int16 bytes per TTS chunk (~170ms @ 24kHz)
 
-# Edge TTS voice mapping by mode and language
-VOICE_MAP: dict[str, dict[str, str]] = {
+# Edge TTS voice candidates by mode and language (first working voice wins)
+VOICE_CANDIDATES: dict[str, dict[str, list[str]]] = {
     "lawyer": {
-        "en": "en-US-AriaNeural",
-        "fr": "fr-FR-DeniseNeural",
+        "en": ["en-US-AvaNeural", "en-US-AriaNeural", "en-US-JennyNeural"],
+        "fr": [
+            "fr-FR-VivienneMultilingualNeural",
+            "fr-FR-DeniseNeural",
+            "fr-FR-EloiseNeural",
+        ],
+        "de": ["de-DE-KatjaNeural", "de-DE-AmalaNeural"],
+        "it": ["it-IT-IsabellaNeural", "it-IT-ElsaNeural"],
     },
     "chatbot": {
-        "en": "en-US-JennyNeural",
-        "fr": "fr-FR-EloiseNeural",
+        "en": ["en-US-JennyNeural", "en-US-AvaNeural"],
+        "fr": ["fr-FR-EloiseNeural", "fr-FR-DeniseNeural"],
+        "de": ["de-DE-AmalaNeural", "de-DE-KatjaNeural"],
+        "it": ["it-IT-ElsaNeural", "it-IT-IsabellaNeural"],
+    },
+}
+
+CATHERINE_GREETING_BY_MODE: dict[str, dict[str, str]] = {
+    "lawyer": {
+        "en": (
+            "Hello, I'm Catherine, your Swiss immigration AI legal assistant. "
+            "I can help you with permits, visas, naturalization, and any Swiss "
+            "immigration question. How can I assist you today?"
+        ),
+        "fr": (
+            "Bonjour, je suis Catherine, votre assistante juridique IA "
+            "spécialisée en immigration suisse. Je peux vous aider avec les "
+            "permis, visas, naturalisation et toute question d'immigration. "
+            "Comment puis-je vous aider aujourd'hui ?"
+        ),
+        "de": (
+            "Hallo, ich bin Catherine, Ihre KI-Rechtsassistentin fuer die "
+            "Schweizer Einwanderung. Ich kann Ihnen bei Bewilligungen, Visa, "
+            "Einbuergerung und allen Einwanderungsfragen helfen. "
+            "Wie kann ich Ihnen heute helfen?"
+        ),
+        "it": (
+            "Ciao, sono Catherine, la tua assistente legale AI specializzata "
+            "in immigrazione svizzera. Posso aiutarti con permessi, visti, "
+            "naturalizzazione e qualsiasi domanda sull'immigrazione. "
+            "Come posso aiutarti oggi?"
+        ),
+    },
+    "chatbot": {
+        "en": (
+            "Hi, I'm Catherine! I'm here to help you navigate Swiss immigration. "
+            "Ask me anything about permits, procedures, or life in Switzerland."
+        ),
+        "fr": (
+            "Salut, je suis Catherine ! Je suis là pour vous guider dans "
+            "l'immigration suisse. Posez-moi vos questions sur les permis, "
+            "les procédures ou la vie en Suisse."
+        ),
+        "de": (
+            "Hallo, ich bin Catherine! Ich bin hier, um Ihnen bei der "
+            "Schweizer Einwanderung zu helfen. Fragen Sie mich alles ueber "
+            "Bewilligungen, Verfahren oder das Leben in der Schweiz."
+        ),
+        "it": (
+            "Ciao, sono Catherine! Sono qui per aiutarti con l'immigrazione "
+            "svizzera. Chiedimi tutto su permessi, procedure o la vita in Svizzera."
+        ),
     },
 }
 
@@ -97,6 +154,33 @@ def get_tts(voice: str) -> TTSProvider:
 
         _tts_cache[voice] = EdgeTTSProvider(voice=voice)
     return _tts_cache[voice]
+
+
+def get_voice_candidates(mode: str, lang: str) -> list[str]:
+    """Get ordered voice candidates for a mode/lang session."""
+    safe_lang = (lang or "en").lower().strip()[:2]
+    by_mode = VOICE_CANDIDATES.get(mode, VOICE_CANDIDATES["chatbot"])
+    if safe_lang in by_mode:
+        return by_mode[safe_lang]
+    return by_mode.get("en", VOICE_CANDIDATES["chatbot"]["en"])
+
+
+async def resolve_tts_with_fallback(mode: str, lang: str) -> tuple[TTSProvider | None, str | None]:
+    """Pick the first compatible Edge voice by synthesizing a short probe."""
+    candidates = get_voice_candidates(mode, lang)
+    probe_text = "Bonjour." if (lang or "").lower().startswith("fr") else "Hello."
+
+    for voice in candidates:
+        tts = get_tts(voice)
+        try:
+            probe = await tts.synthesize(probe_text)
+            if len(probe) > 0:
+                return tts, voice
+        except Exception:
+            logger.warning("Voice candidate failed: %s", voice, exc_info=True)
+            continue
+
+    return None, None
 
 
 def get_semaphore() -> asyncio.Semaphore:
@@ -136,6 +220,29 @@ async def synthesize_and_send(
         if ws.client_state == WebSocketState.CONNECTED:
             await ws.send_bytes(chunk)
         await asyncio.sleep(0)  # yield to event loop
+
+
+async def send_session_greeting(
+    ws: WebSocket,
+    mode: str,
+    lang: str,
+    tts: TTSProvider,
+    interrupted: asyncio.Event,
+) -> None:
+    """Send Catherine's spoken greeting when voice session starts."""
+    safe_lang = (lang or "en").lower().strip()[:2]
+    greetings_by_lang = CATHERINE_GREETING_BY_MODE.get(
+        mode, CATHERINE_GREETING_BY_MODE["chatbot"],
+    )
+    greeting = greetings_by_lang.get(safe_lang, greetings_by_lang["en"])
+
+    await ws.send_text(json.dumps({
+        "type": "speaking_start",
+        "text": greeting,
+    }))
+    await synthesize_and_send(ws, tts, greeting, interrupted)
+    if ws.client_state == WebSocketState.CONNECTED and not interrupted.is_set():
+        await ws.send_text(json.dumps({"type": "speaking_end"}))
 
 
 # ---------------------------------------------------------------------------
@@ -195,16 +302,25 @@ async def voice_ws(
         await ws.accept()
         logger.info("Voice session started: mode=%s lang=%s", mode, lang)
 
-        # Resolve voice for this mode + language
-        voice = VOICE_MAP.get(mode, {}).get(lang, VOICE_MAP["chatbot"]["en"])
-        tts = get_tts(voice)
+        safe_lang = (lang or "en").lower().strip()[:2]
+
+        # Resolve voice for this mode + language with fallback
+        tts, voice = await resolve_tts_with_fallback(mode, safe_lang)
+        if tts is None or voice is None:
+            await ws.send_text(json.dumps({
+                "type": "error",
+                "message": f"No compatible TTS voice available for language '{safe_lang}'.",
+            }))
+            await ws.close(code=4002)
+            return
 
         # Create per-session SipLLM
         llm = SipLLM(
             backend_url=config.llm_base_url,
             mode=mode,
             token=token,
-            language=lang,
+            language=safe_lang,
+            conversation_id=conversation_id,
         )
 
         # Tell client we're ready
@@ -220,6 +336,12 @@ async def voice_ws(
         interrupted = asyncio.Event()
         speaking_task: asyncio.Task[None] | None = None
 
+        # Catherine greeting on session start (both modes).
+        try:
+            await send_session_greeting(ws, mode, safe_lang, tts, interrupted)
+        except Exception:
+            logger.warning("Greeting failed for mode=%s lang=%s", mode, safe_lang, exc_info=True)
+
         try:
             while True:
                 msg = await ws.receive()
@@ -231,7 +353,14 @@ async def voice_ws(
 
                 # --- Text frame: JSON control message ---
                 elif "text" in msg and msg["text"] is not None:
-                    payload: dict[str, Any] = json.loads(msg["text"])
+                    try:
+                        payload: dict[str, Any] = json.loads(msg["text"])
+                    except json.JSONDecodeError:
+                        await ws.send_text(json.dumps({
+                            "type": "error",
+                            "message": "Invalid control message.",
+                        }))
+                        continue
                     msg_type = payload.get("type", "")
 
                     if msg_type == "hangup":
@@ -242,10 +371,8 @@ async def voice_ws(
                         interrupted.set()
                         if speaking_task and not speaking_task.done():
                             speaking_task.cancel()
-                            try:
+                            with contextlib.suppress(asyncio.CancelledError):
                                 await speaking_task
-                            except asyncio.CancelledError:
-                                pass
                         if ws.client_state == WebSocketState.CONNECTED:
                             await ws.send_text(json.dumps({"type": "speaking_end"}))
                         interrupted.clear()
@@ -285,10 +412,8 @@ async def voice_ws(
                                 ws, llm, tts, history, interrupted,
                             )
                         )
-                        try:
+                        with contextlib.suppress(asyncio.CancelledError):
                             await speaking_task
-                        except asyncio.CancelledError:
-                            pass
 
         except WebSocketDisconnect:
             logger.info("Voice session disconnected: mode=%s", mode)

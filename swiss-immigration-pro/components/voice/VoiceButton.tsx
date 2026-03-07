@@ -1,26 +1,18 @@
 "use client";
 
+import { motion, AnimatePresence } from "framer-motion";
 import { PhoneCall, PhoneOff } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useT } from "@/lib/i18n/useTranslation";
 
 interface VoiceButtonProps {
-  /** Whether a voice session is active */
   isActive: boolean;
-  /** Whether the AI is currently speaking */
   isSpeaking: boolean;
-  /** Click handler to toggle voice mode */
   onClick: () => void;
-  /** Whether the button is disabled */
   disabled?: boolean;
-  /** Compact mode for chatbot widget */
   compact?: boolean;
 }
 
-/**
- * Toggle button for starting/stopping voice mode.
- * Shows mic icon (idle), pulsing phone (active), or speaker wave (AI speaking).
- */
 export function VoiceButton({
   isActive,
   isSpeaking,
@@ -31,37 +23,86 @@ export function VoiceButton({
   const { t } = useT();
 
   return (
-    <button
+    <motion.button
       onClick={onClick}
       disabled={disabled}
+      whileHover={disabled ? undefined : { scale: 1.06 }}
+      whileTap={disabled ? undefined : { scale: 0.94 }}
+      transition={{ type: "spring", stiffness: 350, damping: 22 }}
       className={cn(
-        "relative rounded-lg transition-all duration-200 flex items-center gap-2 shrink-0",
-        compact ? "p-2" : "px-3 py-2",
-        isActive
-          ? isSpeaking
-            ? "bg-blue-500/10 text-blue-500 dark:bg-blue-500/20"
-            : "bg-blue-500/10 text-blue-500 dark:bg-blue-500/20 animate-pulse"
-          : "text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800",
-        disabled && "opacity-50 cursor-not-allowed",
+        "relative rounded-full flex items-center gap-2 shrink-0 transition-all duration-300",
+        compact ? "p-2.5" : "px-4 py-2.5",
+        disabled && "opacity-40 cursor-not-allowed",
       )}
+      style={{
+        background: isActive
+          ? "linear-gradient(135deg, rgba(59,130,246,0.15), rgba(99,102,241,0.12))"
+          : "rgba(255,255,255,0.04)",
+        backdropFilter: "blur(16px)",
+        WebkitBackdropFilter: "blur(16px)",
+        border: isActive
+          ? "1px solid rgba(59,130,246,0.3)"
+          : "1px solid rgba(255,255,255,0.06)",
+        boxShadow: isActive
+          ? "0 0 24px rgba(37,99,235,0.25), 0 0 48px rgba(37,99,235,0.1)"
+          : "0 2px 8px rgba(0,0,0,0.2)",
+        color: isActive ? "#60a5fa" : "#64748b",
+      }}
       aria-label={isActive ? t("voice.endCall") : t("voice.startCall")}
       title={isActive ? t("voice.endCall") : t("voice.startCall")}
     >
       {isActive ? (
-        <PhoneOff className={cn(compact ? "w-4 h-4" : "w-5 h-5")} />
+        <PhoneOff className={cn(compact ? "w-4 h-4" : "w-[18px] h-[18px]")} />
       ) : (
         <>
-          <PhoneCall className={cn(compact ? "w-4 h-4" : "w-5 h-5")} />
+          <PhoneCall className={cn(compact ? "w-4 h-4" : "w-[18px] h-[18px]")} />
           {!compact && (
-            <span className="text-sm font-medium hidden sm:inline">
+            <span className="text-[13px] font-medium hidden sm:inline">
               {t("voice.startCall")}
             </span>
           )}
         </>
       )}
-      {isActive && !compact && (
-        <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-blue-500 rounded-full animate-ping" />
-      )}
-    </button>
+
+      {/* Active indicator */}
+      <AnimatePresence>
+        {isActive && (
+          <>
+            <motion.span
+              key="pulse"
+              initial={{ scale: 1, opacity: 0.5 }}
+              animate={{ scale: [1, 2.8], opacity: [0.5, 0] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
+              style={{
+                position: "absolute",
+                top: -3,
+                right: -3,
+                width: 10,
+                height: 10,
+                borderRadius: "50%",
+                background: isSpeaking
+                  ? "rgba(129,140,248,0.5)"
+                  : "rgba(59,130,246,0.5)",
+                pointerEvents: "none",
+              }}
+            />
+            <span
+              style={{
+                position: "absolute",
+                top: -2,
+                right: -2,
+                width: 8,
+                height: 8,
+                borderRadius: "50%",
+                background: isSpeaking ? "#818cf8" : "#3b82f6",
+                boxShadow: isSpeaking
+                  ? "0 0 8px rgba(129,140,248,0.6)"
+                  : "0 0 8px rgba(59,130,246,0.6)",
+              }}
+            />
+          </>
+        )}
+      </AnimatePresence>
+    </motion.button>
   );
 }

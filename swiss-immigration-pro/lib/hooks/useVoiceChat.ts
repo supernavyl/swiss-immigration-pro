@@ -18,6 +18,7 @@ interface VoiceMetadata {
 interface UseVoiceChatOptions {
   mode: "lawyer" | "chatbot";
   language: string;
+  conversationId?: string;
   onTranscription?: (text: string) => void;
   onSpeakingStart?: (text: string) => void;
   onSpeakingEnd?: () => void;
@@ -52,29 +53,26 @@ function getToken(): string | null {
   }
 }
 
-function parseJwtPayload(token: string): Record<string, unknown> | null {
-  try {
-    const base64 = token.split(".")[1];
-    if (!base64) return null;
-    const json = atob(base64.replace(/-/g, "+").replace(/_/g, "/"));
-    return JSON.parse(json) as Record<string, unknown>;
-  } catch {
-    return null;
+function getWsUrl(
+  mode: string,
+  token: string,
+  lang: string,
+  conversationId?: string,
+): string {
+  // Allow configuring voice engine URL via env var (needed for Vercel / external deployments)
+  const envUrl = process.env.NEXT_PUBLIC_VOICE_WS_URL;
+  let base: string;
+  if (envUrl) {
+    // External voiceengine: env var should be like "wss://voice.example.com" or "ws://localhost:8421"
+    base = `${envUrl.replace(/\/$/, "")}/ws/voice/${mode}?token=${encodeURIComponent(token)}&lang=${encodeURIComponent(lang)}`;
+  } else {
+    // Same-origin (Docker stack with nginx proxy)
+    const protocol = typeof window !== "undefined" && window.location.protocol === "https:" ? "wss:" : "ws:";
+    const host = typeof window !== "undefined" ? window.location.host : "localhost";
+    base = `${protocol}//${host}/ws/voice/${mode}?token=${encodeURIComponent(token)}&lang=${encodeURIComponent(lang)}`;
   }
-}
-
-function isPaidUser(token: string | null): boolean {
-  if (!token) return false;
-  const payload = parseJwtPayload(token);
-  if (!payload) return false;
-  const packId = (payload.pack_id as string) || (payload.plan as string) || "";
-  return ["immigration", "advanced", "citizenship"].includes(packId);
-}
-
-function getWsUrl(mode: string, token: string, lang: string): string {
-  const protocol = typeof window !== "undefined" && window.location.protocol === "https:" ? "wss:" : "ws:";
-  const host = typeof window !== "undefined" ? window.location.host : "localhost";
-  return `${protocol}//${host}/ws/voice/${mode}?token=${encodeURIComponent(token)}&lang=${encodeURIComponent(lang)}`;
+  if (!conversationId) return base;
+  return `${base}&conversation_id=${encodeURIComponent(conversationId)}`;
 }
 
 // ---------------------------------------------------------------------------
@@ -82,7 +80,16 @@ function getWsUrl(mode: string, token: string, lang: string): string {
 // ---------------------------------------------------------------------------
 
 export function useVoiceChat(options: UseVoiceChatOptions): UseVoiceChatReturn {
-  const { mode, language, onTranscription, onSpeakingStart, onSpeakingEnd, onMetadata, onError } = options;
+  const {
+    mode,
+    language,
+    conversationId,
+    onTranscription,
+    onSpeakingStart,
+    onSpeakingEnd,
+    onMetadata,
+    onError,
+  } = options;
 
   const [state, setState] = useState<VoiceState>("idle");
   const [transcript, setTranscript] = useState("");
@@ -116,13 +123,7 @@ export function useVoiceChat(options: UseVoiceChatOptions): UseVoiceChatReturn {
   const connect = useCallback(async () => {
     if (state !== "idle") return;
 
-    // Paywall check
     const token = getToken();
-    if (!isPaidUser(token)) {
-      onErrorRef.current?.("voice.upgradeRequired");
-      return;
-    }
-
     setState("connecting");
 
     try {
@@ -154,7 +155,7 @@ export function useVoiceChat(options: UseVoiceChatOptions): UseVoiceChatReturn {
       source.connect(workletNode);
 
       // Open WebSocket
-      const url = getWsUrl(mode, token ?? "", language);
+      const url = getWsUrl(mode, token ?? "", language, conversationId);
       const ws = new WebSocket(url);
       ws.binaryType = "arraybuffer";
       wsRef.current = ws;
@@ -245,7 +246,7 @@ export function useVoiceChat(options: UseVoiceChatOptions): UseVoiceChatReturn {
       cleanup();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state, mode, language]);
+  }, [state, mode, language, conversationId]);
 
   // ── Disconnect ─────────────────────────────────────────────────────
   const cleanup = useCallback(() => {

@@ -329,7 +329,7 @@ export default function MainHeader(): React.ReactElement | null {
   }, [])
 
   const closeMenuDelayed = useCallback((): void => {
-    menuTimeout.current = setTimeout(() => setActiveMenu(null), 120)
+    menuTimeout.current = setTimeout(() => setActiveMenu(null), 300)
   }, [])
 
   const cancelClose = useCallback((): void => {
@@ -382,7 +382,7 @@ export default function MainHeader(): React.ReactElement | null {
   const activeMega = activeMenu ? MEGA_MENUS[activeMenu] : null
 
   return (
-    <header className="sticky top-0 z-50 w-full">
+    <header className="sticky top-0 z-50 w-full" onMouseLeave={closeMenuDelayed}>
 
       {/* ── Top utility strip ───────────────────────────────────────────── */}
       <div className="hidden lg:block bg-[#0f172a] dark:bg-[#060d1f] text-slate-400 text-[11px]">
@@ -463,9 +463,11 @@ export default function MainHeader(): React.ReactElement | null {
             {NAV_ITEMS.map((item) => (
               <div
                 key={item.key}
-                className="relative flex items-stretch"
+                className={cn(
+                  'relative flex items-stretch transition-colors duration-150',
+                  activeMenu === item.megaKey && 'bg-slate-50/80 dark:bg-slate-800/40',
+                )}
                 onMouseEnter={() => item.megaKey ? openMenu(item.megaKey) : setActiveMenu(null)}
-                onMouseLeave={item.megaKey ? closeMenuDelayed : undefined}
               >
                 <Link
                   href={item.href}
@@ -637,7 +639,7 @@ export default function MainHeader(): React.ReactElement | null {
                 {activeMega.sections.map((section) => (
                   <div key={section.heading}>
                     <p
-                      className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 dark:text-slate-500 mb-3"
+                      className="text-[10px] font-bold tracking-[0.14em] uppercase text-blue-500 dark:text-blue-400 mb-3 pl-3 border-l-2 border-blue-500 dark:border-blue-400"
                       style={{ fontFamily: 'var(--font-jakarta)' }}
                     >
                       {section.heading}
@@ -648,7 +650,7 @@ export default function MainHeader(): React.ReactElement | null {
                           <Link
                             href={link.href}
                             onClick={() => setActiveMenu(null)}
-                            className="group flex items-start gap-2.5 rounded-md px-2.5 py-2 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors"
+                            className="group flex items-start gap-2.5 rounded-lg px-3 py-2.5 hover:bg-blue-50/60 dark:hover:bg-slate-800/70 transition-colors"
                           >
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2">
@@ -663,6 +665,7 @@ export default function MainHeader(): React.ReactElement | null {
                                     {link.badge}
                                   </span>
                                 )}
+                                <ArrowRight className="h-3 w-3 ml-auto opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-blue-500 shrink-0" />
                               </div>
                               <span className="text-[12px] text-slate-400 dark:text-slate-500 leading-snug">
                                 {link.desc}
@@ -679,7 +682,7 @@ export default function MainHeader(): React.ReactElement | null {
                 {activeMega.featured && (
                   <div className="pl-6 border-l border-slate-100 dark:border-slate-800">
                     <p
-                      className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 dark:text-slate-500 mb-3"
+                      className="text-[10px] font-bold tracking-[0.14em] uppercase text-blue-500 dark:text-blue-400 mb-3 pl-3 border-l-2 border-blue-500 dark:border-blue-400"
                       style={{ fontFamily: 'var(--font-jakarta)' }}
                     >
                       Featured
