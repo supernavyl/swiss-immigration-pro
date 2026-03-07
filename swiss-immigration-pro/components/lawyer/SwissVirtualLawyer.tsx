@@ -228,7 +228,7 @@ function CollapsibleSection({
 
 export default function SwissVirtualLawyer() {
   const router = useRouter();
-  const { t } = useT();
+  const { t, locale } = useT();
   const chat = useLawyerChat();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -251,7 +251,7 @@ export default function SwissVirtualLawyer() {
 
   const voice = useVoiceChat({
     mode: "lawyer",
-    language: t("__lang") || "en",
+    language: locale,
     conversationId: chat.activeConversationId ?? undefined,
     onTranscription: (text) => {
       // Add user's transcription to chat history as visible text

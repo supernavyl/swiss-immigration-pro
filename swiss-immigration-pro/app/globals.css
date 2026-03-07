@@ -1196,3 +1196,9 @@ input:focus, select:focus, button:focus {
   50%  { background-position: 100% 100%; }
   75%  { background-position: 0% 100%; }
 }
+
+/* ── Voice status dot pulse ── */
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.3); }
+}
